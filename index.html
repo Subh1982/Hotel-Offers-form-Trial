@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Explorer Offers Collection</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="masthead">
+        <nav class="topbar" aria-label="Platform header">
+          <div class="brand-logo-text" aria-label="ALL Accor Plus">ALL Accor+</div>
+          <span class="market-label">Pacific marketing platform</span>
+        </nav>
+        <section class="hero-panel" aria-labelledby="pageTitle">
+          <div class="hero-copy">
+            <p class="eyebrow">Explorer offers</p>
+            <h1 id="pageTitle">Submit hotel offers ready for campaign review</h1>
+            <p class="hero-text">A clearer collection flow for stay, dining, and event offers across Pacific campaigns.</p>
+            <div class="hero-facts" aria-label="Submission requirements">
+              <span>1 offer per submission</span>
+              <span>Assets due 6 weeks ahead</span>
+              <span>2048 x 1366 banner image</span>
+            </div>
+          </div>
+          <figure class="hero-visual" aria-label="Premium hotel campaign visual"></figure>
+        </section>
+      </header>
+      <section class="workspace">
+        <aside class="panel">
+          <div class="brand">
+            <span class="mark">EX</span>
+            <div>
+              <p class="eyebrow">Explorer partners</p>
+              <h2>Offer submission</h2>
+            </div>
+          </div>
+          <ol class="steps" aria-label="Form progress">
+            <li class="active">Hotel details</li>
+            <li>Offer and dates</li>
+            <li>Proof and forms</li>
+            <li>Images and review</li>
+          </ol>
+          <div class="submission-list">
+            <h2>No-backend mode</h2>
+            <div class="recent-empty">Submissions are packaged in the browser as a ZIP file. Nothing is stored on this page.</div>
+          </div>
+        </aside>
+
+        <form id="offerForm" class="form-surface" novalidate>
+          <div class="form-header">
+            <div>
+              <p class="eyebrow">Stay and dining offers</p>
+              <h2>Send Explorer a complete offer in one pass</h2>
+            </div>
+            <span class="status-pill">Static package</span>
+          </div>
+
+          <section class="form-section">
+            <h3>Hotel details</h3>
+            <div class="grid two">
+              <label>Email
+                <input name="email" type="email" required autocomplete="email" placeholder="person@hotel.com">
+              </label>
+              <label>Person in-charge name
+                <input name="person_in_charge_name" required autocomplete="name" placeholder="Example: Yeni Meytadewi">
+              </label>
+              <label>Hotel RID code
+                <input name="hotel_rid_code" required placeholder="Example: B590">
+              </label>
+              <label>Hotel name
+                <input name="hotel_name" required autocomplete="organization" placeholder="Example: Swissotel Jakarta PIK Avenue">
+              </label>
+              <label>Offer type
+                <select name="offer_type" required>
+                  <option value="">Select one</option>
+                  <option>Room package / stay offer</option>
+                  <option>Dining offer</option>
+                  <option>Event offer</option>
+                  <option>Stay and dining/event offer</option>
+                </select>
+              </label>
+              <label>Offer name
+                <input name="offer_name" required placeholder="Example: Red Hot Room">
+              </label>
+            </div>
+          </section>
+
+          <section class="form-section">
+            <h3>Offer details</h3>
+            <div class="grid two">
+              <label>Inclusions
+                <textarea name="inclusions" rows="4" placeholder="Breakfast, late checkout, dining credit..."></textarea>
+              </label>
+              <label>Offer value
+                <textarea name="offer_value" rows="4" placeholder="Example: 20% off best available rate or $50 dining credit."></textarea>
+              </label>
+            </div>
+          </section>
+
+          <section class="form-section">
+            <h3>Dates and booking</h3>
+            <div class="date-compare">
+              <div>
+                <p>Published offer dates</p>
+                <div class="grid two compact">
+                  <label>Start date
+                    <input name="public_start_date" type="date" required>
+                  </label>
+                  <label>End date
+                    <input name="public_end_date" type="date" required>
+                  </label>
+                </div>
+              </div>
+              <div>
+                <p>Actual offer dates</p>
+                <div class="grid two compact">
+                  <label>Start date
+                    <input name="actual_start_date" type="date" required>
+                  </label>
+                  <label>End date
+                    <input name="actual_end_date" type="date" required>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <p id="dateMessage" class="inline-alert" aria-live="polite"></p>
+            <label>Booking link
+              <input name="booking_link" type="url" required placeholder="https://">
+            </label>
+            <label>Terms and conditions
+              <textarea name="terms" rows="4" placeholder="Minimum stays, blackout dates, redemption instructions, exclusions..."></textarea>
+            </label>
+          </section>
+
+          <section class="form-section">
+            <h3>Proof and required forms</h3>
+            <div class="upload-grid">
+              <label class="file-card conditional-stay">Rate screenshot
+                <span>Please show the loaded rate available at all.com. Max 1 MB image.</span>
+                <input name="rate_screenshot" type="file" accept="image/png,image/jpeg,image/webp">
+              </label>
+              <label class="file-card conditional-dining">Dining / event menu PDF
+                <span>Please merge PDFs into one file. Max 10 MB.</span>
+                <input name="menu_pdf" type="file" accept="application/pdf">
+              </label>
+              <label class="file-card conditional-dining">Final booking page screenshot
+                <span>For dining / event offers with a booking URL. Max 1 MB image.</span>
+                <input name="booking_screenshot" type="file" accept="image/png,image/jpeg,image/webp">
+              </label>
+              <label class="file-card required-upload">Offer page form
+                <span>Upload the completed spreadsheet renamed as Hotel Name - Offer Name. Max 10 MB.</span>
+                <input name="offer_page_form" type="file" required accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv">
+              </label>
+            </div>
+            <label class="checkline">
+              <input name="department_confirmation" type="checkbox" value="Yes" required>
+              All relevant hotel departments can confirm the rate loading is set up correctly for members to book.
+            </label>
+          </section>
+
+          <section class="form-section">
+            <h3>Images</h3>
+            <div class="upload-zone">
+              <input id="bannerInput" name="banner_image" type="file" required accept="image/png,image/jpeg,image/webp">
+              <div>
+                <strong>Banner image</strong>
+                <p>Automatically resized to 2048 x 1366 JPG at web-ready quality. No text and no logo.</p>
+              </div>
+              <img id="bannerPreview" alt="">
+            </div>
+            <p id="bannerMessage" class="muted"></p>
+            <div class="upload-zone secondary-upload">
+              <input id="originalInput" name="original_image" type="file" accept="image/png,image/jpeg,image/webp">
+              <div>
+                <strong>Original image</strong>
+                <p>Upload the original JPG/social image if available. No text and no logo.</p>
+              </div>
+              <img id="originalPreview" alt="">
+            </div>
+            <p id="originalMessage" class="muted"></p>
+          </section>
+
+          <section class="form-section">
+            <h3>Final acknowledgement</h3>
+            <label class="checkline">
+              <input name="acknowledgement" type="checkbox" value="I understand" required>
+              I understand incomplete or inaccurate submissions may delay promotion, and assets are due 6 weeks in advance.
+            </label>
+          </section>
+
+          <div id="formMessage" class="form-message" role="status"></div>
+          <div class="actions">
+            <button type="reset" class="secondary">Clear</button>
+            <button type="submit">Review link and create package</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <dialog id="bookingDialog">
+      <form method="dialog" class="dialog-content">
+        <h2>Double-check the booking link</h2>
+        <p>Hotels will send guests to this exact URL. Please confirm it opens the correct booking page for this offer.</p>
+        <a id="bookingPreview" href="#" target="_blank" rel="noreferrer"></a>
+        <div class="actions">
+          <button value="cancel" class="secondary">Go back</button>
+          <button value="confirm">Confirm and create package</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
