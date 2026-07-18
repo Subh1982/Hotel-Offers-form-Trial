@@ -67,36 +67,48 @@
                 <input name="person_in_charge_name" required autocomplete="name" placeholder="Example: Yeni Meytadewi">
               </label>
               <label>Hotel RID code
-                <input name="hotel_rid_code" required placeholder="Example: B590">
+                <input name="hotel_rid_code" placeholder="Example: B590">
               </label>
               <label>Hotel name
-                <input name="hotel_name" required autocomplete="organization" placeholder="Example: Swissotel Jakarta PIK Avenue">
+                <input name="hotel_name" autocomplete="organization" placeholder="Example: Swissotel Jakarta PIK Avenue">
               </label>
               <label>Offer type
-                <select name="offer_type" required>
+                <select id="offerType" name="offer_type" required>
                   <option value="">Select one</option>
-                  <option>Room package / stay offer</option>
-                  <option>Dining offer</option>
-                  <option>Event offer</option>
-                  <option>Stay and dining/event offer</option>
+                  <option value="red_hot_rooms">Red Hot Rooms</option>
+                  <option value="more_escapes">More Escapes</option>
+                  <option value="hotel_stay">Hotel stay</option>
+                  <option value="dining">Dining</option>
+                  <option value="events">Events</option>
+                  <option value="partners">Partners</option>
                 </select>
               </label>
-              <label>Offer name
-                <input name="offer_name" required placeholder="Example: Red Hot Room">
+              <label>City - Country
+                <input name="city_country" placeholder="Example: Phuket - Thailand">
               </label>
             </div>
           </section>
 
           <section class="form-section">
-            <h3>Offer details</h3>
+            <h3>Core offer content</h3>
             <div class="grid two">
-              <label>Inclusions
-                <textarea name="inclusions" rows="4" placeholder="Breakfast, late checkout, dining credit..."></textarea>
+              <label>Offer tile title
+                <input name="offer_tile_title" required placeholder="Shown on listing tiles">
               </label>
-              <label>Offer value
-                <textarea name="offer_value" rows="4" placeholder="Example: 20% off best available rate or $50 dining credit."></textarea>
+              <label>Offer banner title
+                <input name="offer_banner_title" required placeholder="Shown on the offer page banner">
+              </label>
+              <label>Offer subtitle
+                <input name="offer_subtitle" required placeholder="Short member-facing benefit line">
+              </label>
+              <label>Meta description
+                <input name="meta_description" maxlength="160" placeholder="Up to 160 characters for search/social preview">
               </label>
             </div>
+            <label>Offer description
+              <textarea name="offer_description" required rows="5" placeholder="Describe the offer, experience, inclusions, and member value."></textarea>
+            </label>
+            <div id="typeSpecificFields" class="dynamic-fields" aria-live="polite"></div>
           </section>
 
           <section class="form-section">
@@ -148,10 +160,6 @@
               <label class="file-card conditional-dining">Final booking page screenshot
                 <span>For dining / event offers with a booking URL. Max 1 MB image.</span>
                 <input name="booking_screenshot" type="file" accept="image/png,image/jpeg,image/webp">
-              </label>
-              <label class="file-card required-upload">Offer page form
-                <span>Upload the completed spreadsheet renamed as Hotel Name - Offer Name. Max 10 MB.</span>
-                <input name="offer_page_form" type="file" required accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv">
               </label>
             </div>
             <label class="checkline">

@@ -1,4 +1,6 @@
 const form = document.querySelector("#offerForm");
+const offerType = document.querySelector("#offerType");
+const typeSpecificFields = document.querySelector("#typeSpecificFields");
 const bannerInput = document.querySelector("#bannerInput");
 const bannerPreview = document.querySelector("#bannerPreview");
 const bannerMessage = document.querySelector("#bannerMessage");
@@ -12,6 +14,74 @@ const bookingPreview = document.querySelector("#bookingPreview");
 
 let resizedBannerFile = null;
 let optimizedOriginalFile = null;
+
+const offerTypeLabels = {
+  red_hot_rooms: "Red Hot Rooms",
+  more_escapes: "More Escapes",
+  hotel_stay: "Hotel stay",
+  dining: "Dining",
+  events: "Events",
+  partners: "Partners",
+};
+
+const offerTypeGuidance = {
+  red_hot_rooms: "Room-only, limited-time member rate. The manual process references DSO / Tarskey DSO and fixed prepaid, non-refundable terms.",
+  more_escapes: "Two or more night package with inclusions such as dining, wellness, transfers, parking, or third-party experiences.",
+  hotel_stay: "Member-exclusive hotel offer, generally at least 10% off public rate, with one offer loaded for any given dates.",
+  dining: "Restaurant or bar offer available to members, usually bookable through Table Plus / ResDiary or via email.",
+  events: "Member event or hotel event, with event dates, RSVP timing, venue, pricing, and optional accommodation details.",
+  partners: "Partner offer available to Accor Plus members, usually not attached to a hotel location.",
+};
+
+const typeFieldGroups = {
+  red_hot_rooms: [
+    { name: "booking_period", label: "Booking period", placeholder: "Example: 1-30 November 2026", required: true },
+    { name: "stay_period", label: "Stay period", placeholder: "Example: Until 30 November 2026", required: true },
+    { name: "room_type", label: "Room type", placeholder: "Example: King, Queen" },
+    { name: "member_benefits", label: "Member benefits", placeholder: "Example: Accor Plus members exclusive Red Hot Rooms rate", required: true },
+    { name: "original_price", label: "Original price", placeholder: "Example: THB 2,738++", required: true },
+    { name: "discounted_price", label: "Discounted price", placeholder: "Example: THB 1,500++", required: true },
+  ],
+  more_escapes: [
+    { name: "package_details", label: "Package details", type: "textarea", placeholder: "List inclusions for the package, minimum stay, meal/spa/transfer benefits, and exclusions.", required: true },
+    { name: "booking_period", label: "Booking period", placeholder: "Example: Now until 30 October 2026", required: true },
+    { name: "stay_period", label: "Stay period", placeholder: "Example: Now until 30 November 2026", required: true },
+    { name: "member_benefits", label: "Member benefits", placeholder: "Example: Accor Plus member exclusive package", required: true },
+    { name: "member_package_price", label: "Member package price", placeholder: "Example: 2 nights from AUD 215", required: true },
+    { name: "public_package_value", label: "Public package value", placeholder: "Example: 2 nights from AUD 390" },
+  ],
+  hotel_stay: [
+    { name: "booking_period", label: "Booking period", placeholder: "Example: 15 November 2026 - 23 April 2027", required: true },
+    { name: "stay_period", label: "Stay period", placeholder: "Example: 15 November 2026 - 23 April 2027", required: true },
+    { name: "member_benefits", label: "Member benefits", placeholder: "Example: 10% off family stay package", required: true },
+    { name: "member_price_per_night", label: "Member price per night", placeholder: "Example: From SGD 337++ per night", required: true },
+    { name: "public_price_per_night", label: "Public price per night", placeholder: "Example: From SGD 375++ per night" },
+  ],
+  dining: [
+    { name: "price", label: "Price", placeholder: "Example: SGD 68++ per person" },
+    { name: "offer_validity", label: "Offer validity", placeholder: "Example: Until 30 November 2026", required: true },
+    { name: "time", label: "Time", placeholder: "Example: Dinner from 7pm - 10pm", required: true },
+    { name: "venue", label: "Venue", placeholder: "Example: The Cliff at Sofitel Singapore Sentosa Resort and Spa", required: true },
+    { name: "member_benefits", label: "Member benefits", type: "textarea", placeholder: "Describe the member dining benefit, discount, inclusions, or early bird offer.", required: true },
+    { name: "booking_email", label: "Booking via email", placeholder: "Example: recipient and subject, or NIL" },
+  ],
+  events: [
+    { name: "accommodation_details", label: "Accommodation details", type: "textarea", placeholder: "Optional stay package or room-night details connected to the event." },
+    { name: "rsvp_by", label: "RSVP by", placeholder: "Example: 21 November 2026", required: true },
+    { name: "public_price", label: "Public price", placeholder: "Example: N/A or AUD 169 per person" },
+    { name: "event_dates", label: "Event date(s)", placeholder: "Example: 24 November 2026", required: true },
+    { name: "time", label: "Time", placeholder: "Example: 7pm - 10:30pm", required: true },
+    { name: "venue", label: "Venue", placeholder: "Example: Room81 at Sofitel Gold Coast Broadbeach", required: true },
+    { name: "member_price", label: "Member price", placeholder: "Example: AUD 139 per person", required: true },
+    { name: "booking_email", label: "Booking via email / RSVP form", placeholder: "Example: recipient and subject, RSVP form URL, or NIL" },
+  ],
+  partners: [
+    { name: "partner_name", label: "Partner name", placeholder: "Example: Europcar", required: true },
+    { name: "offer_validity", label: "Offer validity", placeholder: "Example: Through 31 December 2026", required: true },
+    { name: "member_benefits", label: "Member benefits", type: "textarea", placeholder: "Describe the exclusive partner benefit for Accor Plus members.", required: true },
+    { name: "booking_email", label: "Booking via email / RSVP form", placeholder: "Example: recipient and subject, form URL, or NIL" },
+  ],
+};
 
 const dateFields = [
   "public_start_date",
@@ -48,13 +118,67 @@ function validateDates() {
 }
 
 function isStayOffer() {
-  const type = form.elements.offer_type.value.toLowerCase();
-  return type.includes("stay") || type.includes("room");
+  return ["red_hot_rooms", "more_escapes", "hotel_stay"].includes(offerType.value);
 }
 
 function isDiningOrEventOffer() {
-  const type = form.elements.offer_type.value.toLowerCase();
-  return type.includes("dining") || type.includes("event");
+  return ["dining", "events"].includes(offerType.value);
+}
+
+function isPartnerOffer() {
+  return offerType.value === "partners";
+}
+
+function renderTypeSpecificFields() {
+  const selected = offerType.value;
+  const fields = typeFieldGroups[selected] || [];
+  typeSpecificFields.innerHTML = "";
+
+  if (!selected) {
+    typeSpecificFields.innerHTML = '<p class="helper-note">Select an offer type to see the fields required for that manual process.</p>';
+    return;
+  }
+
+  const guidance = document.createElement("div");
+  guidance.className = "process-note";
+  guidance.innerHTML = `<strong>${offerTypeLabels[selected]}</strong><span>${offerTypeGuidance[selected]}</span>`;
+  typeSpecificFields.append(guidance);
+
+  const grid = document.createElement("div");
+  grid.className = "grid two dynamic-grid";
+
+  fields.forEach((field) => {
+    const label = document.createElement("label");
+    label.textContent = field.label;
+    const input = document.createElement(field.type === "textarea" ? "textarea" : "input");
+    input.name = field.name;
+    input.dataset.dynamicField = "true";
+    input.required = Boolean(field.required);
+    input.placeholder = field.placeholder || "";
+    if (field.type === "textarea") input.rows = 4;
+    label.append(input);
+    grid.append(label);
+  });
+
+  typeSpecificFields.append(grid);
+}
+
+function validateRequiredDetails() {
+  const missing = [];
+  if (!isPartnerOffer()) {
+    if (!form.elements.hotel_rid_code.value.trim()) missing.push("hotel RID code");
+    if (!form.elements.hotel_name.value.trim()) missing.push("hotel name");
+    if (!form.elements.city_country.value.trim()) missing.push("city - country");
+  }
+  if (isPartnerOffer() && !dynamicFieldValue("partner_name")) {
+    missing.push("partner name");
+  }
+
+  if (missing.length) {
+    setMessage(`Please complete: ${missing.join(", ")}.`, "error");
+    return false;
+  }
+  return true;
 }
 
 function validateRequiredUploads() {
@@ -67,9 +191,6 @@ function validateRequiredUploads() {
   }
   if (isDiningOrEventOffer() && !form.elements.booking_screenshot.files.length) {
     missing.push("final booking-page screenshot");
-  }
-  if (!form.elements.offer_page_form.files.length) {
-    missing.push("offer page spreadsheet");
   }
   if (!resizedBannerFile) {
     missing.push("banner image");
@@ -149,12 +270,25 @@ originalInput.addEventListener("change", () => handleImageUpload(
 ));
 
 dateFields.forEach((field) => field.addEventListener("input", validateDates));
+offerType.addEventListener("change", renderTypeSpecificFields);
 
 function fieldValue(name) {
   const element = form.elements[name];
   if (!element) return "";
   if (element.type === "checkbox") return element.checked ? element.value : "";
   return element.value.trim();
+}
+
+function dynamicFieldValue(name) {
+  const element = typeSpecificFields.querySelector(`[name="${name}"]`);
+  return element ? element.value.trim() : "";
+}
+
+function collectDynamicFields() {
+  return Array.from(typeSpecificFields.querySelectorAll("[data-dynamic-field]")).reduce((result, element) => {
+    result[element.name] = element.value.trim();
+    return result;
+  }, {});
 }
 
 function fileInfo(name, replacementFile = null) {
@@ -174,10 +308,14 @@ function buildSubmissionRecord() {
     person_in_charge_name: fieldValue("person_in_charge_name"),
     hotel_rid_code: fieldValue("hotel_rid_code"),
     hotel_name: fieldValue("hotel_name"),
-    offer_type: fieldValue("offer_type"),
-    offer_name: fieldValue("offer_name"),
-    inclusions: fieldValue("inclusions"),
-    offer_value: fieldValue("offer_value"),
+    city_country: fieldValue("city_country"),
+    offer_type: offerTypeLabels[fieldValue("offer_type")] || fieldValue("offer_type"),
+    offer_tile_title: fieldValue("offer_tile_title"),
+    offer_banner_title: fieldValue("offer_banner_title"),
+    offer_subtitle: fieldValue("offer_subtitle"),
+    offer_description: fieldValue("offer_description"),
+    meta_description: fieldValue("meta_description"),
+    offer_details: collectDynamicFields(),
     public_start_date: fieldValue("public_start_date"),
     public_end_date: fieldValue("public_end_date"),
     actual_start_date: fieldValue("actual_start_date"),
@@ -190,7 +328,6 @@ function buildSubmissionRecord() {
       rate_screenshot: fileInfo("rate_screenshot"),
       menu_pdf: fileInfo("menu_pdf"),
       booking_screenshot: fileInfo("booking_screenshot"),
-      offer_page_form: fileInfo("offer_page_form"),
       banner_image: fileInfo("banner_image", resizedBannerFile),
       original_image: fileInfo("original_image", optimizedOriginalFile),
     },
@@ -198,14 +335,21 @@ function buildSubmissionRecord() {
 }
 
 function buildSummaryText(record) {
+  const detailLines = Object.entries(record.offer_details)
+    .filter(([, value]) => value)
+    .map(([key, value]) => `${key.replace(/_/g, " ")}: ${value}`);
+
   return [
     "Explorer Offer Submission",
     "",
     `Generated: ${record.generated_at}`,
-    `Hotel: ${record.hotel_name}`,
-    `RID: ${record.hotel_rid_code}`,
-    `Offer: ${record.offer_name}`,
     `Type: ${record.offer_type}`,
+    `Hotel / Partner: ${record.hotel_name || record.offer_details.partner_name || "Not provided"}`,
+    `RID: ${record.hotel_rid_code || "Not provided"}`,
+    `City - Country: ${record.city_country || "Not provided"}`,
+    `Offer tile title: ${record.offer_tile_title}`,
+    `Offer banner title: ${record.offer_banner_title}`,
+    `Subtitle: ${record.offer_subtitle}`,
     `Contact: ${record.person_in_charge_name} <${record.email}>`,
     `Booking link: ${record.booking_link}`,
     "",
@@ -213,10 +357,14 @@ function buildSummaryText(record) {
     `Published: ${record.public_start_date} to ${record.public_end_date}`,
     `Actual: ${record.actual_start_date} to ${record.actual_end_date}`,
     "",
-    "Offer details",
-    `Inclusions: ${record.inclusions || "Not provided"}`,
-    `Offer value: ${record.offer_value || "Not provided"}`,
-    `Terms: ${record.terms || "Not provided"}`,
+    "Core content",
+    record.offer_description,
+    "",
+    "Offer type details",
+    detailLines.length ? detailLines.join("\n") : "No additional details provided",
+    "",
+    "Terms",
+    record.terms || "Not provided",
     "",
     "Confirmations",
     `Department confirmation: ${record.department_confirmation}`,
@@ -347,7 +495,7 @@ function addFile(files, folder, file) {
 
 async function createSubmissionPackage() {
   const record = buildSubmissionRecord();
-  const packageName = safeName(`${record.hotel_name}-${record.offer_name}`);
+  const packageName = safeName(`${record.hotel_name || record.offer_details.partner_name}-${record.offer_tile_title}`);
   const files = [
     {
       name: "submission.json",
@@ -362,7 +510,6 @@ async function createSubmissionPackage() {
   addFile(files, "uploads", selectedFile("rate_screenshot"));
   addFile(files, "uploads", selectedFile("menu_pdf"));
   addFile(files, "uploads", selectedFile("booking_screenshot"));
-  addFile(files, "uploads", selectedFile("offer_page_form"));
   addFile(files, "uploads", resizedBannerFile);
   addFile(files, "uploads", optimizedOriginalFile);
 
@@ -381,7 +528,7 @@ form.addEventListener("submit", async (event) => {
   event.preventDefault();
   setMessage("");
 
-  if (!form.reportValidity() || !validateDates() || !validateRequiredUploads()) {
+  if (!form.reportValidity() || !validateDates() || !validateRequiredDetails() || !validateRequiredUploads()) {
     if (!formMessage.textContent) {
       setMessage("Please fix the highlighted fields before creating the package.", "error");
     }
@@ -423,6 +570,9 @@ form.addEventListener("reset", () => {
     bannerMessage.textContent = "";
     originalMessage.textContent = "";
     dateMessage.textContent = "";
+    renderTypeSpecificFields();
     setMessage("");
   });
 });
+
+renderTypeSpecificFields();
