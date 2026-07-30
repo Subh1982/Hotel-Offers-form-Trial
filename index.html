@@ -26,9 +26,7 @@
         </nav>
         <section class="hero-panel" aria-labelledby="pageTitle">
           <div class="hero-copy">
-            <p class="eyebrow" data-i18n="heroEyebrow">Explorer offers</p>
-            <h1 id="pageTitle" data-i18n="heroTitle">Submit hotel offers ready for campaign review</h1>
-            <p class="hero-text" data-i18n="heroText">A clearer collection flow for stay, dining, and event offers across Pacific campaigns.</p>
+            <h1 id="pageTitle" data-i18n="heroTitle">ALL Accor+ Explorer Offers Portal</h1>
             <div class="hero-facts" aria-label="Submission requirements">
               <span data-i18n="heroFactOne">1 offer per submission</span>
               <span data-i18n="heroFactTwo">Assets due 6 weeks ahead</span>
@@ -47,11 +45,12 @@
               <h2 data-i18n="sideTitle">Offer submission</h2>
             </div>
           </div>
-          <ol class="steps" aria-label="Form progress">
-            <li class="active" data-i18n="stepHotel">Hotel details</li>
-            <li data-i18n="stepOffer">Offer and dates</li>
-            <li data-i18n="stepProof">Proof and forms</li>
-            <li data-i18n="stepImages">Images and review</li>
+          <ol class="steps" aria-label="Form sections">
+            <li class="active"><button type="button" data-scroll-target="hotelDetailsSection" data-i18n="stepHotel">Hotel details</button></li>
+            <li><button type="button" data-scroll-target="datesBookingSection" data-i18n="stepOffer">Offer and dates</button></li>
+            <li><button type="button" data-scroll-target="proofFormsSection" data-i18n="stepProof">Proof and forms</button></li>
+            <li><button type="button" data-scroll-target="imagesSection" data-i18n="stepImages">Images and review</button></li>
+            <li><button type="button" data-scroll-target="translationsSection" data-i18n="stepTranslations">Translations</button></li>
           </ol>
           <div class="submission-list">
             <h2 data-i18n="modeTitle">No-backend mode</h2>
@@ -68,7 +67,7 @@
             <span class="status-pill" data-i18n="statusPill">Static package</span>
           </div>
 
-          <section class="form-section">
+          <section id="hotelDetailsSection" class="form-section">
             <h3 data-i18n="hotelDetails">Hotel details</h3>
             <div class="grid two">
               <label>Email
@@ -100,7 +99,7 @@
             </div>
           </section>
 
-          <section class="form-section">
+          <section id="offerContentSection" class="form-section">
             <h3 data-i18n="coreContent">Core offer content</h3>
             <div class="grid two">
               <label>Offer tile title
@@ -122,7 +121,7 @@
             <div id="typeSpecificFields" class="dynamic-fields" aria-live="polite"></div>
           </section>
 
-          <section class="form-section">
+          <section id="datesBookingSection" class="form-section">
             <h3 data-i18n="datesBooking">Dates and booking</h3>
             <div class="date-compare">
               <div>
@@ -157,7 +156,7 @@
             </label>
           </section>
 
-          <section class="form-section">
+          <section id="proofFormsSection" class="form-section">
             <h3 data-i18n="proofForms">Proof and required forms</h3>
             <div class="upload-grid">
               <label class="file-card conditional-stay">Rate screenshot
@@ -179,7 +178,7 @@
             </label>
           </section>
 
-          <section class="form-section">
+          <section id="imagesSection" class="form-section">
             <h3 data-i18n="imagesTitle">Images</h3>
             <div class="upload-zone">
               <input id="masterImageInput" name="master_image" type="file" accept="image/png,image/jpeg,image/webp">
@@ -198,7 +197,7 @@
               <input id="bannerInput" name="banner_image" type="file" accept="image/png,image/jpeg,image/webp">
               <div>
                 <strong>Banner image</strong>
-                <p>2048 x 1366px JPG. Source file must not exceed 200 MB. No text and no logo.</p>
+                <p>Upload any image size. The app will auto-resize it to 2048 x 1366px JPG. Source file must not exceed 200 MB. No text and no logo.</p>
               </div>
               <img id="bannerPreview" alt="">
             </div>
@@ -207,7 +206,7 @@
               <input id="listingTileInput" name="listing_tile_image" type="file" accept="image/png,image/jpeg,image/webp">
               <div>
                 <strong>Listing tile image</strong>
-                <p>400 x 250px JPG. Source file must not exceed 200 MB. Used in offer listing cards.</p>
+                <p>Upload any image size. The app will auto-resize it to 400 x 250px JPG. Source file must not exceed 200 MB.</p>
               </div>
               <img id="listingTilePreview" alt="">
             </div>
@@ -216,14 +215,14 @@
               <input id="socialInput" name="social_image" type="file" accept="image/png,image/jpeg,image/webp">
               <div>
                 <strong>Social image</strong>
-                <p>Minimum 1080 x 1080px JPG. Source file must not exceed 200 MB.</p>
+                <p>Upload any image size. The app will auto-resize it to 1080 x 1080px JPG. Source file must not exceed 200 MB.</p>
               </div>
               <img id="socialPreview" alt="">
             </div>
             <p id="socialMessage" class="muted"></p>
           </section>
 
-          <section class="form-section translation-review-section">
+          <section id="translationsSection" class="form-section translation-review-section">
             <h3>Preview translated content</h3>
             <p class="muted">The offer content entered above is treated as <strong id="translationSourceDisplay">English</strong>, based on the language selected in the top-right corner.</p>
             <div class="grid two">

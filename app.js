@@ -20,6 +20,7 @@ const dateMessage = document.querySelector("#dateMessage");
 const bookingDialog = document.querySelector("#bookingDialog");
 const bookingPreview = document.querySelector("#bookingPreview");
 const languageSelect = document.querySelector("#languageSelect");
+const sectionNavigationButtons = Array.from(document.querySelectorAll("[data-scroll-target]"));
 const translationSourceDisplay = document.querySelector("#translationSourceDisplay");
 const translationTargetLanguage = document.querySelector("#translationTargetLanguage");
 const translateContentButton = document.querySelector("#translateContentButton");
@@ -46,9 +47,7 @@ const uiTranslations = {
   en: {
     marketLabel: "Pacific marketing platform",
     languageLabel: "Language",
-    heroEyebrow: "Explorer offers",
-    heroTitle: "Submit hotel offers ready for campaign review",
-    heroText: "A clearer collection flow for stay, dining, and event offers across Pacific campaigns.",
+    heroTitle: "ALL Accor+ Explorer Offers Portal",
     heroFactOne: "1 offer per submission",
     heroFactTwo: "Assets due 6 weeks ahead",
     heroFactThree: "2048 x 1366 banner image",
@@ -58,6 +57,7 @@ const uiTranslations = {
     stepOffer: "Offer and dates",
     stepProof: "Proof and forms",
     stepImages: "Images and review",
+    stepTranslations: "Translations",
     modeTitle: "No-backend mode",
     modeText: "Submissions are packaged in the browser as a ZIP file. Nothing is stored on this page.",
     formEyebrow: "Stay and dining offers",
@@ -79,9 +79,7 @@ const uiTranslations = {
   th: {
     marketLabel: "แพลตฟอร์มการตลาดแปซิฟิก",
     languageLabel: "ภาษา",
-    heroEyebrow: "ข้อเสนอ Explorer",
-    heroTitle: "ส่งข้อเสนอของโรงแรมเพื่อให้พร้อมสำหรับการตรวจทานแคมเปญ",
-    heroText: "ขั้นตอนการรวบรวมข้อเสนอที่ชัดเจนขึ้นสำหรับการเข้าพัก ห้องอาหาร และอีเวนต์ในแคมเปญแปซิฟิก",
+    heroTitle: "ALL Accor+ Explorer Offers Portal",
     heroFactOne: "ส่ง 1 ข้อเสนอต่อครั้ง",
     heroFactTwo: "ส่งไฟล์ล่วงหน้า 6 สัปดาห์",
     heroFactThree: "ภาพแบนเนอร์ 2048 x 1366",
@@ -91,6 +89,7 @@ const uiTranslations = {
     stepOffer: "ข้อเสนอและวันที่",
     stepProof: "หลักฐานและแบบฟอร์ม",
     stepImages: "รูปภาพและตรวจทาน",
+    stepTranslations: "การแปล",
     modeTitle: "โหมดไม่มีแบ็กเอนด์",
     modeText: "ข้อมูลจะถูกจัดเป็นไฟล์ ZIP ในเบราว์เซอร์ และไม่มีการจัดเก็บบนหน้านี้",
     formEyebrow: "ข้อเสนอห้องพักและห้องอาหาร",
@@ -112,9 +111,7 @@ const uiTranslations = {
   vi: {
     marketLabel: "Nền tảng tiếp thị Pacific",
     languageLabel: "Ngôn ngữ",
-    heroEyebrow: "Ưu đãi Explorer",
-    heroTitle: "Gửi ưu đãi khách sạn sẵn sàng để duyệt chiến dịch",
-    heroText: "Quy trình thu thập rõ ràng hơn cho ưu đãi lưu trú, ẩm thực và sự kiện tại các chiến dịch Pacific.",
+    heroTitle: "ALL Accor+ Explorer Offers Portal",
     heroFactOne: "1 ưu đãi cho mỗi lần gửi",
     heroFactTwo: "Tài sản cần gửi trước 6 tuần",
     heroFactThree: "Ảnh banner 2048 x 1366",
@@ -124,6 +121,7 @@ const uiTranslations = {
     stepOffer: "Ưu đãi và ngày",
     stepProof: "Bằng chứng và biểu mẫu",
     stepImages: "Hình ảnh và rà soát",
+    stepTranslations: "Bản dịch",
     modeTitle: "Chế độ không backend",
     modeText: "Bài gửi được đóng gói thành tệp ZIP trong trình duyệt. Trang này không lưu trữ dữ liệu.",
     formEyebrow: "Ưu đãi lưu trú và ẩm thực",
@@ -145,9 +143,7 @@ const uiTranslations = {
   id: {
     marketLabel: "Platform pemasaran Pacific",
     languageLabel: "Bahasa",
-    heroEyebrow: "Penawaran Explorer",
-    heroTitle: "Kirim penawaran hotel yang siap ditinjau untuk kampanye",
-    heroText: "Alur pengumpulan yang lebih jelas untuk penawaran menginap, dining, dan event di kampanye Pacific.",
+    heroTitle: "ALL Accor+ Explorer Offers Portal",
     heroFactOne: "1 penawaran per pengiriman",
     heroFactTwo: "Aset dikirim 6 minggu sebelumnya",
     heroFactThree: "Gambar banner 2048 x 1366",
@@ -157,6 +153,7 @@ const uiTranslations = {
     stepOffer: "Penawaran dan tanggal",
     stepProof: "Bukti dan formulir",
     stepImages: "Gambar dan tinjauan",
+    stepTranslations: "Terjemahan",
     modeTitle: "Mode tanpa backend",
     modeText: "Pengiriman dikemas di browser sebagai file ZIP. Tidak ada data yang disimpan di halaman ini.",
     formEyebrow: "Penawaran menginap dan dining",
@@ -178,9 +175,7 @@ const uiTranslations = {
   ja: {
     marketLabel: "パシフィック マーケティング プラットフォーム",
     languageLabel: "言語",
-    heroEyebrow: "Explorer オファー",
-    heroTitle: "キャンペーン確認用のホテルオファーを送信",
-    heroText: "パシフィックキャンペーン向けの宿泊、ダイニング、イベントオファーを分かりやすく収集します。",
+    heroTitle: "ALL Accor+ Explorer Offers Portal",
     heroFactOne: "1回につき1オファー",
     heroFactTwo: "素材は6週間前までに提出",
     heroFactThree: "バナー画像 2048 x 1366",
@@ -190,6 +185,7 @@ const uiTranslations = {
     stepOffer: "オファーと日付",
     stepProof: "証明資料とフォーム",
     stepImages: "画像と確認",
+    stepTranslations: "翻訳",
     modeTitle: "バックエンドなしモード",
     modeText: "提出内容はブラウザ内でZIPファイル化されます。このページには保存されません。",
     formEyebrow: "宿泊・ダイニングオファー",
@@ -461,13 +457,14 @@ async function handleImageUpload(input, preview, message, setFile, options) {
 
   message.textContent = "Resizing image...";
   const resized = await resizeImage(file, options.width, options.height, options.cover);
-  setFile(resized);
-  preview.src = URL.createObjectURL(resized);
+  const finalFile = new File([resized], options.outputName, { type: "image/jpeg" });
+  setFile(finalFile);
+  preview.src = URL.createObjectURL(finalFile);
   preview.style.display = "block";
 
   const before = Math.round(file.size / 1024);
-  const after = Math.round(resized.size / 1024);
-  message.textContent = `${options.label} ready. Resized from ${before} KB to ${after} KB.`;
+  const after = Math.round(finalFile.size / 1024);
+  message.textContent = `${options.label} ready. Auto-resized to ${options.width} x ${options.height}px from ${before} KB to ${after} KB.`;
 }
 
 function showPreview(preview, file) {
@@ -526,7 +523,7 @@ bannerInput.addEventListener("change", () => handleImageUpload(
   bannerPreview,
   bannerMessage,
   (file) => { resizedBannerFile = file; },
-  { width: 2048, height: 1366, cover: true, label: "Banner image" },
+  { width: 2048, height: 1366, cover: true, label: "Banner image", outputName: "banner-2048x1366.jpg" },
 ));
 
 listingTileInput.addEventListener("change", () => handleImageUpload(
@@ -534,7 +531,7 @@ listingTileInput.addEventListener("change", () => handleImageUpload(
   listingTilePreview,
   listingTileMessage,
   (file) => { resizedListingTileFile = file; },
-  { width: 400, height: 250, cover: true, label: "Listing tile image" },
+  { width: 400, height: 250, cover: true, label: "Listing tile image", outputName: "listing-tile-400x250.jpg" },
 ));
 
 socialInput.addEventListener("change", () => handleImageUpload(
@@ -542,7 +539,7 @@ socialInput.addEventListener("change", () => handleImageUpload(
   socialPreview,
   socialMessage,
   (file) => { resizedSocialFile = file; },
-  { width: 1080, height: 1080, cover: true, label: "Social image" },
+  { width: 1080, height: 1080, cover: true, label: "Social image", outputName: "social-1080x1080.jpg" },
 ));
 
 translateContentButton.addEventListener("click", async () => {
@@ -595,6 +592,17 @@ saveTranslationPreviewButton.addEventListener("click", () => {
 dateFields.forEach((field) => field.addEventListener("input", validateDates));
 offerType.addEventListener("change", renderTypeSpecificFields);
 languageSelect.addEventListener("change", () => applyLanguage(languageSelect.value));
+
+sectionNavigationButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const target = document.getElementById(button.dataset.scrollTarget);
+    if (!target) return;
+
+    sectionNavigationButtons.forEach((item) => item.parentElement.classList.remove("active"));
+    button.parentElement.classList.add("active");
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
 
 function fieldValue(name) {
   const element = form.elements[name];

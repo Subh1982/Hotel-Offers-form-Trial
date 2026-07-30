@@ -188,16 +188,24 @@ h3 { font-size: 18px; margin-bottom: 18px; }
 }
 
 .steps li {
-  padding: 12px 14px;
   border-radius: 8px;
+}
+.steps button {
+  width: 100%;
+  min-height: auto;
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: transparent;
   color: var(--muted);
+  text-align: left;
   font-weight: 700;
 }
-
-.steps li.active {
+.steps button:hover,
+.steps li.active button {
   background: #f2eadb;
   color: var(--accent-dark);
 }
+.form-section { scroll-margin-top: 24px; }
 
 .submission-list h2 { font-size: 16px; margin-bottom: 12px; }
 .recent-empty, .muted { color: var(--muted); font-size: 14px; }
@@ -215,6 +223,17 @@ h3 { font-size: 18px; margin-bottom: 18px; }
 }
 
 .form-section { padding: 26px 0; border-bottom: 1px solid var(--line); }
+.form-section > label,
+.form-section > .upload-zone,
+.form-section > .date-compare,
+.form-section > .grid + label {
+  margin-top: 18px;
+}
+.form-section h3 + .grid,
+.form-section h3 + .date-compare,
+.form-section h3 + .upload-zone {
+  margin-top: 0;
+}
 .dynamic-fields { margin-top: 18px; }
 .dynamic-grid { margin-top: 16px; }
 .process-note, .helper-note {

@@ -17,6 +17,7 @@ Images can be uploaded individually, or the hotel can upload one master image th
 - social image: minimum 1080 x 1080px
 
 Image source files must not exceed 200 MB.
+If a different-sized image is uploaded for banner, listing tile, or social, the app automatically resizes it to the required output size.
 
 The page interface can be displayed in English, Thai, Vietnamese, Bahasa Indonesia, or Japanese. The selected page language is treated as the source language for entered content. The bottom translation preview can generate a draft translation through the public MyMemory translation endpoint, show it for review/editing, and save the approved preview into the ZIP package.
 
