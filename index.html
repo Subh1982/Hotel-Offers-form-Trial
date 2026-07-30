@@ -182,23 +182,45 @@
           <section class="form-section">
             <h3 data-i18n="imagesTitle">Images</h3>
             <div class="upload-zone">
-              <input id="bannerInput" name="banner_image" type="file" required accept="image/png,image/jpeg,image/webp">
+              <input id="masterImageInput" name="master_image" type="file" accept="image/png,image/jpeg,image/webp">
+              <div>
+                <strong>Use one image for all placements</strong>
+                <p>Upload one high-quality image and the app will resize it into banner, listing tile, and social versions.</p>
+              </div>
+              <div class="image-stack">
+                <img id="masterBannerPreview" alt="">
+                <img id="masterListingPreview" alt="">
+                <img id="masterSocialPreview" alt="">
+              </div>
+            </div>
+            <p id="masterImageMessage" class="muted"></p>
+            <div class="upload-zone secondary-upload">
+              <input id="bannerInput" name="banner_image" type="file" accept="image/png,image/jpeg,image/webp">
               <div>
                 <strong>Banner image</strong>
-                <p>Automatically resized to 2048 x 1366 JPG at web-ready quality. No text and no logo.</p>
+                <p>2048 x 1366px JPG. Source file must not exceed 200 MB. No text and no logo.</p>
               </div>
               <img id="bannerPreview" alt="">
             </div>
             <p id="bannerMessage" class="muted"></p>
             <div class="upload-zone secondary-upload">
-              <input id="originalInput" name="original_image" type="file" accept="image/png,image/jpeg,image/webp">
+              <input id="listingTileInput" name="listing_tile_image" type="file" accept="image/png,image/jpeg,image/webp">
               <div>
-                <strong>Original image</strong>
-                <p>Upload the original JPG/social image if available. No text and no logo.</p>
+                <strong>Listing tile image</strong>
+                <p>400 x 250px JPG. Source file must not exceed 200 MB. Used in offer listing cards.</p>
               </div>
-              <img id="originalPreview" alt="">
+              <img id="listingTilePreview" alt="">
             </div>
-            <p id="originalMessage" class="muted"></p>
+            <p id="listingTileMessage" class="muted"></p>
+            <div class="upload-zone secondary-upload">
+              <input id="socialInput" name="social_image" type="file" accept="image/png,image/jpeg,image/webp">
+              <div>
+                <strong>Social image</strong>
+                <p>Minimum 1080 x 1080px JPG. Source file must not exceed 200 MB.</p>
+              </div>
+              <img id="socialPreview" alt="">
+            </div>
+            <p id="socialMessage" class="muted"></p>
           </section>
 
           <section class="form-section translation-review-section">

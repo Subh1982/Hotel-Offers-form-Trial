@@ -1,12 +1,20 @@
 const form = document.querySelector("#offerForm");
 const offerType = document.querySelector("#offerType");
 const typeSpecificFields = document.querySelector("#typeSpecificFields");
+const masterImageInput = document.querySelector("#masterImageInput");
+const masterImageMessage = document.querySelector("#masterImageMessage");
+const masterBannerPreview = document.querySelector("#masterBannerPreview");
+const masterListingPreview = document.querySelector("#masterListingPreview");
+const masterSocialPreview = document.querySelector("#masterSocialPreview");
 const bannerInput = document.querySelector("#bannerInput");
 const bannerPreview = document.querySelector("#bannerPreview");
 const bannerMessage = document.querySelector("#bannerMessage");
-const originalInput = document.querySelector("#originalInput");
-const originalPreview = document.querySelector("#originalPreview");
-const originalMessage = document.querySelector("#originalMessage");
+const listingTileInput = document.querySelector("#listingTileInput");
+const listingTilePreview = document.querySelector("#listingTilePreview");
+const listingTileMessage = document.querySelector("#listingTileMessage");
+const socialInput = document.querySelector("#socialInput");
+const socialPreview = document.querySelector("#socialPreview");
+const socialMessage = document.querySelector("#socialMessage");
 const formMessage = document.querySelector("#formMessage");
 const dateMessage = document.querySelector("#dateMessage");
 const bookingDialog = document.querySelector("#bookingDialog");
@@ -20,8 +28,11 @@ const translationPreview = document.querySelector("#translationPreview");
 const translationStatus = document.querySelector("#translationStatus");
 
 let resizedBannerFile = null;
-let optimizedOriginalFile = null;
+let resizedListingTileFile = null;
+let resizedSocialFile = null;
 let generatedContentTranslations = {};
+
+const maxImageUploadSize = 200 * 1024 * 1024;
 
 const contentLanguageLabels = {
   en: "English",
@@ -390,6 +401,12 @@ function validateRequiredUploads() {
   if (!resizedBannerFile) {
     missing.push("banner image");
   }
+  if (!resizedListingTileFile) {
+    missing.push("listing tile image");
+  }
+  if (!resizedSocialFile) {
+    missing.push("social image");
+  }
 
   if (missing.length) {
     setMessage(`Please add the required upload: ${missing.join(", ")}.`, "error");
@@ -436,6 +453,11 @@ async function handleImageUpload(input, preview, message, setFile, options) {
     input.value = "";
     return;
   }
+  if (file.size > maxImageUploadSize) {
+    message.textContent = "Image source file must not exceed 200 MB.";
+    input.value = "";
+    return;
+  }
 
   message.textContent = "Resizing image...";
   const resized = await resizeImage(file, options.width, options.height, options.cover);
@@ -448,6 +470,57 @@ async function handleImageUpload(input, preview, message, setFile, options) {
   message.textContent = `${options.label} ready. Resized from ${before} KB to ${after} KB.`;
 }
 
+function showPreview(preview, file) {
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
+}
+
+async function handleMasterImageUpload() {
+  const file = masterImageInput.files[0];
+  masterBannerPreview.style.display = "none";
+  masterListingPreview.style.display = "none";
+  masterSocialPreview.style.display = "none";
+  masterImageMessage.textContent = "";
+
+  if (!file) return;
+  if (!file.type.startsWith("image/")) {
+    masterImageMessage.textContent = "Please upload a PNG, JPG, or WebP image.";
+    masterImageInput.value = "";
+    return;
+  }
+  if (file.size > maxImageUploadSize) {
+    masterImageMessage.textContent = "Image source file must not exceed 200 MB.";
+    masterImageInput.value = "";
+    return;
+  }
+
+  masterImageMessage.textContent = "Creating banner, listing tile, and social image versions...";
+  const [banner, listingTile, social] = await Promise.all([
+    resizeImage(file, 2048, 1366, true),
+    resizeImage(file, 400, 250, true),
+    resizeImage(file, 1080, 1080, true),
+  ]);
+
+  resizedBannerFile = new File([banner], "banner-2048x1366.jpg", { type: "image/jpeg" });
+  resizedListingTileFile = new File([listingTile], "listing-tile-400x250.jpg", { type: "image/jpeg" });
+  resizedSocialFile = new File([social], "social-1080x1080.jpg", { type: "image/jpeg" });
+
+  showPreview(masterBannerPreview, resizedBannerFile);
+  showPreview(masterListingPreview, resizedListingTileFile);
+  showPreview(masterSocialPreview, resizedSocialFile);
+  showPreview(bannerPreview, resizedBannerFile);
+  showPreview(listingTilePreview, resizedListingTileFile);
+  showPreview(socialPreview, resizedSocialFile);
+
+  const before = Math.round(file.size / 1024);
+  masterImageMessage.textContent = `All image versions ready from one source image. Source size: ${before} KB.`;
+  bannerMessage.textContent = "Banner image ready from master upload.";
+  listingTileMessage.textContent = "Listing tile image ready from master upload.";
+  socialMessage.textContent = "Social image ready from master upload.";
+}
+
+masterImageInput.addEventListener("change", handleMasterImageUpload);
+
 bannerInput.addEventListener("change", () => handleImageUpload(
   bannerInput,
   bannerPreview,
@@ -456,12 +529,20 @@ bannerInput.addEventListener("change", () => handleImageUpload(
   { width: 2048, height: 1366, cover: true, label: "Banner image" },
 ));
 
-originalInput.addEventListener("change", () => handleImageUpload(
-  originalInput,
-  originalPreview,
-  originalMessage,
-  (file) => { optimizedOriginalFile = file; },
-  { width: 2400, height: 2400, cover: false, label: "Original image" },
+listingTileInput.addEventListener("change", () => handleImageUpload(
+  listingTileInput,
+  listingTilePreview,
+  listingTileMessage,
+  (file) => { resizedListingTileFile = file; },
+  { width: 400, height: 250, cover: true, label: "Listing tile image" },
+));
+
+socialInput.addEventListener("change", () => handleImageUpload(
+  socialInput,
+  socialPreview,
+  socialMessage,
+  (file) => { resizedSocialFile = file; },
+  { width: 1080, height: 1080, cover: true, label: "Social image" },
 ));
 
 translateContentButton.addEventListener("click", async () => {
@@ -674,7 +755,8 @@ function buildSubmissionRecord() {
       menu_pdf: fileInfo("menu_pdf"),
       booking_screenshot: fileInfo("booking_screenshot"),
       banner_image: fileInfo("banner_image", resizedBannerFile),
-      original_image: fileInfo("original_image", optimizedOriginalFile),
+      listing_tile_image: fileInfo("listing_tile_image", resizedListingTileFile),
+      social_image: fileInfo("social_image", resizedSocialFile),
     },
   };
 }
@@ -846,7 +928,9 @@ function selectedFile(name) {
 
 function addFile(files, folder, file) {
   if (!file) return;
-  files.push({ name: `${folder}/${safeName(file.name) || "file"}.${file.name.split(".").pop() || "bin"}`, blob: file });
+  const extension = file.name.split(".").pop() || "bin";
+  const baseName = file.name.replace(/\.[^.]+$/, "");
+  files.push({ name: `${folder}/${safeName(baseName) || "file"}.${extension}`, blob: file });
 }
 
 function getPackageFiles(record) {
@@ -865,7 +949,8 @@ function getPackageFiles(record) {
   addFile(files, "uploads", selectedFile("menu_pdf"));
   addFile(files, "uploads", selectedFile("booking_screenshot"));
   addFile(files, "uploads", resizedBannerFile);
-  addFile(files, "uploads", optimizedOriginalFile);
+  addFile(files, "uploads", resizedListingTileFile);
+  addFile(files, "uploads", resizedSocialFile);
   return files;
 }
 
@@ -927,11 +1012,18 @@ form.addEventListener("submit", async (event) => {
 form.addEventListener("reset", () => {
   setTimeout(() => {
     resizedBannerFile = null;
-    optimizedOriginalFile = null;
+    resizedListingTileFile = null;
+    resizedSocialFile = null;
+    masterBannerPreview.style.display = "none";
+    masterListingPreview.style.display = "none";
+    masterSocialPreview.style.display = "none";
     bannerPreview.style.display = "none";
-    originalPreview.style.display = "none";
+    listingTilePreview.style.display = "none";
+    socialPreview.style.display = "none";
+    masterImageMessage.textContent = "";
     bannerMessage.textContent = "";
-    originalMessage.textContent = "";
+    listingTileMessage.textContent = "";
+    socialMessage.textContent = "";
     generatedContentTranslations = {};
     translationPreview.value = "";
     setTranslationStatus("");
