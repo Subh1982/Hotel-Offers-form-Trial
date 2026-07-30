@@ -12,7 +12,7 @@ const dateMessage = document.querySelector("#dateMessage");
 const bookingDialog = document.querySelector("#bookingDialog");
 const bookingPreview = document.querySelector("#bookingPreview");
 const languageSelect = document.querySelector("#languageSelect");
-const translationSourceLanguage = document.querySelector("#translationSourceLanguage");
+const translationSourceDisplay = document.querySelector("#translationSourceDisplay");
 const translationTargetLanguage = document.querySelector("#translationTargetLanguage");
 const translateContentButton = document.querySelector("#translateContentButton");
 const saveTranslationPreviewButton = document.querySelector("#saveTranslationPreviewButton");
@@ -22,6 +22,14 @@ const translationStatus = document.querySelector("#translationStatus");
 let resizedBannerFile = null;
 let optimizedOriginalFile = null;
 let generatedContentTranslations = {};
+
+const contentLanguageLabels = {
+  en: "English",
+  th: "Thai",
+  vi: "Vietnamese",
+  id: "Bahasa Indonesia",
+  ja: "Japanese",
+};
 
 const uiTranslations = {
   en: {
@@ -198,6 +206,7 @@ function applyLanguage(language) {
     const key = element.dataset.i18n;
     if (copy[key]) element.textContent = copy[key];
   });
+  translationSourceDisplay.textContent = contentLanguageLabels[language] || contentLanguageLabels.en;
   localStorage.setItem("explorer-offer-language", language);
 }
 
@@ -208,14 +217,6 @@ const offerTypeLabels = {
   dining: "Dining",
   events: "Events",
   partners: "Partners",
-};
-
-const contentLanguageLabels = {
-  en: "English",
-  th: "Thai",
-  vi: "Vietnamese",
-  id: "Bahasa Indonesia",
-  ja: "Japanese",
 };
 
 const offerTypeGuidance = {
@@ -464,7 +465,7 @@ originalInput.addEventListener("change", () => handleImageUpload(
 ));
 
 translateContentButton.addEventListener("click", async () => {
-  const sourceLanguage = translationSourceLanguage.value;
+  const sourceLanguage = languageSelect.value;
   const targetLanguage = translationTargetLanguage.value;
   const content = buildContentForTranslation();
 
@@ -484,12 +485,12 @@ translateContentButton.addEventListener("click", async () => {
     setTranslationStatus(`${error.message} You can still paste a translation into the preview and save it to the package.`);
   } finally {
     translateContentButton.disabled = false;
-    translateContentButton.textContent = "Translate entered content";
+    translateContentButton.textContent = "Preview translated content";
   }
 });
 
 saveTranslationPreviewButton.addEventListener("click", () => {
-  const sourceLanguage = translationSourceLanguage.value;
+  const sourceLanguage = languageSelect.value;
   const targetLanguage = translationTargetLanguage.value;
   const text = translationPreview.value.trim();
 

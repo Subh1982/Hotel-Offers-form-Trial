@@ -248,11 +248,12 @@ h3 { font-size: 18px; margin-bottom: 18px; }
   font-size: 14px;
   line-height: 1.5;
 }
-.auto-translation-panel {
+.translation-review-section {
   background: #f4f8f8;
-  border-color: #bfd8d4;
+  margin-inline: -28px;
+  padding-inline: 28px;
 }
-.auto-translation-panel summary {
+.translation-review-section h3 {
   color: var(--teal);
 }
 .compact-actions {

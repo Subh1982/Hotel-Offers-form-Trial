@@ -119,56 +119,6 @@
             <label>Offer description
               <textarea name="offer_description" required rows="5" placeholder="Describe the offer, experience, inclusions, and member value."></textarea>
             </label>
-            <details class="translation-panel">
-              <summary>Optional translated offer descriptions</summary>
-              <p>Use these fields when a translated version is available for regional review. Leave blank if translation is not required.</p>
-              <div class="grid two">
-                <label>Simplified Chinese
-                  <textarea name="translation_zh" rows="4" lang="zh-Hans" placeholder="Paste or enter the Chinese translation."></textarea>
-                </label>
-                <label>Vietnamese
-                  <textarea name="translation_vi" rows="4" lang="vi" placeholder="Paste or enter the Vietnamese translation."></textarea>
-                </label>
-                <label>Thai
-                  <textarea name="translation_th" rows="4" lang="th" placeholder="Paste or enter the Thai translation."></textarea>
-                </label>
-                <label>Bahasa Indonesia
-                  <textarea name="translation_id" rows="4" lang="id" placeholder="Paste or enter the Bahasa Indonesia translation."></textarea>
-                </label>
-              </div>
-            </details>
-            <details class="translation-panel auto-translation-panel" open>
-              <summary>Prototype automatic translation</summary>
-              <p>Generate a draft translation from the entered offer content, review or edit it, then save the preview into the final package.</p>
-              <div class="grid two">
-                <label>Source language
-                  <select id="translationSourceLanguage">
-                    <option value="en">English</option>
-                    <option value="th">Thai</option>
-                    <option value="vi">Vietnamese</option>
-                    <option value="id">Bahasa Indonesia</option>
-                    <option value="ja">Japanese</option>
-                  </select>
-                </label>
-                <label>Target language
-                  <select id="translationTargetLanguage">
-                    <option value="th">Thai</option>
-                    <option value="vi">Vietnamese</option>
-                    <option value="id">Bahasa Indonesia</option>
-                    <option value="ja">Japanese</option>
-                    <option value="en">English</option>
-                  </select>
-                </label>
-              </div>
-              <div class="actions compact-actions">
-                <button type="button" id="translateContentButton">Translate entered content</button>
-                <button type="button" id="saveTranslationPreviewButton" class="secondary">Save preview to package</button>
-              </div>
-              <label>Translation preview
-                <textarea id="translationPreview" rows="8" placeholder="Generated translation will appear here. You can edit it before saving."></textarea>
-              </label>
-              <p id="translationStatus" class="muted" aria-live="polite"></p>
-            </details>
             <div id="typeSpecificFields" class="dynamic-fields" aria-live="polite"></div>
           </section>
 
@@ -249,6 +199,30 @@
               <img id="originalPreview" alt="">
             </div>
             <p id="originalMessage" class="muted"></p>
+          </section>
+
+          <section class="form-section translation-review-section">
+            <h3>Preview translated content</h3>
+            <p class="muted">The offer content entered above is treated as <strong id="translationSourceDisplay">English</strong>, based on the language selected in the top-right corner.</p>
+            <div class="grid two">
+              <label>Preview in
+                <select id="translationTargetLanguage">
+                  <option value="th">Thai</option>
+                  <option value="vi">Vietnamese</option>
+                  <option value="id">Bahasa Indonesia</option>
+                  <option value="ja">Japanese</option>
+                  <option value="en">English</option>
+                </select>
+              </label>
+            </div>
+            <div class="actions compact-actions">
+              <button type="button" id="translateContentButton">Preview translated content</button>
+              <button type="button" id="saveTranslationPreviewButton" class="secondary">Save preview to package</button>
+            </div>
+            <label>Translated preview
+              <textarea id="translationPreview" rows="10" placeholder="The translated preview will appear here. You can edit it before saving."></textarea>
+            </label>
+            <p id="translationStatus" class="muted" aria-live="polite"></p>
           </section>
 
           <section class="form-section">
