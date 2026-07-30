@@ -105,7 +105,7 @@ const uiTranslations = {
   th: {
     marketLabel: "แพลตฟอร์มการตลาดแปซิฟิก",
     languageLabel: "ภาษา",
-    heroTitle: "ALL Accor+ Explorer Offers Portal",
+    heroTitle: "พอร์ทัลข้อเสนอ ALL Accor+ Explorer",
     heroText: "สร้างข้อเสนอสำหรับโรงแรม ห้องอาหาร อีเวนต์ และพาร์ทเนอร์ให้พร้อมสำหรับแคมเปญ Explorer",
     sideEyebrow: "พันธมิตร Explorer",
     sideTitle: "ส่งข้อเสนอ",
@@ -135,7 +135,7 @@ const uiTranslations = {
   vi: {
     marketLabel: "Nền tảng tiếp thị Pacific",
     languageLabel: "Ngôn ngữ",
-    heroTitle: "ALL Accor+ Explorer Offers Portal",
+    heroTitle: "Cổng ưu đãi ALL Accor+ Explorer",
     heroText: "Tạo ưu đãi khách sạn, ẩm thực, sự kiện và đối tác sẵn sàng cho chiến dịch Explorer.",
     sideEyebrow: "Đối tác Explorer",
     sideTitle: "Gửi ưu đãi",
@@ -165,7 +165,7 @@ const uiTranslations = {
   id: {
     marketLabel: "Platform pemasaran Pacific",
     languageLabel: "Bahasa",
-    heroTitle: "ALL Accor+ Explorer Offers Portal",
+    heroTitle: "Portal Penawaran ALL Accor+ Explorer",
     heroText: "Buat penawaran hotel, dining, event, dan partner yang siap untuk kampanye Explorer.",
     sideEyebrow: "Mitra Explorer",
     sideTitle: "Pengiriman penawaran",
@@ -195,7 +195,7 @@ const uiTranslations = {
   ja: {
     marketLabel: "パシフィック マーケティング プラットフォーム",
     languageLabel: "言語",
-    heroTitle: "ALL Accor+ Explorer Offers Portal",
+    heroTitle: "ALL Accor+ Explorer オファーポータル",
     heroText: "Explorerキャンペーン向けのホテル、ダイニング、イベント、パートナーオファーを作成します。",
     sideEyebrow: "Explorer パートナー",
     sideTitle: "オファー提出",
@@ -1022,19 +1022,39 @@ function readableFieldName(name) {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+function labelForDynamicField(name) {
+  const language = languageSelect.value || "en";
+  const selected = offerType.value;
+  const field = (typeFieldGroups[selected] || []).find((item) => item.name === name);
+  return dynamicFieldLabels[language]?.[name] || field?.label || readableFieldName(name);
+}
+
+function selectedOfferTypeLabel() {
+  return offerTypeLabels[fieldValue("offer_type")] || fieldValue("offer_type");
+}
+
 function buildContentForTranslation() {
   const dynamicLines = Object.entries(collectDynamicFields())
     .filter(([, value]) => value)
-    .map(([key, value]) => [readableFieldName(key), value]);
+    .map(([key, value]) => [labelForDynamicField(key), value]);
 
   const contentLines = [
+    ["Submission contact", fieldValue("person_in_charge_name")],
+    ["Email", fieldValue("email")],
+    ["Hotel RID code", fieldValue("hotel_rid_code")],
+    ["Hotel name", fieldValue("hotel_name")],
+    ["City - Country", fieldValue("city_country")],
+    ["Offer type", selectedOfferTypeLabel()],
     ["Offer tile title", fieldValue("offer_tile_title")],
     ["Offer banner title", fieldValue("offer_banner_title")],
     ["Offer subtitle", fieldValue("offer_subtitle")],
     ["Meta description", fieldValue("meta_description")],
     ["Offer description", fieldValue("offer_description")],
     ...dynamicLines,
+    ["Booking link", fieldValue("booking_link")],
     ["Terms and conditions", fieldValue("terms")],
+    ["Department confirmation", fieldValue("department_confirmation")],
+    ["Final acknowledgement", fieldValue("acknowledgement")],
   ].filter(([, value]) => value);
 
   return contentLines.map(([label, value]) => `${label}:\n${value}`).join("\n\n");
