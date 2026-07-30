@@ -43,15 +43,25 @@ const contentLanguageLabels = {
   ja: "Japanese",
 };
 
+const localizedLanguageLabels = {
+  en: { en: "English", th: "Thai", vi: "Vietnamese", id: "Bahasa Indonesia", ja: "Japanese" },
+  th: { en: "อังกฤษ", th: "ไทย", vi: "เวียดนาม", id: "บาฮาซาอินโดนีเซีย", ja: "ญี่ปุ่น" },
+  vi: { en: "Tiếng Anh", th: "Tiếng Thái", vi: "Tiếng Việt", id: "Bahasa Indonesia", ja: "Tiếng Nhật" },
+  id: { en: "Inggris", th: "Thailand", vi: "Vietnam", id: "Bahasa Indonesia", ja: "Jepang" },
+  ja: { en: "英語", th: "タイ語", vi: "ベトナム語", id: "インドネシア語", ja: "日本語" },
+};
+
 function updateTranslationTargetOptions(sourceLanguage) {
   const currentTarget = translationTargetLanguage.value;
+  const pageLanguage = languageSelect.value || "en";
+  const labels = localizedLanguageLabels[pageLanguage] || localizedLanguageLabels.en;
   translationTargetLanguage.innerHTML = "";
 
-  Object.entries(contentLanguageLabels).forEach(([code, label]) => {
+  Object.keys(contentLanguageLabels).forEach((code) => {
     if (code === sourceLanguage) return;
     const option = document.createElement("option");
     option.value = code;
-    option.textContent = label;
+    option.textContent = labels[code] || contentLanguageLabels[code];
     translationTargetLanguage.append(option);
   });
 
@@ -223,14 +233,225 @@ const uiTranslations = {
   },
 };
 
+const formCopyTranslations = {
+  en: {
+    emailLabel: "Email",
+    contactNameLabel: "Person in-charge name",
+    hotelRidLabel: "Hotel RID code",
+    hotelNameLabel: "Hotel name",
+    offerTypeLabel: "Offer type",
+    selectOne: "Select one",
+    cityCountryLabel: "City - Country",
+    offerTileTitleLabel: "Offer tile title",
+    offerBannerTitleLabel: "Offer banner title",
+    offerSubtitleLabel: "Offer subtitle",
+    metaDescriptionLabel: "Meta description",
+    offerDescriptionLabel: "Offer description",
+    bookingLinkLabel: "Booking link",
+    termsLabel: "Terms and conditions",
+    rateScreenshotLabel: "Rate screenshot",
+    rateScreenshotHelp: "Please show the loaded rate available at all.com. Max 1 MB image.",
+    menuPdfLabel: "Dining / event menu PDF",
+    menuPdfHelp: "Please merge PDFs into one file. Max 10 MB.",
+    bookingScreenshotLabel: "Final booking page screenshot",
+    bookingScreenshotHelp: "For dining / event offers with a booking URL. Max 1 MB image.",
+    departmentConfirmationText: "All relevant hotel departments can confirm the rate loading is set up correctly for members to book.",
+    masterImageTitle: "Use one image for all placements",
+    masterImageHelp: "Upload one high-quality image and the app will resize it into banner, listing tile, and social versions.",
+    bannerImageTitle: "Banner image",
+    bannerImageHelp: "Upload any image size. The app will auto-resize it to 2048 x 1366px JPG. Source file must not exceed 200 MB. No text and no logo.",
+    listingTileImageTitle: "Listing tile image",
+    listingTileImageHelp: "Upload any image size. The app will auto-resize it to 400 x 250px JPG. Source file must not exceed 200 MB.",
+    socialImageTitle: "Social image",
+    socialImageHelp: "Upload any image size. The app will auto-resize it to 1080 x 1080px JPG. Source file must not exceed 200 MB.",
+    translationPreviewTitle: "Preview translated content",
+    translationSourcePrefix: "The offer content entered above is treated as",
+    translationSourceSuffix: "based on the language selected in the top-right corner.",
+    previewInLabel: "Preview in",
+    previewTranslatedButton: "Preview translated content",
+    savePreviewButton: "Save preview to package",
+    translatedPreviewLabel: "Translated preview",
+    acknowledgementText: "I understand incomplete or inaccurate submissions may delay promotion, and assets are due 6 weeks in advance.",
+  },
+  th: {
+    formTitle: "ส่งข้อเสนอที่ครบถ้วนในครั้งเดียว",
+    submitButton: "สร้างแพ็กเกจและส่ง",
+    emailLabel: "อีเมล",
+    contactNameLabel: "ชื่อผู้รับผิดชอบ",
+    hotelRidLabel: "รหัส RID ของโรงแรม",
+    hotelNameLabel: "ชื่อโรงแรม",
+    offerTypeLabel: "ประเภทข้อเสนอ",
+    selectOne: "เลือกหนึ่งรายการ",
+    cityCountryLabel: "เมือง - ประเทศ",
+    offerTileTitleLabel: "ชื่อข้อเสนอในไทล์",
+    offerBannerTitleLabel: "ชื่อข้อเสนอในแบนเนอร์",
+    offerSubtitleLabel: "คำบรรยายข้อเสนอ",
+    metaDescriptionLabel: "คำอธิบายเมตา",
+    offerDescriptionLabel: "รายละเอียดข้อเสนอ",
+    bookingLinkLabel: "ลิงก์จอง",
+    termsLabel: "ข้อกำหนดและเงื่อนไข",
+    rateScreenshotLabel: "ภาพหน้าจอราคา",
+    rateScreenshotHelp: "โปรดแสดงราคาที่โหลดไว้บน all.com ขนาดภาพสูงสุด 1 MB",
+    menuPdfLabel: "เมนู PDF สำหรับห้องอาหาร / อีเวนต์",
+    menuPdfHelp: "โปรดรวมไฟล์ PDF เป็นไฟล์เดียว ขนาดสูงสุด 10 MB",
+    bookingScreenshotLabel: "ภาพหน้าจอหน้าจองสุดท้าย",
+    bookingScreenshotHelp: "สำหรับข้อเสนอห้องอาหาร / อีเวนต์ที่มี URL จอง ขนาดภาพสูงสุด 1 MB",
+    departmentConfirmationText: "ทุกแผนกที่เกี่ยวข้องของโรงแรมยืนยันได้ว่าการโหลดราคาได้รับการตั้งค่าอย่างถูกต้องเพื่อให้สมาชิกจองได้",
+    masterImageTitle: "ใช้ภาพเดียวสำหรับทุกตำแหน่ง",
+    masterImageHelp: "อัปโหลดภาพคุณภาพสูงหนึ่งภาพ แล้วระบบจะปรับขนาดเป็นแบนเนอร์ ไทล์รายการ และภาพโซเชียล",
+    bannerImageTitle: "ภาพแบนเนอร์",
+    bannerImageHelp: "อัปโหลดภาพขนาดใดก็ได้ ระบบจะปรับเป็น JPG 2048 x 1366px ไฟล์ต้นฉบับต้องไม่เกิน 200 MB ไม่มีข้อความและโลโก้",
+    listingTileImageTitle: "ภาพไทล์รายการ",
+    listingTileImageHelp: "อัปโหลดภาพขนาดใดก็ได้ ระบบจะปรับเป็น JPG 400 x 250px ไฟล์ต้นฉบับต้องไม่เกิน 200 MB",
+    socialImageTitle: "ภาพโซเชียล",
+    socialImageHelp: "อัปโหลดภาพขนาดใดก็ได้ ระบบจะปรับเป็น JPG 1080 x 1080px ไฟล์ต้นฉบับต้องไม่เกิน 200 MB",
+    translationPreviewTitle: "ดูตัวอย่างเนื้อหาที่แปล",
+    translationSourcePrefix: "เนื้อหาข้อเสนอที่กรอกด้านบนจะถือว่าเป็นภาษา",
+    translationSourceSuffix: "ตามภาษาที่เลือกที่มุมขวาบน",
+    previewInLabel: "ดูตัวอย่างเป็น",
+    previewTranslatedButton: "ดูตัวอย่างคำแปล",
+    savePreviewButton: "บันทึกตัวอย่างลงแพ็กเกจ",
+    translatedPreviewLabel: "ตัวอย่างคำแปล",
+    acknowledgementText: "ฉันเข้าใจว่าการส่งข้อมูลที่ไม่ครบถ้วนหรือไม่ถูกต้องอาจทำให้การโปรโมตล่าช้า และต้องส่งไฟล์ล่วงหน้า 6 สัปดาห์",
+  },
+  vi: {
+    formTitle: "Gửi một ưu đãi hoàn chỉnh trong một lần",
+    submitButton: "Tạo gói và gửi",
+    emailLabel: "Email",
+    contactNameLabel: "Tên người phụ trách",
+    hotelRidLabel: "Mã RID khách sạn",
+    hotelNameLabel: "Tên khách sạn",
+    offerTypeLabel: "Loại ưu đãi",
+    selectOne: "Chọn một",
+    cityCountryLabel: "Thành phố - Quốc gia",
+    offerTileTitleLabel: "Tiêu đề ô ưu đãi",
+    offerBannerTitleLabel: "Tiêu đề banner ưu đãi",
+    offerSubtitleLabel: "Phụ đề ưu đãi",
+    metaDescriptionLabel: "Mô tả meta",
+    offerDescriptionLabel: "Mô tả ưu đãi",
+    bookingLinkLabel: "Liên kết đặt chỗ",
+    termsLabel: "Điều khoản và điều kiện",
+    rateScreenshotLabel: "Ảnh chụp màn hình giá",
+    rateScreenshotHelp: "Vui lòng hiển thị mức giá đã được tải trên all.com. Ảnh tối đa 1 MB.",
+    menuPdfLabel: "PDF menu ẩm thực / sự kiện",
+    menuPdfHelp: "Vui lòng gộp các PDF thành một tệp. Tối đa 10 MB.",
+    bookingScreenshotLabel: "Ảnh chụp trang đặt chỗ cuối cùng",
+    bookingScreenshotHelp: "Dành cho ưu đãi ẩm thực / sự kiện có URL đặt chỗ. Ảnh tối đa 1 MB.",
+    departmentConfirmationText: "Tất cả bộ phận liên quan của khách sạn xác nhận việc tải giá đã được thiết lập đúng để thành viên đặt chỗ.",
+    masterImageTitle: "Dùng một ảnh cho mọi vị trí",
+    masterImageHelp: "Tải lên một ảnh chất lượng cao và ứng dụng sẽ đổi kích thước thành banner, ô danh sách và ảnh mạng xã hội.",
+    bannerImageTitle: "Ảnh banner",
+    bannerImageHelp: "Tải lên ảnh kích thước bất kỳ. Ứng dụng sẽ tự đổi thành JPG 2048 x 1366px. Tệp gốc không quá 200 MB. Không có chữ và logo.",
+    listingTileImageTitle: "Ảnh ô danh sách",
+    listingTileImageHelp: "Tải lên ảnh kích thước bất kỳ. Ứng dụng sẽ tự đổi thành JPG 400 x 250px. Tệp gốc không quá 200 MB.",
+    socialImageTitle: "Ảnh mạng xã hội",
+    socialImageHelp: "Tải lên ảnh kích thước bất kỳ. Ứng dụng sẽ tự đổi thành JPG 1080 x 1080px. Tệp gốc không quá 200 MB.",
+    translationPreviewTitle: "Xem trước nội dung đã dịch",
+    translationSourcePrefix: "Nội dung ưu đãi bên trên được xem là",
+    translationSourceSuffix: "dựa trên ngôn ngữ đã chọn ở góc trên bên phải.",
+    previewInLabel: "Xem trước bằng",
+    previewTranslatedButton: "Xem trước bản dịch",
+    savePreviewButton: "Lưu bản xem trước vào gói",
+    translatedPreviewLabel: "Bản dịch xem trước",
+    acknowledgementText: "Tôi hiểu rằng nội dung gửi không đầy đủ hoặc không chính xác có thể làm chậm chương trình khuyến mãi, và tài sản cần gửi trước 6 tuần.",
+  },
+  id: {
+    formTitle: "Kirim penawaran lengkap dalam satu langkah",
+    submitButton: "Buat Paket dan Kirim",
+    emailLabel: "Email",
+    contactNameLabel: "Nama penanggung jawab",
+    hotelRidLabel: "Kode RID hotel",
+    hotelNameLabel: "Nama hotel",
+    offerTypeLabel: "Jenis penawaran",
+    selectOne: "Pilih satu",
+    cityCountryLabel: "Kota - Negara",
+    offerTileTitleLabel: "Judul tile penawaran",
+    offerBannerTitleLabel: "Judul banner penawaran",
+    offerSubtitleLabel: "Subjudul penawaran",
+    metaDescriptionLabel: "Deskripsi meta",
+    offerDescriptionLabel: "Deskripsi penawaran",
+    bookingLinkLabel: "Tautan pemesanan",
+    termsLabel: "Syarat dan ketentuan",
+    rateScreenshotLabel: "Screenshot tarif",
+    rateScreenshotHelp: "Tampilkan tarif yang sudah dimuat di all.com. Gambar maks. 1 MB.",
+    menuPdfLabel: "PDF menu dining / event",
+    menuPdfHelp: "Gabungkan PDF menjadi satu file. Maks. 10 MB.",
+    bookingScreenshotLabel: "Screenshot halaman pemesanan akhir",
+    bookingScreenshotHelp: "Untuk penawaran dining / event dengan URL pemesanan. Gambar maks. 1 MB.",
+    departmentConfirmationText: "Semua departemen hotel terkait dapat mengonfirmasi bahwa pemuatan tarif sudah benar agar anggota dapat memesan.",
+    masterImageTitle: "Gunakan satu gambar untuk semua penempatan",
+    masterImageHelp: "Unggah satu gambar berkualitas tinggi dan aplikasi akan mengubah ukurannya menjadi banner, listing tile, dan sosial.",
+    bannerImageTitle: "Gambar banner",
+    bannerImageHelp: "Unggah gambar ukuran apa pun. Aplikasi akan mengubahnya menjadi JPG 2048 x 1366px. File sumber maks. 200 MB. Tanpa teks dan logo.",
+    listingTileImageTitle: "Gambar listing tile",
+    listingTileImageHelp: "Unggah gambar ukuran apa pun. Aplikasi akan mengubahnya menjadi JPG 400 x 250px. File sumber maks. 200 MB.",
+    socialImageTitle: "Gambar sosial",
+    socialImageHelp: "Unggah gambar ukuran apa pun. Aplikasi akan mengubahnya menjadi JPG 1080 x 1080px. File sumber maks. 200 MB.",
+    translationPreviewTitle: "Pratinjau konten terjemahan",
+    translationSourcePrefix: "Konten penawaran yang diisi di atas dianggap sebagai",
+    translationSourceSuffix: "berdasarkan bahasa yang dipilih di kanan atas.",
+    previewInLabel: "Pratinjau dalam",
+    previewTranslatedButton: "Pratinjau terjemahan",
+    savePreviewButton: "Simpan pratinjau ke paket",
+    translatedPreviewLabel: "Pratinjau terjemahan",
+    acknowledgementText: "Saya memahami bahwa pengiriman yang tidak lengkap atau tidak akurat dapat menunda promosi, dan aset harus dikirim 6 minggu sebelumnya.",
+  },
+  ja: {
+    formTitle: "完全なオファーを一度で送信",
+    submitButton: "パッケージを作成して送信",
+    emailLabel: "メール",
+    contactNameLabel: "担当者名",
+    hotelRidLabel: "ホテルRIDコード",
+    hotelNameLabel: "ホテル名",
+    offerTypeLabel: "オファー種別",
+    selectOne: "選択してください",
+    cityCountryLabel: "都市 - 国",
+    offerTileTitleLabel: "オファータイル見出し",
+    offerBannerTitleLabel: "オファーバナー見出し",
+    offerSubtitleLabel: "オファーサブタイトル",
+    metaDescriptionLabel: "メタ説明",
+    offerDescriptionLabel: "オファー説明",
+    bookingLinkLabel: "予約リンク",
+    termsLabel: "利用規約",
+    rateScreenshotLabel: "料金スクリーンショット",
+    rateScreenshotHelp: "all.comで読み込まれた料金を表示してください。画像は最大1 MBです。",
+    menuPdfLabel: "ダイニング / イベント メニューPDF",
+    menuPdfHelp: "PDFは1つのファイルにまとめてください。最大10 MBです。",
+    bookingScreenshotLabel: "最終予約ページのスクリーンショット",
+    bookingScreenshotHelp: "予約URLがあるダイニング / イベントオファー用です。画像は最大1 MBです。",
+    departmentConfirmationText: "関連するホテル部門は、会員が予約できるよう料金ロードが正しく設定されていることを確認できます。",
+    masterImageTitle: "1枚の画像をすべての配置に使用",
+    masterImageHelp: "高品質な画像を1枚アップロードすると、バナー、一覧タイル、ソーシャル用にリサイズされます。",
+    bannerImageTitle: "バナー画像",
+    bannerImageHelp: "任意サイズの画像をアップロードできます。アプリが2048 x 1366px JPGに自動リサイズします。元ファイルは200 MB以下。文字とロゴは不可。",
+    listingTileImageTitle: "一覧タイル画像",
+    listingTileImageHelp: "任意サイズの画像をアップロードできます。アプリが400 x 250px JPGに自動リサイズします。元ファイルは200 MB以下。",
+    socialImageTitle: "ソーシャル画像",
+    socialImageHelp: "任意サイズの画像をアップロードできます。アプリが1080 x 1080px JPGに自動リサイズします。元ファイルは200 MB以下。",
+    translationPreviewTitle: "翻訳コンテンツをプレビュー",
+    translationSourcePrefix: "上記に入力されたオファー内容は",
+    translationSourceSuffix: "右上で選択された言語として扱われます。",
+    previewInLabel: "プレビュー言語",
+    previewTranslatedButton: "翻訳をプレビュー",
+    savePreviewButton: "プレビューをパッケージに保存",
+    translatedPreviewLabel: "翻訳プレビュー",
+    acknowledgementText: "不完全または不正確な提出はプロモーションの遅延につながる可能性があり、素材は6週間前までに提出する必要があることを理解しています。",
+  },
+};
+
+Object.entries(formCopyTranslations).forEach(([language, copy]) => {
+  Object.assign(uiTranslations[language], copy);
+});
+
 function applyLanguage(language) {
   const copy = uiTranslations[language] || uiTranslations.en;
+  const labels = localizedLanguageLabels[language] || localizedLanguageLabels.en;
   document.documentElement.lang = language;
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     const key = element.dataset.i18n;
     if (copy[key]) element.textContent = copy[key];
   });
-  translationSourceDisplay.textContent = contentLanguageLabels[language] || contentLanguageLabels.en;
+  translationSourceDisplay.textContent = labels[language] || contentLanguageLabels[language] || contentLanguageLabels.en;
   updateTranslationTargetOptions(language);
   localStorage.setItem("explorer-offer-language", language);
 }
@@ -255,8 +476,10 @@ const offerTypeGuidance = {
 
 const typeFieldGroups = {
   red_hot_rooms: [
-    { name: "booking_period", label: "Booking period", placeholder: "Example: 1-30 November 2026", required: true },
-    { name: "stay_period", label: "Stay period", placeholder: "Example: Until 30 November 2026", required: true },
+    { name: "booking_start_date", label: "Booking start date", type: "date", required: true },
+    { name: "booking_end_date", label: "Booking end date", type: "date", required: true },
+    { name: "stay_start_date", label: "Stay start date", type: "date", required: true },
+    { name: "stay_end_date", label: "Stay end date", type: "date", required: true },
     { name: "room_type", label: "Room type", placeholder: "Example: King, Queen" },
     { name: "member_benefits", label: "Member benefits", placeholder: "Example: Accor Plus members exclusive Red Hot Rooms rate", required: true },
     { name: "original_price", label: "Original price", placeholder: "Example: THB 2,738++", required: true },
@@ -264,51 +487,204 @@ const typeFieldGroups = {
   ],
   more_escapes: [
     { name: "package_details", label: "Package details", type: "textarea", placeholder: "List inclusions for the package, minimum stay, meal/spa/transfer benefits, and exclusions.", required: true },
-    { name: "booking_period", label: "Booking period", placeholder: "Example: Now until 30 October 2026", required: true },
-    { name: "stay_period", label: "Stay period", placeholder: "Example: Now until 30 November 2026", required: true },
+    { name: "booking_start_date", label: "Booking start date", type: "date", required: true },
+    { name: "booking_end_date", label: "Booking end date", type: "date", required: true },
+    { name: "stay_start_date", label: "Stay start date", type: "date", required: true },
+    { name: "stay_end_date", label: "Stay end date", type: "date", required: true },
     { name: "member_benefits", label: "Member benefits", placeholder: "Example: Accor Plus member exclusive package", required: true },
     { name: "member_package_price", label: "Member package price", placeholder: "Example: 2 nights from AUD 215", required: true },
     { name: "public_package_value", label: "Public package value", placeholder: "Example: 2 nights from AUD 390" },
   ],
   hotel_stay: [
-    { name: "booking_period", label: "Booking period", placeholder: "Example: 15 November 2026 - 23 April 2027", required: true },
-    { name: "stay_period", label: "Stay period", placeholder: "Example: 15 November 2026 - 23 April 2027", required: true },
+    { name: "booking_start_date", label: "Booking start date", type: "date", required: true },
+    { name: "booking_end_date", label: "Booking end date", type: "date", required: true },
+    { name: "stay_start_date", label: "Stay start date", type: "date", required: true },
+    { name: "stay_end_date", label: "Stay end date", type: "date", required: true },
     { name: "member_benefits", label: "Member benefits", placeholder: "Example: 10% off family stay package", required: true },
     { name: "member_price_per_night", label: "Member price per night", placeholder: "Example: From SGD 337++ per night", required: true },
     { name: "public_price_per_night", label: "Public price per night", placeholder: "Example: From SGD 375++ per night" },
   ],
   dining: [
     { name: "price", label: "Price", placeholder: "Example: SGD 68++ per person" },
-    { name: "offer_validity", label: "Offer validity", placeholder: "Example: Until 30 November 2026", required: true },
-    { name: "time", label: "Time", placeholder: "Example: Dinner from 7pm - 10pm", required: true },
+    { name: "offer_validity_start_date", label: "Offer validity start date", type: "date", required: true },
+    { name: "offer_validity_end_date", label: "Offer validity end date", type: "date", required: true },
     { name: "venue", label: "Venue", placeholder: "Example: The Cliff at Sofitel Singapore Sentosa Resort and Spa", required: true },
     { name: "member_benefits", label: "Member benefits", type: "textarea", placeholder: "Describe the member dining benefit, discount, inclusions, or early bird offer.", required: true },
     { name: "booking_email", label: "Booking via email", placeholder: "Example: recipient and subject, or NIL" },
   ],
   events: [
     { name: "accommodation_details", label: "Accommodation details", type: "textarea", placeholder: "Optional stay package or room-night details connected to the event." },
-    { name: "rsvp_by", label: "RSVP by", placeholder: "Example: 21 November 2026", required: true },
     { name: "public_price", label: "Public price", placeholder: "Example: N/A or AUD 169 per person" },
-    { name: "event_dates", label: "Event date(s)", placeholder: "Example: 24 November 2026", required: true },
-    { name: "time", label: "Time", placeholder: "Example: 7pm - 10:30pm", required: true },
+    { name: "event_date", label: "Event date", type: "date", required: true },
+    { name: "event_time", label: "Event time", type: "time", required: true },
     { name: "venue", label: "Venue", placeholder: "Example: Room81 at Sofitel Gold Coast Broadbeach", required: true },
     { name: "member_price", label: "Member price", placeholder: "Example: AUD 139 per person", required: true },
     { name: "booking_email", label: "Booking via email / RSVP form", placeholder: "Example: recipient and subject, RSVP form URL, or NIL" },
   ],
   partners: [
     { name: "partner_name", label: "Partner name", placeholder: "Example: Europcar", required: true },
-    { name: "offer_validity", label: "Offer validity", placeholder: "Example: Through 31 December 2026", required: true },
+    { name: "offer_validity_start_date", label: "Offer validity start date", type: "date", required: true },
+    { name: "offer_validity_end_date", label: "Offer validity end date", type: "date", required: true },
     { name: "member_benefits", label: "Member benefits", type: "textarea", placeholder: "Describe the exclusive partner benefit for Accor Plus members.", required: true },
     { name: "booking_email", label: "Booking via email / RSVP form", placeholder: "Example: recipient and subject, form URL, or NIL" },
   ],
 };
 
-const dateFields = [
-  "public_start_date",
-  "public_end_date",
-  "actual_start_date",
-  "actual_end_date",
-].map((name) => form.elements[name]);
+const dynamicFieldLabels = {
+  th: {
+    booking_start_date: "วันที่เริ่มจอง",
+    booking_end_date: "วันที่สิ้นสุดการจอง",
+    stay_start_date: "วันที่เริ่มเข้าพัก",
+    stay_end_date: "วันที่สิ้นสุดการเข้าพัก",
+    room_type: "ประเภทห้อง",
+    member_benefits: "สิทธิประโยชน์สมาชิก",
+    original_price: "ราคาปกติ",
+    discounted_price: "ราคาส่วนลด",
+    package_details: "รายละเอียดแพ็กเกจ",
+    member_package_price: "ราคาแพ็กเกจสำหรับสมาชิก",
+    public_package_value: "มูลค่าแพ็กเกจทั่วไป",
+    member_price_per_night: "ราคาสมาชิกต่อคืน",
+    public_price_per_night: "ราคาทั่วไปต่อคืน",
+    price: "ราคา",
+    offer_validity_start_date: "วันที่เริ่มข้อเสนอ",
+    offer_validity_end_date: "วันที่สิ้นสุดข้อเสนอ",
+    venue: "สถานที่",
+    booking_email: "จองผ่านอีเมล",
+    accommodation_details: "รายละเอียดที่พัก",
+    public_price: "ราคาทั่วไป",
+    event_date: "วันที่จัดอีเวนต์",
+    event_time: "เวลาอีเวนต์",
+    member_price: "ราคาสมาชิก",
+    partner_name: "ชื่อพาร์ทเนอร์",
+  },
+  vi: {
+    booking_start_date: "Ngày bắt đầu đặt",
+    booking_end_date: "Ngày kết thúc đặt",
+    stay_start_date: "Ngày bắt đầu lưu trú",
+    stay_end_date: "Ngày kết thúc lưu trú",
+    room_type: "Loại phòng",
+    member_benefits: "Quyền lợi thành viên",
+    original_price: "Giá gốc",
+    discounted_price: "Giá ưu đãi",
+    package_details: "Chi tiết gói",
+    member_package_price: "Giá gói cho thành viên",
+    public_package_value: "Giá trị gói công khai",
+    member_price_per_night: "Giá thành viên mỗi đêm",
+    public_price_per_night: "Giá công khai mỗi đêm",
+    price: "Giá",
+    offer_validity_start_date: "Ngày bắt đầu hiệu lực",
+    offer_validity_end_date: "Ngày kết thúc hiệu lực",
+    venue: "Địa điểm",
+    booking_email: "Đặt qua email",
+    accommodation_details: "Chi tiết lưu trú",
+    public_price: "Giá công khai",
+    event_date: "Ngày sự kiện",
+    event_time: "Giờ sự kiện",
+    member_price: "Giá thành viên",
+    partner_name: "Tên đối tác",
+  },
+  id: {
+    booking_start_date: "Tanggal mulai pemesanan",
+    booking_end_date: "Tanggal akhir pemesanan",
+    stay_start_date: "Tanggal mulai menginap",
+    stay_end_date: "Tanggal akhir menginap",
+    room_type: "Tipe kamar",
+    member_benefits: "Manfaat anggota",
+    original_price: "Harga asli",
+    discounted_price: "Harga diskon",
+    package_details: "Detail paket",
+    member_package_price: "Harga paket anggota",
+    public_package_value: "Nilai paket publik",
+    member_price_per_night: "Harga anggota per malam",
+    public_price_per_night: "Harga publik per malam",
+    price: "Harga",
+    offer_validity_start_date: "Tanggal mulai penawaran",
+    offer_validity_end_date: "Tanggal akhir penawaran",
+    venue: "Tempat",
+    booking_email: "Pemesanan via email",
+    accommodation_details: "Detail akomodasi",
+    public_price: "Harga publik",
+    event_date: "Tanggal event",
+    event_time: "Waktu event",
+    member_price: "Harga anggota",
+    partner_name: "Nama partner",
+  },
+  ja: {
+    booking_start_date: "予約開始日",
+    booking_end_date: "予約終了日",
+    stay_start_date: "宿泊開始日",
+    stay_end_date: "宿泊終了日",
+    room_type: "客室タイプ",
+    member_benefits: "会員特典",
+    original_price: "通常価格",
+    discounted_price: "割引価格",
+    package_details: "パッケージ詳細",
+    member_package_price: "会員パッケージ価格",
+    public_package_value: "一般パッケージ価値",
+    member_price_per_night: "会員料金 / 泊",
+    public_price_per_night: "一般料金 / 泊",
+    price: "価格",
+    offer_validity_start_date: "オファー開始日",
+    offer_validity_end_date: "オファー終了日",
+    venue: "会場",
+    booking_email: "メール予約",
+    accommodation_details: "宿泊詳細",
+    public_price: "一般価格",
+    event_date: "イベント日",
+    event_time: "イベント時間",
+    member_price: "会員価格",
+    partner_name: "パートナー名",
+  },
+};
+
+const helperNoteTranslations = {
+  en: "Select an offer type to see the fields required for that manual process.",
+  th: "เลือกประเภทข้อเสนอเพื่อดูช่องข้อมูลที่จำเป็นสำหรับขั้นตอนนั้น",
+  vi: "Chọn loại ưu đãi để xem các trường cần thiết cho quy trình đó.",
+  id: "Pilih jenis penawaran untuk melihat kolom yang diperlukan untuk proses tersebut.",
+  ja: "オファー種別を選択すると、その手順に必要な項目が表示されます。",
+};
+
+const offerTypeGuidanceTranslations = {
+  th: {
+    red_hot_rooms: "ราคาห้องพักสำหรับสมาชิกแบบจำกัดเวลา",
+    more_escapes: "แพ็กเกจอย่างน้อยสองคืนพร้อมสิทธิประโยชน์ เช่น อาหาร สปา รถรับส่ง ที่จอดรถ หรือประสบการณ์จากบุคคลที่สาม",
+    hotel_stay: "ข้อเสนอพิเศษสำหรับสมาชิก โดยทั่วไปลดอย่างน้อย 10% จากราคาสาธารณะ",
+    dining: "ข้อเสนอร้านอาหารหรือบาร์สำหรับสมาชิก โดยทั่วไปสามารถจองผ่าน Table Plus / ResDiary หรืออีเมล",
+    events: "อีเวนต์สำหรับสมาชิกหรืออีเวนต์ของโรงแรม พร้อมวันที่ RSVP สถานที่ ราคา และรายละเอียดที่พักถ้ามี",
+    partners: "ข้อเสนอพาร์ทเนอร์สำหรับสมาชิก Accor Plus โดยทั่วไปไม่ผูกกับที่ตั้งโรงแรม",
+  },
+  vi: {
+    red_hot_rooms: "Giá phòng giới hạn thời gian dành cho thành viên.",
+    more_escapes: "Gói từ hai đêm trở lên với các quyền lợi như ẩm thực, wellness, đưa đón, đỗ xe hoặc trải nghiệm bên thứ ba.",
+    hotel_stay: "Ưu đãi khách sạn dành riêng cho thành viên, thường giảm ít nhất 10% so với giá công khai.",
+    dining: "Ưu đãi nhà hàng hoặc bar dành cho thành viên, thường đặt qua Table Plus / ResDiary hoặc email.",
+    events: "Sự kiện thành viên hoặc sự kiện khách sạn với ngày sự kiện, hạn RSVP, địa điểm, giá và chi tiết lưu trú nếu có.",
+    partners: "Ưu đãi đối tác dành cho thành viên Accor Plus, thường không gắn với địa điểm khách sạn.",
+  },
+  id: {
+    red_hot_rooms: "Tarif kamar khusus anggota untuk periode terbatas.",
+    more_escapes: "Paket dua malam atau lebih dengan manfaat seperti dining, wellness, transfer, parkir, atau pengalaman pihak ketiga.",
+    hotel_stay: "Penawaran hotel eksklusif anggota, umumnya minimal 10% lebih rendah dari harga publik.",
+    dining: "Penawaran restoran atau bar untuk anggota, biasanya dapat dipesan melalui Table Plus / ResDiary atau email.",
+    events: "Event anggota atau event hotel dengan tanggal event, batas RSVP, tempat, harga, dan detail akomodasi bila ada.",
+    partners: "Penawaran partner untuk anggota Accor Plus, biasanya tidak terikat dengan lokasi hotel.",
+  },
+  ja: {
+    red_hot_rooms: "期間限定の会員向け客室料金です。",
+    more_escapes: "ダイニング、ウェルネス、送迎、駐車場、外部体験などを含む2泊以上のパッケージです。",
+    hotel_stay: "会員限定のホテルオファーで、通常は一般料金から少なくとも10%割引です。",
+    dining: "会員向けレストランまたはバーのオファーで、通常はTable Plus / ResDiaryまたはメールで予約できます。",
+    events: "イベント日、RSVP期限、会場、価格、必要に応じた宿泊詳細を含む会員イベントまたはホテルイベントです。",
+    partners: "Accor Plus会員向けのパートナーオファーで、通常はホテル所在地に紐づきません。",
+  },
+};
+
+const dateRangePairs = [
+  { start: "booking_start_date", end: "booking_end_date", label: "Booking period" },
+  { start: "stay_start_date", end: "stay_end_date", label: "Stay period" },
+  { start: "offer_validity_start_date", end: "offer_validity_end_date", label: "Offer validity" },
+];
 
 function setMessage(message, type = "") {
   formMessage.textContent = message;
@@ -316,23 +692,14 @@ function setMessage(message, type = "") {
 }
 
 function validateDates() {
-  const publicStart = form.elements.public_start_date.value;
-  const publicEnd = form.elements.public_end_date.value;
-  const actualStart = form.elements.actual_start_date.value;
-  const actualEnd = form.elements.actual_end_date.value;
-
   dateMessage.textContent = "";
-  if (publicStart && publicEnd && publicStart > publicEnd) {
-    dateMessage.textContent = "The published start date must be before the published end date.";
-    return false;
-  }
-  if (actualStart && actualEnd && actualStart > actualEnd) {
-    dateMessage.textContent = "The actual start date must be before the actual end date.";
-    return false;
-  }
-  if (publicStart && publicEnd && actualStart && actualEnd && (publicStart !== actualStart || publicEnd !== actualEnd)) {
-    dateMessage.textContent = "Published dates must match the actual offer dates before submission.";
-    return false;
+  for (const pair of dateRangePairs) {
+    const start = dynamicFieldValue(pair.start);
+    const end = dynamicFieldValue(pair.end);
+    if (start && end && start > end) {
+      dateMessage.textContent = `${pair.label} start date must be before the end date.`;
+      return false;
+    }
   }
   return true;
 }
@@ -352,16 +719,18 @@ function isPartnerOffer() {
 function renderTypeSpecificFields() {
   const selected = offerType.value;
   const fields = typeFieldGroups[selected] || [];
+  const language = languageSelect.value || "en";
+  const existingValues = collectDynamicFields();
   typeSpecificFields.innerHTML = "";
 
   if (!selected) {
-    typeSpecificFields.innerHTML = '<p class="helper-note">Select an offer type to see the fields required for that manual process.</p>';
+    typeSpecificFields.innerHTML = `<p class="helper-note">${helperNoteTranslations[language] || helperNoteTranslations.en}</p>`;
     return;
   }
 
   const guidance = document.createElement("div");
   guidance.className = "process-note";
-  guidance.innerHTML = `<strong>${offerTypeLabels[selected]}</strong><span>${offerTypeGuidance[selected]}</span>`;
+  guidance.innerHTML = `<strong>${offerTypeLabels[selected]}</strong><span>${offerTypeGuidanceTranslations[language]?.[selected] || offerTypeGuidance[selected]}</span>`;
   typeSpecificFields.append(guidance);
 
   const grid = document.createElement("div");
@@ -369,13 +738,16 @@ function renderTypeSpecificFields() {
 
   fields.forEach((field) => {
     const label = document.createElement("label");
-    label.textContent = field.label;
+    label.textContent = dynamicFieldLabels[language]?.[field.name] || field.label;
     const input = document.createElement(field.type === "textarea" ? "textarea" : "input");
     input.name = field.name;
     input.dataset.dynamicField = "true";
     input.required = Boolean(field.required);
     input.placeholder = field.placeholder || "";
+    input.value = existingValues[field.name] || "";
     if (field.type === "textarea") input.rows = 4;
+    if (["date", "time"].includes(field.type)) input.type = field.type;
+    if (field.type === "date") input.addEventListener("input", validateDates);
     label.append(input);
     grid.append(label);
   });
@@ -581,7 +953,7 @@ translateContentButton.addEventListener("click", async () => {
     setTranslationStatus(`${error.message} You can still paste a translation into the preview and save it to the package.`);
   } finally {
     translateContentButton.disabled = false;
-    translateContentButton.textContent = "Preview translated content";
+    translateContentButton.textContent = (uiTranslations[languageSelect.value] || uiTranslations.en).previewTranslatedButton;
   }
 });
 
@@ -607,9 +979,11 @@ saveTranslationPreviewButton.addEventListener("click", () => {
   setTranslationStatus(`${contentLanguageLabels[targetLanguage]} preview saved into the package.`);
 });
 
-dateFields.forEach((field) => field.addEventListener("input", validateDates));
 offerType.addEventListener("change", renderTypeSpecificFields);
-languageSelect.addEventListener("change", () => applyLanguage(languageSelect.value));
+languageSelect.addEventListener("change", () => {
+  applyLanguage(languageSelect.value);
+  renderTypeSpecificFields();
+});
 
 sectionNavigationButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -768,10 +1142,6 @@ function buildSubmissionRecord() {
     auto_translations: generatedContentTranslations,
     meta_description: fieldValue("meta_description"),
     offer_details: collectDynamicFields(),
-    public_start_date: fieldValue("public_start_date"),
-    public_end_date: fieldValue("public_end_date"),
-    actual_start_date: fieldValue("actual_start_date"),
-    actual_end_date: fieldValue("actual_end_date"),
     booking_link: fieldValue("booking_link"),
     terms: fieldValue("terms"),
     department_confirmation: fieldValue("department_confirmation"),
@@ -810,10 +1180,6 @@ function buildSummaryText(record) {
     `Subtitle: ${record.offer_subtitle}`,
     `Contact: ${record.person_in_charge_name} <${record.email}>`,
     `Booking link: ${record.booking_link}`,
-    "",
-    "Dates",
-    `Published: ${record.public_start_date} to ${record.public_end_date}`,
-    `Actual: ${record.actual_start_date} to ${record.actual_end_date}`,
     "",
     "Core content",
     record.offer_description,
@@ -1031,7 +1397,7 @@ form.addEventListener("submit", async (event) => {
     setMessage(error.message || "The package could not be created.", "error");
   } finally {
     submitButton.disabled = false;
-    submitButton.textContent = "Create Package and Submit";
+    submitButton.textContent = (uiTranslations[languageSelect.value] || uiTranslations.en).submitButton;
   }
 });
 

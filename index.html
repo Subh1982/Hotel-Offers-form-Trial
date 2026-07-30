@@ -70,21 +70,21 @@
           <section id="hotelDetailsSection" class="form-section">
             <h3 data-i18n="hotelDetails">Hotel details</h3>
             <div class="grid two">
-              <label>Email
+              <label><span data-i18n="emailLabel">Email</span>
                 <input name="email" type="email" required autocomplete="email" placeholder="person@hotel.com">
               </label>
-              <label>Person in-charge name
+              <label><span data-i18n="contactNameLabel">Person in-charge name</span>
                 <input name="person_in_charge_name" required autocomplete="name" placeholder="Example: Yeni Meytadewi">
               </label>
-              <label>Hotel RID code
+              <label><span data-i18n="hotelRidLabel">Hotel RID code</span>
                 <input name="hotel_rid_code" placeholder="Example: B590">
               </label>
-              <label>Hotel name
+              <label><span data-i18n="hotelNameLabel">Hotel name</span>
                 <input name="hotel_name" autocomplete="organization" placeholder="Example: Swissotel Jakarta PIK Avenue">
               </label>
-              <label>Offer type
+              <label><span data-i18n="offerTypeLabel">Offer type</span>
                 <select id="offerType" name="offer_type" required>
-                  <option value="">Select one</option>
+                  <option value="" data-i18n="selectOne">Select one</option>
                   <option value="red_hot_rooms">Red Hot Rooms</option>
                   <option value="more_escapes">More Escapes</option>
                   <option value="hotel_stay">Hotel stay</option>
@@ -93,7 +93,7 @@
                   <option value="partners">Partners</option>
                 </select>
               </label>
-              <label>City - Country
+              <label><span data-i18n="cityCountryLabel">City - Country</span>
                 <input name="city_country" placeholder="Example: Phuket - Thailand">
               </label>
             </div>
@@ -102,56 +102,32 @@
           <section id="offerContentSection" class="form-section">
             <h3 data-i18n="coreContent">Core offer content</h3>
             <div class="grid two">
-              <label>Offer tile title
+              <label><span data-i18n="offerTileTitleLabel">Offer tile title</span>
                 <input name="offer_tile_title" required placeholder="Shown on listing tiles">
               </label>
-              <label>Offer banner title
+              <label><span data-i18n="offerBannerTitleLabel">Offer banner title</span>
                 <input name="offer_banner_title" required placeholder="Shown on the offer page banner">
               </label>
-              <label>Offer subtitle
+              <label><span data-i18n="offerSubtitleLabel">Offer subtitle</span>
                 <input name="offer_subtitle" required placeholder="Short member-facing benefit line">
               </label>
-              <label>Meta description
+              <label><span data-i18n="metaDescriptionLabel">Meta description</span>
                 <input name="meta_description" maxlength="160" placeholder="Up to 160 characters for search/social preview">
               </label>
             </div>
-            <label>Offer description
+            <label><span data-i18n="offerDescriptionLabel">Offer description</span>
               <textarea name="offer_description" required rows="5" placeholder="Describe the offer, experience, inclusions, and member value."></textarea>
             </label>
-            <div id="typeSpecificFields" class="dynamic-fields" aria-live="polite"></div>
           </section>
 
           <section id="datesBookingSection" class="form-section">
             <h3 data-i18n="datesBooking">Dates and booking</h3>
-            <div class="date-compare">
-              <div>
-                <p>Published offer dates</p>
-                <div class="grid two compact">
-                  <label>Start date
-                    <input name="public_start_date" type="date" required>
-                  </label>
-                  <label>End date
-                    <input name="public_end_date" type="date" required>
-                  </label>
-                </div>
-              </div>
-              <div>
-                <p>Actual offer dates</p>
-                <div class="grid two compact">
-                  <label>Start date
-                    <input name="actual_start_date" type="date" required>
-                  </label>
-                  <label>End date
-                    <input name="actual_end_date" type="date" required>
-                  </label>
-                </div>
-              </div>
-            </div>
+            <div id="typeSpecificFields" class="dynamic-fields" aria-live="polite"></div>
             <p id="dateMessage" class="inline-alert" aria-live="polite"></p>
-            <label>Booking link
+            <label><span data-i18n="bookingLinkLabel">Booking link</span>
               <input name="booking_link" type="url" required placeholder="https://">
             </label>
-            <label>Terms and conditions
+            <label><span data-i18n="termsLabel">Terms and conditions</span>
               <textarea name="terms" rows="4" placeholder="Minimum stays, blackout dates, redemption instructions, exclusions..."></textarea>
             </label>
           </section>
@@ -159,22 +135,22 @@
           <section id="proofFormsSection" class="form-section">
             <h3 data-i18n="proofForms">Proof and required forms</h3>
             <div class="upload-grid">
-              <label class="file-card conditional-stay">Rate screenshot
-                <span>Please show the loaded rate available at all.com. Max 1 MB image.</span>
+              <label class="file-card conditional-stay"><span data-i18n="rateScreenshotLabel">Rate screenshot</span>
+                <span data-i18n="rateScreenshotHelp">Please show the loaded rate available at all.com. Max 1 MB image.</span>
                 <input name="rate_screenshot" type="file" accept="image/png,image/jpeg,image/webp">
               </label>
-              <label class="file-card conditional-dining">Dining / event menu PDF
-                <span>Please merge PDFs into one file. Max 10 MB.</span>
+              <label class="file-card conditional-dining"><span data-i18n="menuPdfLabel">Dining / event menu PDF</span>
+                <span data-i18n="menuPdfHelp">Please merge PDFs into one file. Max 10 MB.</span>
                 <input name="menu_pdf" type="file" accept="application/pdf">
               </label>
-              <label class="file-card conditional-dining">Final booking page screenshot
-                <span>For dining / event offers with a booking URL. Max 1 MB image.</span>
+              <label class="file-card conditional-dining"><span data-i18n="bookingScreenshotLabel">Final booking page screenshot</span>
+                <span data-i18n="bookingScreenshotHelp">For dining / event offers with a booking URL. Max 1 MB image.</span>
                 <input name="booking_screenshot" type="file" accept="image/png,image/jpeg,image/webp">
               </label>
             </div>
             <label class="checkline">
               <input name="department_confirmation" type="checkbox" value="Yes" required>
-              All relevant hotel departments can confirm the rate loading is set up correctly for members to book.
+              <span data-i18n="departmentConfirmationText">All relevant hotel departments can confirm the rate loading is set up correctly for members to book.</span>
             </label>
           </section>
 
@@ -183,8 +159,8 @@
             <div class="upload-zone">
               <input id="masterImageInput" name="master_image" type="file" accept="image/png,image/jpeg,image/webp">
               <div>
-                <strong>Use one image for all placements</strong>
-                <p>Upload one high-quality image and the app will resize it into banner, listing tile, and social versions.</p>
+                <strong data-i18n="masterImageTitle">Use one image for all placements</strong>
+                <p data-i18n="masterImageHelp">Upload one high-quality image and the app will resize it into banner, listing tile, and social versions.</p>
               </div>
               <div class="image-stack">
                 <img id="masterBannerPreview" alt="">
@@ -196,8 +172,8 @@
             <div class="upload-zone secondary-upload">
               <input id="bannerInput" name="banner_image" type="file" accept="image/png,image/jpeg,image/webp">
               <div>
-                <strong>Banner image</strong>
-                <p>Upload any image size. The app will auto-resize it to 2048 x 1366px JPG. Source file must not exceed 200 MB. No text and no logo.</p>
+                <strong data-i18n="bannerImageTitle">Banner image</strong>
+                <p data-i18n="bannerImageHelp">Upload any image size. The app will auto-resize it to 2048 x 1366px JPG. Source file must not exceed 200 MB. No text and no logo.</p>
               </div>
               <img id="bannerPreview" alt="">
             </div>
@@ -205,8 +181,8 @@
             <div class="upload-zone secondary-upload">
               <input id="listingTileInput" name="listing_tile_image" type="file" accept="image/png,image/jpeg,image/webp">
               <div>
-                <strong>Listing tile image</strong>
-                <p>Upload any image size. The app will auto-resize it to 400 x 250px JPG. Source file must not exceed 200 MB.</p>
+                <strong data-i18n="listingTileImageTitle">Listing tile image</strong>
+                <p data-i18n="listingTileImageHelp">Upload any image size. The app will auto-resize it to 400 x 250px JPG. Source file must not exceed 200 MB.</p>
               </div>
               <img id="listingTilePreview" alt="">
             </div>
@@ -214,8 +190,8 @@
             <div class="upload-zone secondary-upload">
               <input id="socialInput" name="social_image" type="file" accept="image/png,image/jpeg,image/webp">
               <div>
-                <strong>Social image</strong>
-                <p>Upload any image size. The app will auto-resize it to 1080 x 1080px JPG. Source file must not exceed 200 MB.</p>
+                <strong data-i18n="socialImageTitle">Social image</strong>
+                <p data-i18n="socialImageHelp">Upload any image size. The app will auto-resize it to 1080 x 1080px JPG. Source file must not exceed 200 MB.</p>
               </div>
               <img id="socialPreview" alt="">
             </div>
@@ -223,10 +199,10 @@
           </section>
 
           <section id="translationsSection" class="form-section translation-review-section">
-            <h3>Preview translated content</h3>
-            <p class="muted">The offer content entered above is treated as <strong id="translationSourceDisplay">English</strong>, based on the language selected in the top-right corner.</p>
+            <h3 data-i18n="translationPreviewTitle">Preview translated content</h3>
+            <p class="muted"><span data-i18n="translationSourcePrefix">The offer content entered above is treated as</span> <strong id="translationSourceDisplay">English</strong>, <span data-i18n="translationSourceSuffix">based on the language selected in the top-right corner.</span></p>
             <div class="grid two">
-              <label>Preview in
+              <label><span data-i18n="previewInLabel">Preview in</span>
                 <select id="translationTargetLanguage">
                   <option value="th">Thai</option>
                   <option value="vi">Vietnamese</option>
@@ -237,10 +213,10 @@
               </label>
             </div>
             <div class="actions compact-actions">
-              <button type="button" id="translateContentButton">Preview translated content</button>
-              <button type="button" id="saveTranslationPreviewButton" class="secondary">Save preview to package</button>
+              <button type="button" id="translateContentButton" data-i18n="previewTranslatedButton">Preview translated content</button>
+              <button type="button" id="saveTranslationPreviewButton" class="secondary" data-i18n="savePreviewButton">Save preview to package</button>
             </div>
-            <label>Translated preview
+            <label><span data-i18n="translatedPreviewLabel">Translated preview</span>
               <textarea id="translationPreview" rows="10" placeholder="The translated preview will appear here. You can edit it before saving."></textarea>
             </label>
             <p id="translationStatus" class="muted" aria-live="polite"></p>
@@ -250,7 +226,7 @@
             <h3 data-i18n="finalAcknowledgement">Final acknowledgement</h3>
             <label class="checkline">
               <input name="acknowledgement" type="checkbox" value="I understand" required>
-              I understand incomplete or inaccurate submissions may delay promotion, and assets are due 6 weeks in advance.
+              <span data-i18n="acknowledgementText">I understand incomplete or inaccurate submissions may delay promotion, and assets are due 6 weeks in advance.</span>
             </label>
           </section>
 
