@@ -43,6 +43,23 @@ const contentLanguageLabels = {
   ja: "Japanese",
 };
 
+function updateTranslationTargetOptions(sourceLanguage) {
+  const currentTarget = translationTargetLanguage.value;
+  translationTargetLanguage.innerHTML = "";
+
+  Object.entries(contentLanguageLabels).forEach(([code, label]) => {
+    if (code === sourceLanguage) return;
+    const option = document.createElement("option");
+    option.value = code;
+    option.textContent = label;
+    translationTargetLanguage.append(option);
+  });
+
+  if (currentTarget && currentTarget !== sourceLanguage) {
+    translationTargetLanguage.value = currentTarget;
+  }
+}
+
 const uiTranslations = {
   en: {
     marketLabel: "Pacific marketing platform",
@@ -61,7 +78,7 @@ const uiTranslations = {
     modeTitle: "No-backend mode",
     modeText: "Submissions are packaged in the browser as a ZIP file. Nothing is stored on this page.",
     formEyebrow: "Stay and dining offers",
-    formTitle: "Send Explorer a complete offer in one pass",
+    formTitle: "Submit a complete offer in one pass",
     statusPill: "Static package",
     hotelDetails: "Hotel details",
     coreContent: "Core offer content",
@@ -70,7 +87,7 @@ const uiTranslations = {
     imagesTitle: "Images",
     finalAcknowledgement: "Final acknowledgement",
     clearButton: "Clear",
-    submitButton: "Review link and create package",
+    submitButton: "Create Package and Submit",
     dialogTitle: "Double-check the booking link",
     dialogText: "Hotels will send guests to this exact URL. Please confirm it opens the correct booking page for this offer.",
     goBackButton: "Go back",
@@ -93,7 +110,7 @@ const uiTranslations = {
     modeTitle: "โหมดไม่มีแบ็กเอนด์",
     modeText: "ข้อมูลจะถูกจัดเป็นไฟล์ ZIP ในเบราว์เซอร์ และไม่มีการจัดเก็บบนหน้านี้",
     formEyebrow: "ข้อเสนอห้องพักและห้องอาหาร",
-    formTitle: "ส่งข้อเสนอที่ครบถ้วนให้ Explorer ในครั้งเดียว",
+    formTitle: "Submit a complete offer in one pass",
     statusPill: "แพ็กเกจแบบสแตติก",
     hotelDetails: "รายละเอียดโรงแรม",
     coreContent: "เนื้อหาหลักของข้อเสนอ",
@@ -102,7 +119,7 @@ const uiTranslations = {
     imagesTitle: "รูปภาพ",
     finalAcknowledgement: "การรับทราบขั้นสุดท้าย",
     clearButton: "ล้างข้อมูล",
-    submitButton: "ตรวจลิงก์และสร้างแพ็กเกจ",
+    submitButton: "Create Package and Submit",
     dialogTitle: "ตรวจสอบลิงก์จองอีกครั้ง",
     dialogText: "แขกจะถูกส่งไปยัง URL นี้ โปรดยืนยันว่าเป็นหน้าจองที่ถูกต้องสำหรับข้อเสนอนี้",
     goBackButton: "กลับไปแก้ไข",
@@ -125,7 +142,7 @@ const uiTranslations = {
     modeTitle: "Chế độ không backend",
     modeText: "Bài gửi được đóng gói thành tệp ZIP trong trình duyệt. Trang này không lưu trữ dữ liệu.",
     formEyebrow: "Ưu đãi lưu trú và ẩm thực",
-    formTitle: "Gửi một ưu đãi hoàn chỉnh cho Explorer trong một lần",
+    formTitle: "Submit a complete offer in one pass",
     statusPill: "Gói tĩnh",
     hotelDetails: "Thông tin khách sạn",
     coreContent: "Nội dung chính của ưu đãi",
@@ -134,7 +151,7 @@ const uiTranslations = {
     imagesTitle: "Hình ảnh",
     finalAcknowledgement: "Xác nhận cuối cùng",
     clearButton: "Xóa",
-    submitButton: "Kiểm tra liên kết và tạo gói",
+    submitButton: "Create Package and Submit",
     dialogTitle: "Kiểm tra lại liên kết đặt chỗ",
     dialogText: "Khách sẽ được chuyển đến chính URL này. Vui lòng xác nhận đây là trang đặt chỗ đúng cho ưu đãi.",
     goBackButton: "Quay lại",
@@ -157,7 +174,7 @@ const uiTranslations = {
     modeTitle: "Mode tanpa backend",
     modeText: "Pengiriman dikemas di browser sebagai file ZIP. Tidak ada data yang disimpan di halaman ini.",
     formEyebrow: "Penawaran menginap dan dining",
-    formTitle: "Kirim penawaran lengkap ke Explorer dalam satu langkah",
+    formTitle: "Submit a complete offer in one pass",
     statusPill: "Paket statis",
     hotelDetails: "Detail hotel",
     coreContent: "Konten utama penawaran",
@@ -166,7 +183,7 @@ const uiTranslations = {
     imagesTitle: "Gambar",
     finalAcknowledgement: "Persetujuan akhir",
     clearButton: "Hapus",
-    submitButton: "Tinjau tautan dan buat paket",
+    submitButton: "Create Package and Submit",
     dialogTitle: "Periksa kembali tautan pemesanan",
     dialogText: "Tamu akan diarahkan ke URL ini. Pastikan tautan membuka halaman pemesanan yang benar untuk penawaran ini.",
     goBackButton: "Kembali",
@@ -189,7 +206,7 @@ const uiTranslations = {
     modeTitle: "バックエンドなしモード",
     modeText: "提出内容はブラウザ内でZIPファイル化されます。このページには保存されません。",
     formEyebrow: "宿泊・ダイニングオファー",
-    formTitle: "Explorerへ完全なオファーを一度で送信",
+    formTitle: "Submit a complete offer in one pass",
     statusPill: "静的パッケージ",
     hotelDetails: "ホテル情報",
     coreContent: "オファー基本内容",
@@ -198,7 +215,7 @@ const uiTranslations = {
     imagesTitle: "画像",
     finalAcknowledgement: "最終確認",
     clearButton: "クリア",
-    submitButton: "リンクを確認してパッケージ作成",
+    submitButton: "Create Package and Submit",
     dialogTitle: "予約リンクを再確認",
     dialogText: "ゲストはこのURLに移動します。このオファーの正しい予約ページであることを確認してください。",
     goBackButton: "戻る",
@@ -214,6 +231,7 @@ function applyLanguage(language) {
     if (copy[key]) element.textContent = copy[key];
   });
   translationSourceDisplay.textContent = contentLanguageLabels[language] || contentLanguageLabels.en;
+  updateTranslationTargetOptions(language);
   localStorage.setItem("explorer-offer-language", language);
 }
 
@@ -1013,7 +1031,7 @@ form.addEventListener("submit", async (event) => {
     setMessage(error.message || "The package could not be created.", "error");
   } finally {
     submitButton.disabled = false;
-    submitButton.textContent = "Review link and create package";
+    submitButton.textContent = "Create Package and Submit";
   }
 });
 
