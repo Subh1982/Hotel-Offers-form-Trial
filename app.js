@@ -12,9 +12,16 @@ const dateMessage = document.querySelector("#dateMessage");
 const bookingDialog = document.querySelector("#bookingDialog");
 const bookingPreview = document.querySelector("#bookingPreview");
 const languageSelect = document.querySelector("#languageSelect");
+const translationSourceLanguage = document.querySelector("#translationSourceLanguage");
+const translationTargetLanguage = document.querySelector("#translationTargetLanguage");
+const translateContentButton = document.querySelector("#translateContentButton");
+const saveTranslationPreviewButton = document.querySelector("#saveTranslationPreviewButton");
+const translationPreview = document.querySelector("#translationPreview");
+const translationStatus = document.querySelector("#translationStatus");
 
 let resizedBannerFile = null;
 let optimizedOriginalFile = null;
+let generatedContentTranslations = {};
 
 const uiTranslations = {
   en: {
@@ -201,6 +208,14 @@ const offerTypeLabels = {
   dining: "Dining",
   events: "Events",
   partners: "Partners",
+};
+
+const contentLanguageLabels = {
+  en: "English",
+  th: "Thai",
+  vi: "Vietnamese",
+  id: "Bahasa Indonesia",
+  ja: "Japanese",
 };
 
 const offerTypeGuidance = {
@@ -448,6 +463,53 @@ originalInput.addEventListener("change", () => handleImageUpload(
   { width: 2400, height: 2400, cover: false, label: "Original image" },
 ));
 
+translateContentButton.addEventListener("click", async () => {
+  const sourceLanguage = translationSourceLanguage.value;
+  const targetLanguage = translationTargetLanguage.value;
+  const content = buildContentForTranslation();
+
+  if (!content) {
+    setTranslationStatus("Enter the offer content first, then generate a translation draft.");
+    return;
+  }
+
+  translateContentButton.disabled = true;
+  translateContentButton.textContent = "Translating...";
+  setTranslationStatus(`Generating ${contentLanguageLabels[targetLanguage]} draft translation...`);
+
+  try {
+    translationPreview.value = await translateText(content, sourceLanguage, targetLanguage);
+    setTranslationStatus(`Draft ${contentLanguageLabels[targetLanguage]} translation generated. Review or edit it, then save the preview to the package.`);
+  } catch (error) {
+    setTranslationStatus(`${error.message} You can still paste a translation into the preview and save it to the package.`);
+  } finally {
+    translateContentButton.disabled = false;
+    translateContentButton.textContent = "Translate entered content";
+  }
+});
+
+saveTranslationPreviewButton.addEventListener("click", () => {
+  const sourceLanguage = translationSourceLanguage.value;
+  const targetLanguage = translationTargetLanguage.value;
+  const text = translationPreview.value.trim();
+
+  if (!text) {
+    setTranslationStatus("Add or generate preview text before saving it to the package.");
+    return;
+  }
+
+  generatedContentTranslations[targetLanguage] = {
+    language_code: targetLanguage,
+    language: contentLanguageLabels[targetLanguage],
+    source_language_code: sourceLanguage,
+    source_language: contentLanguageLabels[sourceLanguage],
+    provider: sourceLanguage === targetLanguage ? "Copied source content" : "MyMemory public API prototype",
+    saved_at: new Date().toISOString(),
+    text,
+  };
+  setTranslationStatus(`${contentLanguageLabels[targetLanguage]} preview saved into the package.`);
+});
+
 dateFields.forEach((field) => field.addEventListener("input", validateDates));
 offerType.addEventListener("change", renderTypeSpecificFields);
 languageSelect.addEventListener("change", () => applyLanguage(languageSelect.value));
@@ -480,6 +542,97 @@ function collectTranslations() {
   };
 }
 
+function readableFieldName(name) {
+  return name
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function buildContentForTranslation() {
+  const dynamicLines = Object.entries(collectDynamicFields())
+    .filter(([, value]) => value)
+    .map(([key, value]) => [readableFieldName(key), value]);
+
+  const contentLines = [
+    ["Offer tile title", fieldValue("offer_tile_title")],
+    ["Offer banner title", fieldValue("offer_banner_title")],
+    ["Offer subtitle", fieldValue("offer_subtitle")],
+    ["Meta description", fieldValue("meta_description")],
+    ["Offer description", fieldValue("offer_description")],
+    ...dynamicLines,
+    ["Terms and conditions", fieldValue("terms")],
+  ].filter(([, value]) => value);
+
+  return contentLines.map(([label, value]) => `${label}:\n${value}`).join("\n\n");
+}
+
+function chunkText(text, maxLength = 450) {
+  const chunks = [];
+  let current = "";
+
+  text.split(/\n{2,}/).forEach((paragraph) => {
+    const trimmed = paragraph.trim();
+    if (!trimmed) return;
+
+    if ([current, trimmed].filter(Boolean).join("\n\n").length <= maxLength) {
+      current = [current, trimmed].filter(Boolean).join("\n\n");
+      return;
+    }
+
+    if (current) chunks.push(current);
+    current = "";
+
+    if (trimmed.length <= maxLength) {
+      current = trimmed;
+      return;
+    }
+
+    trimmed.split(/\s+/).forEach((word) => {
+      if ([current, word].filter(Boolean).join(" ").length > maxLength) {
+        if (current) chunks.push(current);
+        current = word;
+      } else {
+        current = [current, word].filter(Boolean).join(" ");
+      }
+    });
+  });
+
+  if (current) chunks.push(current);
+  return chunks;
+}
+
+async function translateChunk(chunk, sourceLanguage, targetLanguage) {
+  if (sourceLanguage === targetLanguage) return chunk;
+
+  const langpair = `${sourceLanguage}|${targetLanguage}`;
+  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(chunk)}&langpair=${encodeURIComponent(langpair)}&mt=1`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("The translation service is not available right now.");
+
+  const data = await response.json();
+  const translatedText = data?.responseData?.translatedText;
+  if (!translatedText || data.responseStatus >= 400) {
+    throw new Error(data?.responseDetails || "No translation was returned.");
+  }
+  return translatedText;
+}
+
+async function translateText(text, sourceLanguage, targetLanguage) {
+  const chunks = chunkText(text);
+  const translatedChunks = [];
+
+  for (const chunk of chunks) {
+    translatedChunks.push(await translateChunk(chunk, sourceLanguage, targetLanguage));
+  }
+
+  return translatedChunks.join("\n\n");
+}
+
+function setTranslationStatus(message, type = "") {
+  translationStatus.textContent = message;
+  translationStatus.className = `muted ${type}`.trim();
+}
+
 function fileInfo(name, replacementFile = null) {
   const file = replacementFile || form.elements[name]?.files?.[0];
   if (!file) return null;
@@ -504,6 +657,7 @@ function buildSubmissionRecord() {
     offer_subtitle: fieldValue("offer_subtitle"),
     offer_description: fieldValue("offer_description"),
     translations: collectTranslations(),
+    auto_translations: generatedContentTranslations,
     meta_description: fieldValue("meta_description"),
     offer_details: collectDynamicFields(),
     public_start_date: fieldValue("public_start_date"),
@@ -531,6 +685,8 @@ function buildSummaryText(record) {
   const translationLines = Object.entries(record.translations)
     .filter(([, value]) => value)
     .map(([key, value]) => `${key.replace("_", "-")}: ${value}`);
+  const autoTranslationLines = Object.entries(record.auto_translations || {})
+    .map(([, item]) => `${item.language} from ${item.source_language}:\n${item.text}`);
 
   return [
     "Explorer Offer Submission",
@@ -555,6 +711,9 @@ function buildSummaryText(record) {
     "",
     "Translations",
     translationLines.length ? translationLines.join("\n\n") : "No translations provided",
+    "",
+    "Prototype auto-translation previews",
+    autoTranslationLines.length ? autoTranslationLines.join("\n\n") : "No auto-translation preview saved",
     "",
     "Offer type details",
     detailLines.length ? detailLines.join("\n") : "No additional details provided",
@@ -772,6 +931,9 @@ form.addEventListener("reset", () => {
     originalPreview.style.display = "none";
     bannerMessage.textContent = "";
     originalMessage.textContent = "";
+    generatedContentTranslations = {};
+    translationPreview.value = "";
+    setTranslationStatus("");
     dateMessage.textContent = "";
     renderTypeSpecificFields();
     setMessage("");

@@ -137,6 +137,38 @@
                 </label>
               </div>
             </details>
+            <details class="translation-panel auto-translation-panel" open>
+              <summary>Prototype automatic translation</summary>
+              <p>Generate a draft translation from the entered offer content, review or edit it, then save the preview into the final package.</p>
+              <div class="grid two">
+                <label>Source language
+                  <select id="translationSourceLanguage">
+                    <option value="en">English</option>
+                    <option value="th">Thai</option>
+                    <option value="vi">Vietnamese</option>
+                    <option value="id">Bahasa Indonesia</option>
+                    <option value="ja">Japanese</option>
+                  </select>
+                </label>
+                <label>Target language
+                  <select id="translationTargetLanguage">
+                    <option value="th">Thai</option>
+                    <option value="vi">Vietnamese</option>
+                    <option value="id">Bahasa Indonesia</option>
+                    <option value="ja">Japanese</option>
+                    <option value="en">English</option>
+                  </select>
+                </label>
+              </div>
+              <div class="actions compact-actions">
+                <button type="button" id="translateContentButton">Translate entered content</button>
+                <button type="button" id="saveTranslationPreviewButton" class="secondary">Save preview to package</button>
+              </div>
+              <label>Translation preview
+                <textarea id="translationPreview" rows="8" placeholder="Generated translation will appear here. You can edit it before saving."></textarea>
+              </label>
+              <p id="translationStatus" class="muted" aria-live="polite"></p>
+            </details>
             <div id="typeSpecificFields" class="dynamic-fields" aria-live="polite"></div>
           </section>
 

@@ -248,6 +248,27 @@ h3 { font-size: 18px; margin-bottom: 18px; }
   font-size: 14px;
   line-height: 1.5;
 }
+.auto-translation-panel {
+  background: #f4f8f8;
+  border-color: #bfd8d4;
+}
+.auto-translation-panel summary {
+  color: var(--teal);
+}
+.compact-actions {
+  justify-content: flex-start;
+  margin: 16px 0;
+  padding-top: 0;
+}
+.compact-actions button { min-height: 40px; }
+.muted.success {
+  color: var(--ok);
+  font-weight: 800;
+}
+.muted.error {
+  color: var(--danger);
+  font-weight: 800;
+}
 .grid { display: grid; gap: 16px; }
 .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .compact { gap: 12px; }
