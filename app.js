@@ -11,9 +11,188 @@ const formMessage = document.querySelector("#formMessage");
 const dateMessage = document.querySelector("#dateMessage");
 const bookingDialog = document.querySelector("#bookingDialog");
 const bookingPreview = document.querySelector("#bookingPreview");
+const languageSelect = document.querySelector("#languageSelect");
 
 let resizedBannerFile = null;
 let optimizedOriginalFile = null;
+
+const uiTranslations = {
+  en: {
+    marketLabel: "Pacific marketing platform",
+    languageLabel: "Language",
+    heroEyebrow: "Explorer offers",
+    heroTitle: "Submit hotel offers ready for campaign review",
+    heroText: "A clearer collection flow for stay, dining, and event offers across Pacific campaigns.",
+    heroFactOne: "1 offer per submission",
+    heroFactTwo: "Assets due 6 weeks ahead",
+    heroFactThree: "2048 x 1366 banner image",
+    sideEyebrow: "Explorer partners",
+    sideTitle: "Offer submission",
+    stepHotel: "Hotel details",
+    stepOffer: "Offer and dates",
+    stepProof: "Proof and forms",
+    stepImages: "Images and review",
+    modeTitle: "No-backend mode",
+    modeText: "Submissions are packaged in the browser as a ZIP file. Nothing is stored on this page.",
+    formEyebrow: "Stay and dining offers",
+    formTitle: "Send Explorer a complete offer in one pass",
+    statusPill: "Static package",
+    hotelDetails: "Hotel details",
+    coreContent: "Core offer content",
+    datesBooking: "Dates and booking",
+    proofForms: "Proof and required forms",
+    imagesTitle: "Images",
+    finalAcknowledgement: "Final acknowledgement",
+    clearButton: "Clear",
+    submitButton: "Review link and create package",
+    dialogTitle: "Double-check the booking link",
+    dialogText: "Hotels will send guests to this exact URL. Please confirm it opens the correct booking page for this offer.",
+    goBackButton: "Go back",
+    confirmButton: "Confirm and create package",
+  },
+  th: {
+    marketLabel: "แพลตฟอร์มการตลาดแปซิฟิก",
+    languageLabel: "ภาษา",
+    heroEyebrow: "ข้อเสนอ Explorer",
+    heroTitle: "ส่งข้อเสนอของโรงแรมเพื่อให้พร้อมสำหรับการตรวจทานแคมเปญ",
+    heroText: "ขั้นตอนการรวบรวมข้อเสนอที่ชัดเจนขึ้นสำหรับการเข้าพัก ห้องอาหาร และอีเวนต์ในแคมเปญแปซิฟิก",
+    heroFactOne: "ส่ง 1 ข้อเสนอต่อครั้ง",
+    heroFactTwo: "ส่งไฟล์ล่วงหน้า 6 สัปดาห์",
+    heroFactThree: "ภาพแบนเนอร์ 2048 x 1366",
+    sideEyebrow: "พันธมิตร Explorer",
+    sideTitle: "ส่งข้อเสนอ",
+    stepHotel: "รายละเอียดโรงแรม",
+    stepOffer: "ข้อเสนอและวันที่",
+    stepProof: "หลักฐานและแบบฟอร์ม",
+    stepImages: "รูปภาพและตรวจทาน",
+    modeTitle: "โหมดไม่มีแบ็กเอนด์",
+    modeText: "ข้อมูลจะถูกจัดเป็นไฟล์ ZIP ในเบราว์เซอร์ และไม่มีการจัดเก็บบนหน้านี้",
+    formEyebrow: "ข้อเสนอห้องพักและห้องอาหาร",
+    formTitle: "ส่งข้อเสนอที่ครบถ้วนให้ Explorer ในครั้งเดียว",
+    statusPill: "แพ็กเกจแบบสแตติก",
+    hotelDetails: "รายละเอียดโรงแรม",
+    coreContent: "เนื้อหาหลักของข้อเสนอ",
+    datesBooking: "วันที่และลิงก์จอง",
+    proofForms: "หลักฐานและไฟล์ที่ต้องใช้",
+    imagesTitle: "รูปภาพ",
+    finalAcknowledgement: "การรับทราบขั้นสุดท้าย",
+    clearButton: "ล้างข้อมูล",
+    submitButton: "ตรวจลิงก์และสร้างแพ็กเกจ",
+    dialogTitle: "ตรวจสอบลิงก์จองอีกครั้ง",
+    dialogText: "แขกจะถูกส่งไปยัง URL นี้ โปรดยืนยันว่าเป็นหน้าจองที่ถูกต้องสำหรับข้อเสนอนี้",
+    goBackButton: "กลับไปแก้ไข",
+    confirmButton: "ยืนยันและสร้างแพ็กเกจ",
+  },
+  vi: {
+    marketLabel: "Nền tảng tiếp thị Pacific",
+    languageLabel: "Ngôn ngữ",
+    heroEyebrow: "Ưu đãi Explorer",
+    heroTitle: "Gửi ưu đãi khách sạn sẵn sàng để duyệt chiến dịch",
+    heroText: "Quy trình thu thập rõ ràng hơn cho ưu đãi lưu trú, ẩm thực và sự kiện tại các chiến dịch Pacific.",
+    heroFactOne: "1 ưu đãi cho mỗi lần gửi",
+    heroFactTwo: "Tài sản cần gửi trước 6 tuần",
+    heroFactThree: "Ảnh banner 2048 x 1366",
+    sideEyebrow: "Đối tác Explorer",
+    sideTitle: "Gửi ưu đãi",
+    stepHotel: "Thông tin khách sạn",
+    stepOffer: "Ưu đãi và ngày",
+    stepProof: "Bằng chứng và biểu mẫu",
+    stepImages: "Hình ảnh và rà soát",
+    modeTitle: "Chế độ không backend",
+    modeText: "Bài gửi được đóng gói thành tệp ZIP trong trình duyệt. Trang này không lưu trữ dữ liệu.",
+    formEyebrow: "Ưu đãi lưu trú và ẩm thực",
+    formTitle: "Gửi một ưu đãi hoàn chỉnh cho Explorer trong một lần",
+    statusPill: "Gói tĩnh",
+    hotelDetails: "Thông tin khách sạn",
+    coreContent: "Nội dung chính của ưu đãi",
+    datesBooking: "Ngày và đặt chỗ",
+    proofForms: "Bằng chứng và tệp cần thiết",
+    imagesTitle: "Hình ảnh",
+    finalAcknowledgement: "Xác nhận cuối cùng",
+    clearButton: "Xóa",
+    submitButton: "Kiểm tra liên kết và tạo gói",
+    dialogTitle: "Kiểm tra lại liên kết đặt chỗ",
+    dialogText: "Khách sẽ được chuyển đến chính URL này. Vui lòng xác nhận đây là trang đặt chỗ đúng cho ưu đãi.",
+    goBackButton: "Quay lại",
+    confirmButton: "Xác nhận và tạo gói",
+  },
+  id: {
+    marketLabel: "Platform pemasaran Pacific",
+    languageLabel: "Bahasa",
+    heroEyebrow: "Penawaran Explorer",
+    heroTitle: "Kirim penawaran hotel yang siap ditinjau untuk kampanye",
+    heroText: "Alur pengumpulan yang lebih jelas untuk penawaran menginap, dining, dan event di kampanye Pacific.",
+    heroFactOne: "1 penawaran per pengiriman",
+    heroFactTwo: "Aset dikirim 6 minggu sebelumnya",
+    heroFactThree: "Gambar banner 2048 x 1366",
+    sideEyebrow: "Mitra Explorer",
+    sideTitle: "Pengiriman penawaran",
+    stepHotel: "Detail hotel",
+    stepOffer: "Penawaran dan tanggal",
+    stepProof: "Bukti dan formulir",
+    stepImages: "Gambar dan tinjauan",
+    modeTitle: "Mode tanpa backend",
+    modeText: "Pengiriman dikemas di browser sebagai file ZIP. Tidak ada data yang disimpan di halaman ini.",
+    formEyebrow: "Penawaran menginap dan dining",
+    formTitle: "Kirim penawaran lengkap ke Explorer dalam satu langkah",
+    statusPill: "Paket statis",
+    hotelDetails: "Detail hotel",
+    coreContent: "Konten utama penawaran",
+    datesBooking: "Tanggal dan pemesanan",
+    proofForms: "Bukti dan file wajib",
+    imagesTitle: "Gambar",
+    finalAcknowledgement: "Persetujuan akhir",
+    clearButton: "Hapus",
+    submitButton: "Tinjau tautan dan buat paket",
+    dialogTitle: "Periksa kembali tautan pemesanan",
+    dialogText: "Tamu akan diarahkan ke URL ini. Pastikan tautan membuka halaman pemesanan yang benar untuk penawaran ini.",
+    goBackButton: "Kembali",
+    confirmButton: "Konfirmasi dan buat paket",
+  },
+  ja: {
+    marketLabel: "パシフィック マーケティング プラットフォーム",
+    languageLabel: "言語",
+    heroEyebrow: "Explorer オファー",
+    heroTitle: "キャンペーン確認用のホテルオファーを送信",
+    heroText: "パシフィックキャンペーン向けの宿泊、ダイニング、イベントオファーを分かりやすく収集します。",
+    heroFactOne: "1回につき1オファー",
+    heroFactTwo: "素材は6週間前までに提出",
+    heroFactThree: "バナー画像 2048 x 1366",
+    sideEyebrow: "Explorer パートナー",
+    sideTitle: "オファー提出",
+    stepHotel: "ホテル情報",
+    stepOffer: "オファーと日付",
+    stepProof: "証明資料とフォーム",
+    stepImages: "画像と確認",
+    modeTitle: "バックエンドなしモード",
+    modeText: "提出内容はブラウザ内でZIPファイル化されます。このページには保存されません。",
+    formEyebrow: "宿泊・ダイニングオファー",
+    formTitle: "Explorerへ完全なオファーを一度で送信",
+    statusPill: "静的パッケージ",
+    hotelDetails: "ホテル情報",
+    coreContent: "オファー基本内容",
+    datesBooking: "日付と予約",
+    proofForms: "証明資料と必要ファイル",
+    imagesTitle: "画像",
+    finalAcknowledgement: "最終確認",
+    clearButton: "クリア",
+    submitButton: "リンクを確認してパッケージ作成",
+    dialogTitle: "予約リンクを再確認",
+    dialogText: "ゲストはこのURLに移動します。このオファーの正しい予約ページであることを確認してください。",
+    goBackButton: "戻る",
+    confirmButton: "確認してパッケージ作成",
+  },
+};
+
+function applyLanguage(language) {
+  const copy = uiTranslations[language] || uiTranslations.en;
+  document.documentElement.lang = language;
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    const key = element.dataset.i18n;
+    if (copy[key]) element.textContent = copy[key];
+  });
+  localStorage.setItem("explorer-offer-language", language);
+}
 
 const offerTypeLabels = {
   red_hot_rooms: "Red Hot Rooms",
@@ -271,6 +450,7 @@ originalInput.addEventListener("change", () => handleImageUpload(
 
 dateFields.forEach((field) => field.addEventListener("input", validateDates));
 offerType.addEventListener("change", renderTypeSpecificFields);
+languageSelect.addEventListener("change", () => applyLanguage(languageSelect.value));
 
 function fieldValue(name) {
   const element = form.elements[name];
@@ -289,6 +469,15 @@ function collectDynamicFields() {
     result[element.name] = element.value.trim();
     return result;
   }, {});
+}
+
+function collectTranslations() {
+  return {
+    zh_hans: fieldValue("translation_zh"),
+    vi: fieldValue("translation_vi"),
+    th: fieldValue("translation_th"),
+    id: fieldValue("translation_id"),
+  };
 }
 
 function fileInfo(name, replacementFile = null) {
@@ -314,6 +503,7 @@ function buildSubmissionRecord() {
     offer_banner_title: fieldValue("offer_banner_title"),
     offer_subtitle: fieldValue("offer_subtitle"),
     offer_description: fieldValue("offer_description"),
+    translations: collectTranslations(),
     meta_description: fieldValue("meta_description"),
     offer_details: collectDynamicFields(),
     public_start_date: fieldValue("public_start_date"),
@@ -338,6 +528,9 @@ function buildSummaryText(record) {
   const detailLines = Object.entries(record.offer_details)
     .filter(([, value]) => value)
     .map(([key, value]) => `${key.replace(/_/g, " ")}: ${value}`);
+  const translationLines = Object.entries(record.translations)
+    .filter(([, value]) => value)
+    .map(([key, value]) => `${key.replace("_", "-")}: ${value}`);
 
   return [
     "Explorer Offer Submission",
@@ -359,6 +552,9 @@ function buildSummaryText(record) {
     "",
     "Core content",
     record.offer_description,
+    "",
+    "Translations",
+    translationLines.length ? translationLines.join("\n\n") : "No translations provided",
     "",
     "Offer type details",
     detailLines.length ? detailLines.join("\n") : "No additional details provided",
@@ -493,9 +689,7 @@ function addFile(files, folder, file) {
   files.push({ name: `${folder}/${safeName(file.name) || "file"}.${file.name.split(".").pop() || "bin"}`, blob: file });
 }
 
-async function createSubmissionPackage() {
-  const record = buildSubmissionRecord();
-  const packageName = safeName(`${record.hotel_name || record.offer_details.partner_name}-${record.offer_tile_title}`);
+function getPackageFiles(record) {
   const files = [
     {
       name: "submission.json",
@@ -512,16 +706,25 @@ async function createSubmissionPackage() {
   addFile(files, "uploads", selectedFile("booking_screenshot"));
   addFile(files, "uploads", resizedBannerFile);
   addFile(files, "uploads", optimizedOriginalFile);
+  return files;
+}
 
-  const zip = await createZip(files);
-  const url = URL.createObjectURL(zip);
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `${packageName}-explorer-offer-submission.zip`;
+  link.download = filename;
   document.body.append(link);
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
+}
+
+async function createSubmissionPackage() {
+  const record = buildSubmissionRecord();
+  const packageName = safeName(`${record.hotel_name || record.offer_details.partner_name}-${record.offer_tile_title}`);
+  const zip = await createZip(getPackageFiles(record));
+  downloadBlob(zip, `${packageName}-explorer-offer-submission.zip`);
 }
 
 form.addEventListener("submit", async (event) => {
@@ -575,4 +778,7 @@ form.addEventListener("reset", () => {
   });
 });
 
+const savedLanguage = localStorage.getItem("explorer-offer-language") || "en";
+languageSelect.value = savedLanguage;
+applyLanguage(savedLanguage);
 renderTypeSpecificFields();

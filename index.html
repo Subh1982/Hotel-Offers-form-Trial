@@ -11,17 +11,28 @@
       <header class="masthead">
         <nav class="topbar" aria-label="Platform header">
           <img class="brand-logo" src="assets/all-accor-plus-logo.png" alt="ALL Accor Plus">
-          <span class="market-label">Pacific marketing platform</span>
+          <div class="topbar-actions">
+            <span class="market-label" data-i18n="marketLabel">Pacific marketing platform</span>
+            <label class="language-control"><span data-i18n="languageLabel">Language</span>
+              <select id="languageSelect" aria-label="Language">
+                <option value="en">English</option>
+                <option value="th">ไทย</option>
+                <option value="vi">Tiếng Việt</option>
+                <option value="id">Bahasa Indonesia</option>
+                <option value="ja">日本語</option>
+              </select>
+            </label>
+          </div>
         </nav>
         <section class="hero-panel" aria-labelledby="pageTitle">
           <div class="hero-copy">
-            <p class="eyebrow">Explorer offers</p>
-            <h1 id="pageTitle">Submit hotel offers ready for campaign review</h1>
-            <p class="hero-text">A clearer collection flow for stay, dining, and event offers across Pacific campaigns.</p>
+            <p class="eyebrow" data-i18n="heroEyebrow">Explorer offers</p>
+            <h1 id="pageTitle" data-i18n="heroTitle">Submit hotel offers ready for campaign review</h1>
+            <p class="hero-text" data-i18n="heroText">A clearer collection flow for stay, dining, and event offers across Pacific campaigns.</p>
             <div class="hero-facts" aria-label="Submission requirements">
-              <span>1 offer per submission</span>
-              <span>Assets due 6 weeks ahead</span>
-              <span>2048 x 1366 banner image</span>
+              <span data-i18n="heroFactOne">1 offer per submission</span>
+              <span data-i18n="heroFactTwo">Assets due 6 weeks ahead</span>
+              <span data-i18n="heroFactThree">2048 x 1366 banner image</span>
             </div>
           </div>
           <figure class="hero-visual" aria-label="Premium hotel campaign visual"></figure>
@@ -32,33 +43,33 @@
           <div class="brand">
             <span class="mark">EX</span>
             <div>
-              <p class="eyebrow">Explorer partners</p>
-              <h2>Offer submission</h2>
+              <p class="eyebrow" data-i18n="sideEyebrow">Explorer partners</p>
+              <h2 data-i18n="sideTitle">Offer submission</h2>
             </div>
           </div>
           <ol class="steps" aria-label="Form progress">
-            <li class="active">Hotel details</li>
-            <li>Offer and dates</li>
-            <li>Proof and forms</li>
-            <li>Images and review</li>
+            <li class="active" data-i18n="stepHotel">Hotel details</li>
+            <li data-i18n="stepOffer">Offer and dates</li>
+            <li data-i18n="stepProof">Proof and forms</li>
+            <li data-i18n="stepImages">Images and review</li>
           </ol>
           <div class="submission-list">
-            <h2>No-backend mode</h2>
-            <div class="recent-empty">Submissions are packaged in the browser as a ZIP file. Nothing is stored on this page.</div>
+            <h2 data-i18n="modeTitle">No-backend mode</h2>
+            <div class="recent-empty" data-i18n="modeText">Submissions are packaged in the browser as a ZIP file. Nothing is stored on this page.</div>
           </div>
         </aside>
 
         <form id="offerForm" class="form-surface" novalidate>
           <div class="form-header">
             <div>
-              <p class="eyebrow">Stay and dining offers</p>
-              <h2>Send Explorer a complete offer in one pass</h2>
+              <p class="eyebrow" data-i18n="formEyebrow">Stay and dining offers</p>
+              <h2 data-i18n="formTitle">Send Explorer a complete offer in one pass</h2>
             </div>
-            <span class="status-pill">Static package</span>
+            <span class="status-pill" data-i18n="statusPill">Static package</span>
           </div>
 
           <section class="form-section">
-            <h3>Hotel details</h3>
+            <h3 data-i18n="hotelDetails">Hotel details</h3>
             <div class="grid two">
               <label>Email
                 <input name="email" type="email" required autocomplete="email" placeholder="person@hotel.com">
@@ -90,7 +101,7 @@
           </section>
 
           <section class="form-section">
-            <h3>Core offer content</h3>
+            <h3 data-i18n="coreContent">Core offer content</h3>
             <div class="grid two">
               <label>Offer tile title
                 <input name="offer_tile_title" required placeholder="Shown on listing tiles">
@@ -108,11 +119,29 @@
             <label>Offer description
               <textarea name="offer_description" required rows="5" placeholder="Describe the offer, experience, inclusions, and member value."></textarea>
             </label>
+            <details class="translation-panel">
+              <summary>Optional translated offer descriptions</summary>
+              <p>Use these fields when a translated version is available for regional review. Leave blank if translation is not required.</p>
+              <div class="grid two">
+                <label>Simplified Chinese
+                  <textarea name="translation_zh" rows="4" lang="zh-Hans" placeholder="Paste or enter the Chinese translation."></textarea>
+                </label>
+                <label>Vietnamese
+                  <textarea name="translation_vi" rows="4" lang="vi" placeholder="Paste or enter the Vietnamese translation."></textarea>
+                </label>
+                <label>Thai
+                  <textarea name="translation_th" rows="4" lang="th" placeholder="Paste or enter the Thai translation."></textarea>
+                </label>
+                <label>Bahasa Indonesia
+                  <textarea name="translation_id" rows="4" lang="id" placeholder="Paste or enter the Bahasa Indonesia translation."></textarea>
+                </label>
+              </div>
+            </details>
             <div id="typeSpecificFields" class="dynamic-fields" aria-live="polite"></div>
           </section>
 
           <section class="form-section">
-            <h3>Dates and booking</h3>
+            <h3 data-i18n="datesBooking">Dates and booking</h3>
             <div class="date-compare">
               <div>
                 <p>Published offer dates</p>
@@ -147,7 +176,7 @@
           </section>
 
           <section class="form-section">
-            <h3>Proof and required forms</h3>
+            <h3 data-i18n="proofForms">Proof and required forms</h3>
             <div class="upload-grid">
               <label class="file-card conditional-stay">Rate screenshot
                 <span>Please show the loaded rate available at all.com. Max 1 MB image.</span>
@@ -169,7 +198,7 @@
           </section>
 
           <section class="form-section">
-            <h3>Images</h3>
+            <h3 data-i18n="imagesTitle">Images</h3>
             <div class="upload-zone">
               <input id="bannerInput" name="banner_image" type="file" required accept="image/png,image/jpeg,image/webp">
               <div>
@@ -191,7 +220,7 @@
           </section>
 
           <section class="form-section">
-            <h3>Final acknowledgement</h3>
+            <h3 data-i18n="finalAcknowledgement">Final acknowledgement</h3>
             <label class="checkline">
               <input name="acknowledgement" type="checkbox" value="I understand" required>
               I understand incomplete or inaccurate submissions may delay promotion, and assets are due 6 weeks in advance.
@@ -200,8 +229,8 @@
 
           <div id="formMessage" class="form-message" role="status"></div>
           <div class="actions">
-            <button type="reset" class="secondary">Clear</button>
-            <button type="submit">Review link and create package</button>
+            <button type="reset" class="secondary" data-i18n="clearButton">Clear</button>
+            <button type="submit" data-i18n="submitButton">Review link and create package</button>
           </div>
         </form>
       </section>
@@ -209,12 +238,12 @@
 
     <dialog id="bookingDialog">
       <form method="dialog" class="dialog-content">
-        <h2>Double-check the booking link</h2>
-        <p>Hotels will send guests to this exact URL. Please confirm it opens the correct booking page for this offer.</p>
+        <h2 data-i18n="dialogTitle">Double-check the booking link</h2>
+        <p data-i18n="dialogText">Hotels will send guests to this exact URL. Please confirm it opens the correct booking page for this offer.</p>
         <a id="bookingPreview" href="#" target="_blank" rel="noreferrer"></a>
         <div class="actions">
-          <button value="cancel" class="secondary">Go back</button>
-          <button value="confirm">Confirm and create package</button>
+          <button value="cancel" class="secondary" data-i18n="goBackButton">Go back</button>
+          <button value="confirm" data-i18n="confirmButton">Confirm and create package</button>
         </div>
       </form>
     </dialog>
