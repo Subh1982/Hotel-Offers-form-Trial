@@ -20,6 +20,7 @@ const dateMessage = document.querySelector("#dateMessage");
 const bookingDialog = document.querySelector("#bookingDialog");
 const bookingPreview = document.querySelector("#bookingPreview");
 const languageSelect = document.querySelector("#languageSelect");
+const heroText = document.querySelector("[data-i18n='heroText']");
 const sectionNavigationButtons = Array.from(document.querySelectorAll("[data-scroll-target]"));
 const translationSourceDisplay = document.querySelector("#translationSourceDisplay");
 const translationTargetLanguage = document.querySelector("#translationTargetLanguage");
@@ -75,9 +76,7 @@ const uiTranslations = {
     marketLabel: "Pacific marketing platform",
     languageLabel: "Language",
     heroTitle: "ALL Accor+ Explorer Offers Portal",
-    heroFactOne: "1 offer per submission",
-    heroFactTwo: "Assets due 6 weeks ahead",
-    heroFactThree: "2048 x 1366 banner image",
+    heroText: "Create campaign-ready hotel, dining, event, and partner offers for Explorer.",
     sideEyebrow: "Explorer partners",
     sideTitle: "Offer submission",
     stepHotel: "Hotel details",
@@ -107,9 +106,7 @@ const uiTranslations = {
     marketLabel: "แพลตฟอร์มการตลาดแปซิฟิก",
     languageLabel: "ภาษา",
     heroTitle: "ALL Accor+ Explorer Offers Portal",
-    heroFactOne: "ส่ง 1 ข้อเสนอต่อครั้ง",
-    heroFactTwo: "ส่งไฟล์ล่วงหน้า 6 สัปดาห์",
-    heroFactThree: "ภาพแบนเนอร์ 2048 x 1366",
+    heroText: "สร้างข้อเสนอสำหรับโรงแรม ห้องอาหาร อีเวนต์ และพาร์ทเนอร์ให้พร้อมสำหรับแคมเปญ Explorer",
     sideEyebrow: "พันธมิตร Explorer",
     sideTitle: "ส่งข้อเสนอ",
     stepHotel: "รายละเอียดโรงแรม",
@@ -139,9 +136,7 @@ const uiTranslations = {
     marketLabel: "Nền tảng tiếp thị Pacific",
     languageLabel: "Ngôn ngữ",
     heroTitle: "ALL Accor+ Explorer Offers Portal",
-    heroFactOne: "1 ưu đãi cho mỗi lần gửi",
-    heroFactTwo: "Tài sản cần gửi trước 6 tuần",
-    heroFactThree: "Ảnh banner 2048 x 1366",
+    heroText: "Tạo ưu đãi khách sạn, ẩm thực, sự kiện và đối tác sẵn sàng cho chiến dịch Explorer.",
     sideEyebrow: "Đối tác Explorer",
     sideTitle: "Gửi ưu đãi",
     stepHotel: "Thông tin khách sạn",
@@ -171,9 +166,7 @@ const uiTranslations = {
     marketLabel: "Platform pemasaran Pacific",
     languageLabel: "Bahasa",
     heroTitle: "ALL Accor+ Explorer Offers Portal",
-    heroFactOne: "1 penawaran per pengiriman",
-    heroFactTwo: "Aset dikirim 6 minggu sebelumnya",
-    heroFactThree: "Gambar banner 2048 x 1366",
+    heroText: "Buat penawaran hotel, dining, event, dan partner yang siap untuk kampanye Explorer.",
     sideEyebrow: "Mitra Explorer",
     sideTitle: "Pengiriman penawaran",
     stepHotel: "Detail hotel",
@@ -203,9 +196,7 @@ const uiTranslations = {
     marketLabel: "パシフィック マーケティング プラットフォーム",
     languageLabel: "言語",
     heroTitle: "ALL Accor+ Explorer Offers Portal",
-    heroFactOne: "1回につき1オファー",
-    heroFactTwo: "素材は6週間前までに提出",
-    heroFactThree: "バナー画像 2048 x 1366",
+    heroText: "Explorerキャンペーン向けのホテル、ダイニング、イベント、パートナーオファーを作成します。",
     sideEyebrow: "Explorer パートナー",
     sideTitle: "オファー提出",
     stepHotel: "ホテル情報",
@@ -449,8 +440,9 @@ function applyLanguage(language) {
   document.documentElement.lang = language;
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     const key = element.dataset.i18n;
-    if (copy[key]) element.textContent = copy[key];
+    if (Object.hasOwn(copy, key)) element.textContent = copy[key];
   });
+  if (heroText) heroText.textContent = copy.heroText || uiTranslations.en.heroText;
   translationSourceDisplay.textContent = labels[language] || contentLanguageLabels[language] || contentLanguageLabels.en;
   updateTranslationTargetOptions(language);
   localStorage.setItem("explorer-offer-language", language);
