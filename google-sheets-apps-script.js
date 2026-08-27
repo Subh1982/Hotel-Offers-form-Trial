@@ -1,4 +1,5 @@
 const SHEET_NAME = "Offer Submissions";
+const PACKAGE_EMAIL_RECIPIENT = "subh.bhatt22@gmail.com";
 
 const HEADERS = [
   "offer_id",
@@ -42,6 +43,14 @@ const HEADERS = [
 
 function doPost(e) {
   const payload = JSON.parse(e.postData.contents || "{}");
+
+  if (payload.action === "email_package") {
+    sendPackageEmail(payload.offer || {}, payload.attachment || {});
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
   const offer = payload.offer || {};
   const sheet = getSheet();
   const row = HEADERS.map((header) => offer[header] || "");
@@ -56,6 +65,38 @@ function doPost(e) {
   return ContentService
     .createTextOutput(JSON.stringify({ ok: true }))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+function sendPackageEmail(offer, attachment) {
+  if (!attachment.data_base64 || !attachment.file_name) {
+    throw new Error("Missing ZIP attachment.");
+  }
+
+  const blob = Utilities.newBlob(
+    Utilities.base64Decode(attachment.data_base64),
+    attachment.mime_type || "application/zip",
+    attachment.file_name
+  );
+  const offerId = offer.offer_id || "New offer";
+  const hotelName = offer.hotel_name || offer.partner_name || "Hotel / partner not provided";
+  const offerTitle = offer.offer_tile_title || offer.offer_banner_title || "Offer title not provided";
+
+  MailApp.sendEmail({
+    to: PACKAGE_EMAIL_RECIPIENT,
+    subject: `Explorer offer package: ${offerId}`,
+    body: [
+      "A new Explorer offer package has been submitted.",
+      "",
+      `Offer ID: ${offerId}`,
+      `Hotel / partner: ${hotelName}`,
+      `Offer title: ${offerTitle}`,
+      `Submitter email: ${offer.email || "Not provided"}`,
+      `Booking link: ${offer.booking_link || "Not provided"}`,
+      "",
+      "The ZIP package is attached.",
+    ].join("\n"),
+    attachments: [blob],
+  });
 }
 
 function getSheet() {

@@ -74,3 +74,21 @@ The Sheet includes these image URL columns when Supabase Storage is configured:
 - `banner_image_url`
 - `listing_tile_image_url`
 - `social_image_url`
+
+## Email ZIP package
+
+This version can email the generated ZIP package to:
+
+`subh.bhatt22@gmail.com`
+
+The email is sent through the same Google Apps Script Web App used for Google Sheets sync.
+
+1. Paste the latest `google-sheets-apps-script.js` into Apps Script.
+2. Deploy a new Web App version.
+3. Confirm Netlify still has:
+   - `GOOGLE_SHEETS_WEBHOOK_URL`
+4. Redeploy the site from Netlify.
+
+After a successful submission, the browser downloads the ZIP package and also sends it to the Netlify email function, which forwards it to Apps Script for delivery as an attachment.
+
+Large ZIP packages may be limited by Netlify or Google Apps Script request size limits. The app currently attaches the generated ZIP package after the marketing images are resized.

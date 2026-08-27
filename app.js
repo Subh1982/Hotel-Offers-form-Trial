@@ -1892,6 +1892,10 @@ async function fileToBase64(file) {
   return String(dataUrl).split(",")[1] || "";
 }
 
+async function blobToBase64(blob) {
+  return fileToBase64(blob);
+}
+
 async function buildStorageUploads() {
   const uploadMap = {
     banner_image: resizedBannerFile,
@@ -1951,6 +1955,35 @@ async function updateSubmission(record) {
   return result;
 }
 
+async function sendPackageEmail(record, zip, filename) {
+  const response = await fetch("/.netlify/functions/email-package", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      offer: {
+        offer_id: record.offer_id,
+        hotel_name: record.hotel_name,
+        partner_name: record.offer_details?.partner_name,
+        offer_tile_title: record.offer_tile_title,
+        offer_banner_title: record.offer_banner_title,
+        email: record.email,
+        booking_link: record.booking_link,
+      },
+      attachment: {
+        file_name: filename,
+        mime_type: "application/zip",
+        data_base64: await blobToBase64(zip),
+      },
+    }),
+  });
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(result.error || "Package email could not be sent.");
+  }
+  return result;
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   setMessage("");
@@ -1986,8 +2019,11 @@ form.addEventListener("submit", async (event) => {
       record.files = savedSubmission.offer.files;
     }
     const packageName = safeName(`${record.hotel_name || record.offer_details.partner_name}-${record.offer_tile_title}`);
+    const packageFilename = `${packageName}-explorer-offer-submission.zip`;
     const zip = await createZip(getPackageFiles(record));
-    downloadBlob(zip, `${packageName}-explorer-offer-submission.zip`);
+    downloadBlob(zip, packageFilename);
+    const emailDelivery = await sendPackageEmail(record, zip, packageFilename).catch((error) => ({ ok: false, error: error.message }));
+    record.email_delivery = emailDelivery;
     setMessage(editingOffer ? "Submission updated and package created." : "Submission stored and package created.", "success");
     if (editingOffer) {
       editingOffer = savedSubmission.offer || { ...editingOffer, ...record };
