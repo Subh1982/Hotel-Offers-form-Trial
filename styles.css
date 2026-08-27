@@ -276,6 +276,94 @@ body {
   line-height: 1.55;
 }
 
+.retrieve-results {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.retrieved-offer-card,
+.retrieved-offer-detail {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--surface);
+}
+
+.retrieved-offer-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+}
+
+.retrieved-offer-card h4,
+.retrieved-offer-detail h4 {
+  margin: 0 0 6px;
+  font-size: 17px;
+}
+
+.retrieved-offer-card p,
+.retrieved-offer-detail p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.retrieved-offer-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.retrieved-offer-meta span {
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #f8f6f2;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.retrieved-offer-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 18px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.retrieved-offer-fields div {
+  min-width: 0;
+}
+
+.retrieved-offer-fields dt {
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.retrieved-offer-fields dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.edit-mode-notice {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
 .panel,
 .form-surface {
   background: var(--surface);
@@ -846,7 +934,9 @@ dialog::backdrop {
   .date-compare,
   .upload-zone,
   .upload-grid,
-  .confirmation-details div {
+  .confirmation-details div,
+  .retrieved-offer-card,
+  .retrieved-offer-fields {
     grid-template-columns: 1fr;
   }
 

@@ -7,8 +7,10 @@ const retrievePanel = document.querySelector("#retrievePanel");
 const retrieveModeLabel = document.querySelector("#retrieveModeLabel");
 const retrieveTitle = document.querySelector("#retrieveTitle");
 const retrieveMessage = document.querySelector("#retrieveMessage");
+const retrieveResults = document.querySelector("#retrieveResults");
 const searchOfferButton = document.querySelector("#searchOfferButton");
 const backToStartButton = document.querySelector("#backToStartButton");
+const editModeNotice = document.querySelector("#editModeNotice");
 const confirmationNewOfferButton = document.querySelector("#confirmationNewOfferButton");
 const confirmationBackButton = document.querySelector("#confirmationBackButton");
 const offerType = document.querySelector("#offerType");
@@ -53,6 +55,7 @@ let resizedListingTileFile = null;
 let resizedSocialFile = null;
 let generatedContentTranslations = {};
 let retrieveMode = "view";
+let editingOffer = null;
 
 const maxImageUploadSize = 200 * 1024 * 1024;
 
@@ -117,7 +120,13 @@ const uiTranslations = {
     offerTitleLabel: "Offer title",
     searchOfferButton: "Search offer",
     backToStartButton: "Back to options",
-    retrievePrototypeMessage: "The search screen is ready. The database lookup can be connected in the next release.",
+    retrieveNoCriteriaMessage: "Enter at least one search value.",
+    retrieveSearchingMessage: "Searching saved offers...",
+    retrieveNoResultsMessage: "No matching offers found.",
+    retrieveResultsMessage: "Select an offer below.",
+    retrieveEditNotice: "You are editing offer {offerId}. Existing uploaded images are stored as metadata only; upload new images if you want them included in the revised package.",
+    retrieveImagesNotice: "Uploaded image files are stored as metadata only in this release.",
+    updateSubmitButton: "Update Package and Submit",
     confirmationEyebrow: "Submission complete",
     confirmationTitle: "Offer submitted successfully",
     confirmationText: "Use this Offer ID to retrieve, view, or edit the offer later.",
@@ -174,7 +183,13 @@ const uiTranslations = {
     offerTitleLabel: "ชื่อข้อเสนอ",
     searchOfferButton: "ค้นหาข้อเสนอ",
     backToStartButton: "กลับไปยังตัวเลือก",
-    retrievePrototypeMessage: "หน้าค้นหาพร้อมแล้ว สามารถเชื่อมต่อการค้นหาฐานข้อมูลในรุ่นถัดไป",
+    retrieveNoCriteriaMessage: "กรอกค่าค้นหาอย่างน้อยหนึ่งรายการ",
+    retrieveSearchingMessage: "กำลังค้นหาข้อเสนอที่บันทึกไว้...",
+    retrieveNoResultsMessage: "ไม่พบข้อเสนอที่ตรงกัน",
+    retrieveResultsMessage: "เลือกข้อเสนอด้านล่าง",
+    retrieveEditNotice: "คุณกำลังแก้ไขข้อเสนอ {offerId} ไฟล์ภาพเดิมถูกจัดเก็บเป็นข้อมูลเมตาเท่านั้น โปรดอัปโหลดภาพใหม่หากต้องการรวมไว้ในแพ็กเกจฉบับปรับปรุง",
+    retrieveImagesNotice: "ไฟล์ภาพที่อัปโหลดถูกจัดเก็บเป็นข้อมูลเมตาเท่านั้นในรุ่นนี้",
+    updateSubmitButton: "อัปเดตแพ็กเกจและส่ง",
     confirmationEyebrow: "ส่งข้อมูลเสร็จสมบูรณ์",
     confirmationTitle: "ส่งข้อเสนอสำเร็จ",
     confirmationText: "ใช้ Offer ID นี้เพื่อเรียกดู ดู หรือแก้ไขข้อเสนอในภายหลัง",
@@ -231,7 +246,13 @@ const uiTranslations = {
     offerTitleLabel: "Tiêu đề ưu đãi",
     searchOfferButton: "Tìm ưu đãi",
     backToStartButton: "Quay lại lựa chọn",
-    retrievePrototypeMessage: "Màn hình tìm kiếm đã sẵn sàng. Có thể kết nối tra cứu cơ sở dữ liệu trong phiên bản tiếp theo.",
+    retrieveNoCriteriaMessage: "Nhập ít nhất một giá trị tìm kiếm.",
+    retrieveSearchingMessage: "Đang tìm ưu đãi đã lưu...",
+    retrieveNoResultsMessage: "Không tìm thấy ưu đãi phù hợp.",
+    retrieveResultsMessage: "Chọn một ưu đãi bên dưới.",
+    retrieveEditNotice: "Bạn đang chỉnh sửa ưu đãi {offerId}. Ảnh đã tải trước đó chỉ được lưu dưới dạng metadata; hãy tải ảnh mới nếu muốn đưa vào gói đã chỉnh sửa.",
+    retrieveImagesNotice: "Ảnh đã tải lên chỉ được lưu dưới dạng metadata trong bản phát hành này.",
+    updateSubmitButton: "Cập nhật gói và gửi",
     confirmationEyebrow: "Gửi hoàn tất",
     confirmationTitle: "Ưu đãi đã được gửi thành công",
     confirmationText: "Dùng Offer ID này để truy xuất, xem hoặc chỉnh sửa ưu đãi sau.",
@@ -288,7 +309,13 @@ const uiTranslations = {
     offerTitleLabel: "Judul penawaran",
     searchOfferButton: "Cari penawaran",
     backToStartButton: "Kembali ke opsi",
-    retrievePrototypeMessage: "Layar pencarian sudah siap. Pencarian database dapat dihubungkan pada rilis berikutnya.",
+    retrieveNoCriteriaMessage: "Masukkan setidaknya satu nilai pencarian.",
+    retrieveSearchingMessage: "Mencari penawaran tersimpan...",
+    retrieveNoResultsMessage: "Tidak ada penawaran yang cocok.",
+    retrieveResultsMessage: "Pilih penawaran di bawah ini.",
+    retrieveEditNotice: "Anda sedang mengedit penawaran {offerId}. Gambar yang sudah diunggah hanya disimpan sebagai metadata; unggah gambar baru jika ingin memasukkannya ke paket revisi.",
+    retrieveImagesNotice: "File gambar yang diunggah hanya disimpan sebagai metadata pada rilis ini.",
+    updateSubmitButton: "Perbarui Paket dan Kirim",
     confirmationEyebrow: "Pengiriman selesai",
     confirmationTitle: "Penawaran berhasil dikirim",
     confirmationText: "Gunakan Offer ID ini untuk mengambil, melihat, atau mengedit penawaran nanti.",
@@ -345,7 +372,13 @@ const uiTranslations = {
     offerTitleLabel: "オファータイトル",
     searchOfferButton: "オファーを検索",
     backToStartButton: "選択肢に戻る",
-    retrievePrototypeMessage: "検索画面は準備できています。データベース検索は次のリリースで接続できます。",
+    retrieveNoCriteriaMessage: "検索値を少なくとも1つ入力してください。",
+    retrieveSearchingMessage: "保存済みオファーを検索しています...",
+    retrieveNoResultsMessage: "一致するオファーが見つかりません。",
+    retrieveResultsMessage: "下のオファーを選択してください。",
+    retrieveEditNotice: "オファー {offerId} を編集中です。既存の画像はメタデータのみ保存されています。修正版パッケージに含める場合は新しい画像をアップロードしてください。",
+    retrieveImagesNotice: "このリリースでは、アップロード画像ファイルはメタデータのみ保存されます。",
+    updateSubmitButton: "パッケージを更新して送信",
     confirmationEyebrow: "提出完了",
     confirmationTitle: "オファーが正常に送信されました",
     confirmationText: "このOffer IDを使って、後でオファーの取得、表示、編集ができます。",
@@ -602,6 +635,10 @@ function applyLanguage(language) {
   if (!retrievePanel.hidden) {
     retrieveModeLabel.textContent = retrieveMode === "edit" ? copy.retrieveEditEyebrow : copy.retrieveViewEyebrow;
   }
+  if (editingOffer) {
+    editModeNotice.textContent = copy.retrieveEditNotice.replace("{offerId}", offerIdForRecord(editingOffer));
+    form.querySelector('button[type="submit"]').textContent = copy.updateSubmitButton;
+  }
   updateTranslationTargetOptions(language);
   localStorage.setItem("explorer-offer-language", language);
 }
@@ -847,10 +884,15 @@ function showStartScreen() {
   confirmationScreen.classList.add("is-hidden");
   retrievePanel.hidden = true;
   retrieveMessage.textContent = "";
+  retrieveResults.innerHTML = "";
   offerStartSection.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function showCreateForm() {
+  editingOffer = null;
+  editModeNotice.hidden = true;
+  editModeNotice.textContent = "";
+  form.querySelector('button[type="submit"]').textContent = (uiTranslations[languageSelect.value] || uiTranslations.en).submitButton;
   offerStartSection.classList.add("is-hidden");
   confirmationScreen.classList.add("is-hidden");
   offerWorkspace.classList.remove("is-hidden");
@@ -863,13 +905,154 @@ function showRetrievePanel(mode) {
   retrieveModeLabel.textContent = mode === "edit" ? copy.retrieveEditEyebrow : copy.retrieveViewEyebrow;
   retrievePanel.hidden = false;
   retrieveMessage.textContent = "";
+  retrieveResults.innerHTML = "";
   retrievePanel.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function handleRetrieveSearch() {
+function setRetrieveMessage(message, type = "") {
+  retrieveMessage.textContent = message;
+  retrieveMessage.className = `muted ${type}`.trim();
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function offerIdForRecord(record) {
+  return record.offer_id || formatOfferId(record.id);
+}
+
+function searchValue(id) {
+  return document.getElementById(id).value.trim();
+}
+
+function buildOfferSearchParams() {
+  const params = new URLSearchParams();
+  const offerId = searchValue("offerSearchId");
+  const email = searchValue("offerSearchEmail");
+  const hotelName = searchValue("offerSearchHotel");
+  const hotelCode = searchValue("offerSearchHotelCode");
+
+  if (offerId) params.set("offer_id", offerId);
+  if (email) params.set("email", email);
+  if (hotelName) params.set("hotel_name", hotelName);
+  if (hotelCode) params.set("hotel_rid_code", hotelCode);
+  return params;
+}
+
+async function fetchOffers(params) {
+  const response = await fetch(`/.netlify/functions/get-offer?${params.toString()}`);
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(result.error || "The offer lookup could not be completed.");
+  }
+  return result.offers || [];
+}
+
+function renderOfferResults(offers) {
   const copy = uiTranslations[languageSelect.value] || uiTranslations.en;
-  const modeText = retrieveMode === "edit" ? copy.retrieveEditEyebrow : copy.retrieveViewEyebrow;
-  retrieveMessage.textContent = `${modeText}: ${copy.retrievePrototypeMessage}`;
+  retrieveResults.innerHTML = "";
+
+  offers.forEach((offer, index) => {
+    const card = document.createElement("article");
+    card.className = "retrieved-offer-card";
+    card.innerHTML = `
+      <div>
+        <h4>${escapeHtml(offer.offer_tile_title || offer.offer_banner_title || "Untitled offer")}</h4>
+        <p>${escapeHtml(offer.hotel_name || offer.offer_details?.partner_name || "Hotel / partner not provided")}</p>
+        <div class="retrieved-offer-meta">
+          <span>${escapeHtml(offerIdForRecord(offer))}</span>
+          <span>${escapeHtml(offer.offer_type || "Offer type not provided")}</span>
+          <span>${escapeHtml(offer.email || "Email not provided")}</span>
+        </div>
+      </div>
+    `;
+
+    const action = document.createElement("button");
+    action.type = "button";
+    action.textContent = retrieveMode === "edit" ? copy.retrieveEditEyebrow : copy.retrieveViewEyebrow;
+    action.addEventListener("click", () => {
+      if (retrieveMode === "edit") {
+        loadOfferForEdit(offers[index]);
+      } else {
+        renderOfferDetail(offers[index]);
+      }
+    });
+
+    card.append(action);
+    retrieveResults.append(card);
+  });
+}
+
+function detailRowsForOffer(offer) {
+  const details = offer.offer_details || {};
+  return [
+    ["Offer ID", offerIdForRecord(offer)],
+    ["Hotel name", offer.hotel_name || details.partner_name],
+    ["Hotel code", offer.hotel_rid_code],
+    ["Offer type", offer.offer_type],
+    ["Offer title", offer.offer_tile_title],
+    ["Submitter email", offer.email],
+    ["Booking link", offer.booking_link],
+    ["Date range", buildDateRangeSummary({ offer_details: details })],
+    ["Offer description", offer.offer_description],
+    ["Terms", offer.terms],
+  ].filter(([, value]) => value);
+}
+
+function renderOfferDetail(offer) {
+  const copy = uiTranslations[languageSelect.value] || uiTranslations.en;
+  retrieveResults.innerHTML = `
+    <article class="retrieved-offer-detail">
+      <h4>${escapeHtml(offer.offer_tile_title || offer.offer_banner_title || "Untitled offer")}</h4>
+      <p>${escapeHtml(copy.retrieveImagesNotice)}</p>
+      <dl class="retrieved-offer-fields">
+        ${detailRowsForOffer(offer).map(([label, value]) => `
+          <div>
+            <dt>${escapeHtml(label)}</dt>
+            <dd>${escapeHtml(value)}</dd>
+          </div>
+        `).join("")}
+      </dl>
+    </article>
+  `;
+  setRetrieveMessage(`${copy.retrieveViewEyebrow}: ${offerIdForRecord(offer)}`, "success");
+}
+
+async function handleRetrieveSearch() {
+  const copy = uiTranslations[languageSelect.value] || uiTranslations.en;
+  const params = buildOfferSearchParams();
+  retrieveResults.innerHTML = "";
+
+  if (!params.toString()) {
+    setRetrieveMessage(copy.retrieveNoCriteriaMessage, "error");
+    return;
+  }
+
+  searchOfferButton.disabled = true;
+  searchOfferButton.textContent = copy.retrieveSearchingMessage;
+  setRetrieveMessage(copy.retrieveSearchingMessage);
+
+  try {
+    const offers = await fetchOffers(params);
+    if (!offers.length) {
+      setRetrieveMessage(copy.retrieveNoResultsMessage, "error");
+      return;
+    }
+
+    renderOfferResults(offers);
+    setRetrieveMessage(copy.retrieveResultsMessage, "success");
+  } catch (error) {
+    setRetrieveMessage(error.message || "The offer lookup could not be completed.", "error");
+  } finally {
+    searchOfferButton.disabled = false;
+    searchOfferButton.textContent = copy.searchOfferButton;
+  }
 }
 
 function validateDates() {
@@ -936,6 +1119,66 @@ function renderTypeSpecificFields() {
   typeSpecificFields.append(grid);
 }
 
+function normalizeOfferType(value) {
+  if (!value) return "";
+  const exactMatch = Object.entries(offerTypeLabels).find(([, label]) => label === value);
+  if (exactMatch) return exactMatch[0];
+  const normalized = String(value).toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+  return Object.hasOwn(offerTypeLabels, normalized) ? normalized : "";
+}
+
+function setFormField(name, value) {
+  const element = form.elements[name];
+  if (!element) return;
+  if (element.type === "checkbox") {
+    element.checked = Boolean(value);
+    return;
+  }
+  element.value = value || "";
+}
+
+function fillFormFromOffer(offer) {
+  const offerTypeValue = normalizeOfferType(offer.offer_type);
+  setFormField("email", offer.email);
+  setFormField("person_in_charge_name", offer.person_in_charge_name);
+  setFormField("hotel_rid_code", offer.hotel_rid_code);
+  setFormField("hotel_name", offer.hotel_name);
+  setFormField("city_country", offer.city_country);
+  setFormField("offer_type", offerTypeValue);
+  setFormField("offer_tile_title", offer.offer_tile_title);
+  setFormField("offer_banner_title", offer.offer_banner_title);
+  setFormField("offer_subtitle", offer.offer_subtitle);
+  setFormField("meta_description", offer.meta_description);
+  setFormField("offer_description", offer.offer_description);
+  setFormField("booking_link", offer.booking_link);
+  setFormField("terms", offer.terms);
+  setFormField("department_confirmation", offer.department_confirmation);
+  setFormField("acknowledgement", offer.acknowledgement);
+
+  renderTypeSpecificFields();
+  Object.entries(offer.offer_details || {}).forEach(([name, value]) => {
+    const element = typeSpecificFields.querySelector(`[name="${name}"]`);
+    if (element) element.value = value || "";
+  });
+
+  generatedContentTranslations = offer.auto_translations || {};
+  translationPreview.value = "";
+  setTranslationStatus("");
+}
+
+function loadOfferForEdit(offer) {
+  const copy = uiTranslations[languageSelect.value] || uiTranslations.en;
+  editingOffer = offer;
+  fillFormFromOffer(offer);
+  editModeNotice.textContent = copy.retrieveEditNotice.replace("{offerId}", offerIdForRecord(offer));
+  editModeNotice.hidden = false;
+  form.querySelector('button[type="submit"]').textContent = copy.updateSubmitButton;
+  offerStartSection.classList.add("is-hidden");
+  confirmationScreen.classList.add("is-hidden");
+  offerWorkspace.classList.remove("is-hidden");
+  offerWorkspace.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 function validateRequiredDetails() {
   const missing = [];
   if (!isPartnerOffer()) {
@@ -956,22 +1199,23 @@ function validateRequiredDetails() {
 
 function validateRequiredUploads() {
   const missing = [];
-  if (isStayOffer() && !form.elements.rate_screenshot.files.length) {
+  const existingFiles = editingOffer?.files || {};
+  if (isStayOffer() && !form.elements.rate_screenshot.files.length && !existingFiles.rate_screenshot) {
     missing.push("rate screenshot");
   }
-  if (isDiningOrEventOffer() && !form.elements.menu_pdf.files.length) {
+  if (isDiningOrEventOffer() && !form.elements.menu_pdf.files.length && !existingFiles.menu_pdf) {
     missing.push("menu PDF");
   }
-  if (isDiningOrEventOffer() && !form.elements.booking_screenshot.files.length) {
+  if (isDiningOrEventOffer() && !form.elements.booking_screenshot.files.length && !existingFiles.booking_screenshot) {
     missing.push("final booking-page screenshot");
   }
-  if (!resizedBannerFile) {
+  if (!resizedBannerFile && !existingFiles.banner_image) {
     missing.push("banner image");
   }
-  if (!resizedListingTileFile) {
+  if (!resizedListingTileFile && !existingFiles.listing_tile_image) {
     missing.push("listing tile image");
   }
-  if (!resizedSocialFile) {
+  if (!resizedSocialFile && !existingFiles.social_image) {
     missing.push("social image");
   }
 
@@ -1337,7 +1581,7 @@ function setTranslationStatus(message, type = "") {
 
 function fileInfo(name, replacementFile = null) {
   const file = replacementFile || form.elements[name]?.files?.[0];
-  if (!file) return null;
+  if (!file) return editingOffer?.files?.[name] || null;
   return {
     file_name: file.name,
     file_type: file.type || "application/octet-stream",
@@ -1347,6 +1591,8 @@ function fileInfo(name, replacementFile = null) {
 
 function buildSubmissionRecord() {
   return {
+    id: editingOffer?.id || null,
+    offer_id: editingOffer ? offerIdForRecord(editingOffer) : "",
     generated_at: new Date().toISOString(),
     email: fieldValue("email"),
     person_in_charge_name: fieldValue("person_in_charge_name"),
@@ -1649,6 +1895,20 @@ async function storeSubmission(record) {
   return result;
 }
 
+async function updateSubmission(record) {
+  const response = await fetch("/.netlify/functions/update-offer", {
+    method: "PATCH",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ offer_id: record.offer_id, verify_email: editingOffer?.email, submission: record }),
+  });
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(result.error || "Submission could not be updated.");
+  }
+  return result;
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   setMessage("");
@@ -1673,22 +1933,27 @@ form.addEventListener("submit", async (event) => {
 
   const submitButton = form.querySelector('button[type="submit"]');
   submitButton.disabled = true;
-  submitButton.textContent = "Creating package...";
+  submitButton.textContent = editingOffer ? "Updating package..." : "Creating package...";
 
   try {
     const record = buildSubmissionRecord();
-    const storedSubmission = await storeSubmission(record);
-    record.offer_id = formatOfferId(storedSubmission.id);
+    const savedSubmission = editingOffer ? await updateSubmission(record) : await storeSubmission(record);
+    record.id = savedSubmission.id || record.id;
+    record.offer_id = savedSubmission.offer_id || formatOfferId(savedSubmission.id);
     const packageName = safeName(`${record.hotel_name || record.offer_details.partner_name}-${record.offer_tile_title}`);
     const zip = await createZip(getPackageFiles(record));
     downloadBlob(zip, `${packageName}-explorer-offer-submission.zip`);
-    setMessage("Submission stored and package created.", "success");
+    setMessage(editingOffer ? "Submission updated and package created." : "Submission stored and package created.", "success");
+    if (editingOffer) {
+      editingOffer = savedSubmission.offer || { ...editingOffer, ...record };
+    }
     showConfirmation(record);
   } catch (error) {
     setMessage(error.message || "The submission could not be completed.", "error");
   } finally {
     submitButton.disabled = false;
-    submitButton.textContent = (uiTranslations[languageSelect.value] || uiTranslations.en).submitButton;
+    const copy = uiTranslations[languageSelect.value] || uiTranslations.en;
+    submitButton.textContent = editingOffer ? copy.updateSubmitButton : copy.submitButton;
   }
 });
 
@@ -1708,6 +1973,10 @@ form.addEventListener("reset", () => {
     listingTileMessage.textContent = "";
     socialMessage.textContent = "";
     generatedContentTranslations = {};
+    editingOffer = null;
+    editModeNotice.hidden = true;
+    editModeNotice.textContent = "";
+    form.querySelector('button[type="submit"]').textContent = (uiTranslations[languageSelect.value] || uiTranslations.en).submitButton;
     translationPreview.value = "";
     setTranslationStatus("");
     dateMessage.textContent = "";
