@@ -1,6 +1,6 @@
 # Explorer Offer Submission
 
-Static no-backend form for Pacific hotel offer submissions.
+Offer collection form for Pacific hotel offer submissions.
 
 Hotels complete the form in the browser and download a ZIP package containing:
 
@@ -21,7 +21,7 @@ If a different-sized image is uploaded for banner, listing tile, or social, the 
 
 The page interface can be displayed in English, Thai, Vietnamese, Bahasa Indonesia, or Japanese. The selected page language is treated as the source language for entered content. The bottom translation preview can generate a draft translation through the public MyMemory translation endpoint, show it for review/editing, and save the approved preview into the ZIP package.
 
-No information is stored by this page. Offer content is sent to the public MyMemory translation endpoint only when the hotel clicks the preview translation button.
+Offer content is stored in Supabase when the Netlify environment variables are configured. Offer content is sent to the public MyMemory translation endpoint only when the hotel clicks the preview translation button.
 
 ## Supabase storage
 
@@ -34,3 +34,19 @@ This Netlify version includes a serverless function that stores structured offer
 3. Redeploy the site from Netlify.
 
 The function stores structured form data only. Uploaded proof files and resized images remain inside the downloaded ZIP package for now.
+
+## Google Sheets sync
+
+This version can also write each saved offer to a Google Sheet after the Supabase save succeeds.
+
+1. Create or open the target Google Sheet.
+2. Go to Extensions > Apps Script.
+3. Paste the contents of `google-sheets-apps-script.js`.
+4. Deploy the script as a Web App.
+5. Set access to allow the web app to receive requests.
+6. Copy the Web App URL.
+7. In Netlify, add this environment variable:
+   - `GOOGLE_SHEETS_WEBHOOK_URL`
+8. Redeploy the site from Netlify.
+
+New offers append a row. Edited offers update the matching row by `offer_id`.

@@ -19,6 +19,64 @@ function formatOfferId(id) {
   return `EXP-${new Date().getFullYear()}-${String(numericId).padStart(6, "0")}`;
 }
 
+function sheetRowForOffer(offer) {
+  const details = offer.offer_details || {};
+  return {
+    offer_id: offer.offer_id,
+    database_id: offer.id,
+    status: offer.status,
+    generated_at: offer.generated_at,
+    email: offer.email,
+    person_in_charge_name: offer.person_in_charge_name,
+    hotel_rid_code: offer.hotel_rid_code,
+    hotel_name: offer.hotel_name,
+    city_country: offer.city_country,
+    offer_type: offer.offer_type,
+    offer_tile_title: offer.offer_tile_title,
+    offer_banner_title: offer.offer_banner_title,
+    offer_subtitle: offer.offer_subtitle,
+    offer_description: offer.offer_description,
+    meta_description: offer.meta_description,
+    booking_link: offer.booking_link,
+    booking_start_date: details.booking_start_date || "",
+    booking_end_date: details.booking_end_date || "",
+    stay_start_date: details.stay_start_date || "",
+    stay_end_date: details.stay_end_date || "",
+    offer_validity_start_date: details.offer_validity_start_date || "",
+    offer_validity_end_date: details.offer_validity_end_date || "",
+    event_date: details.event_date || "",
+    event_time: details.event_time || "",
+    venue: details.venue || "",
+    partner_name: details.partner_name || "",
+    member_benefits: details.member_benefits || "",
+    price: details.price || details.member_price || details.discounted_price || details.member_package_price || details.member_price_per_night || "",
+    terms: offer.terms,
+    department_confirmation: offer.department_confirmation,
+    acknowledgement: offer.acknowledgement,
+    offer_details_json: JSON.stringify(details),
+    translations_json: JSON.stringify(offer.auto_translations || offer.translations || {}),
+    files_json: JSON.stringify(offer.files || {}),
+  };
+}
+
+async function syncOfferToSheet(action, offer) {
+  const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+  if (!webhookUrl) return { skipped: true };
+
+  const response = await fetch(webhookUrl, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ action, offer: sheetRowForOffer(offer) }),
+  });
+
+  const text = await response.text();
+  if (!response.ok) {
+    return { ok: false, error: text || "Google Sheets sync failed." };
+  }
+
+  return { ok: true };
+}
+
 exports.handler = async (event) => {
   if (!["PATCH", "POST"].includes(event.httpMethod)) {
     return json(405, { error: "Method not allowed" });
@@ -101,10 +159,14 @@ exports.handler = async (event) => {
     return json(404, { error: "No matching offer found for that Offer ID and submitter email." });
   }
 
+  const updatedOffer = { ...updated[0], offer_id: formatOfferId(updated[0].id) };
+  const sheets = await syncOfferToSheet("update", updatedOffer);
+
   return json(200, {
     ok: true,
     id: updated[0].id,
-    offer_id: formatOfferId(updated[0].id),
-    offer: { ...updated[0], offer_id: formatOfferId(updated[0].id) },
+    offer_id: updatedOffer.offer_id,
+    offer: updatedOffer,
+    sheets,
   });
 };
