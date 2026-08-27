@@ -32,6 +32,9 @@ const HEADERS = [
   "terms",
   "department_confirmation",
   "acknowledgement",
+  "banner_image_url",
+  "listing_tile_image_url",
+  "social_image_url",
   "offer_details_json",
   "translations_json",
   "files_json",
@@ -59,9 +62,9 @@ function getSheet() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.insertSheet(SHEET_NAME);
   const firstRow = sheet.getRange(1, 1, 1, HEADERS.length).getValues()[0];
-  const hasHeaders = firstRow.some((value) => value);
+  const headersMatch = HEADERS.every((header, index) => firstRow[index] === header);
 
-  if (!hasHeaders) {
+  if (!headersMatch) {
     sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
   }
 

@@ -33,7 +33,25 @@ This Netlify version includes a serverless function that stores structured offer
    - `SUPABASE_SERVICE_ROLE_KEY`
 3. Redeploy the site from Netlify.
 
-The function stores structured form data only. Uploaded proof files and resized images remain inside the downloaded ZIP package for now.
+The function stores structured form data in Supabase. Resized marketing images can also be stored in Supabase Storage when the storage bucket is configured.
+
+## Supabase image storage
+
+This version can store the resized marketing images in Supabase Storage and write their links to the Google Sheet.
+
+1. In Supabase, run `supabase-storage-setup.sql` in the SQL editor.
+2. This creates a public bucket called `offer-assets`.
+3. Optional: in Netlify, add this environment variable if you want a different bucket name:
+   - `SUPABASE_STORAGE_BUCKET`
+4. Redeploy the site from Netlify.
+
+The app uploads these resized images:
+
+- banner image
+- listing tile image
+- social image
+
+Proof files such as rate screenshots, menu PDFs, and booking screenshots remain in the downloaded ZIP package for now.
 
 ## Google Sheets sync
 
@@ -50,3 +68,9 @@ This version can also write each saved offer to a Google Sheet after the Supabas
 8. Redeploy the site from Netlify.
 
 New offers append a row. Edited offers update the matching row by `offer_id`.
+
+The Sheet includes these image URL columns when Supabase Storage is configured:
+
+- `banner_image_url`
+- `listing_tile_image_url`
+- `social_image_url`

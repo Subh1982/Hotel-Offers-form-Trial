@@ -19,8 +19,66 @@ function formatOfferId(id) {
   return `EXP-${new Date().getFullYear()}-${String(numericId).padStart(6, "0")}`;
 }
 
+function safeName(value) {
+  return String(value || "asset")
+    .toLowerCase()
+    .replace(/[^a-z0-9.]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 90) || "asset";
+}
+
+function publicStorageUrl(supabaseUrl, bucket, path) {
+  return `${supabaseUrl}/storage/v1/object/public/${bucket}/${path.split("/").map(encodeURIComponent).join("/")}`;
+}
+
+async function uploadAssetToStorage({ supabaseUrl, supabaseServiceRoleKey, offerId, asset }) {
+  if (!asset?.field || !asset?.data_base64) return null;
+
+  const bucket = process.env.SUPABASE_STORAGE_BUCKET || "offer-assets";
+  const filename = safeName(asset.file_name || `${asset.field}.jpg`);
+  const path = `${offerId}/${asset.field}/${Date.now()}-${filename}`;
+  const bytes = Buffer.from(asset.data_base64, "base64");
+  const response = await fetch(`${supabaseUrl}/storage/v1/object/${bucket}/${path}`, {
+    method: "POST",
+    headers: {
+      apikey: supabaseServiceRoleKey,
+      authorization: `Bearer ${supabaseServiceRoleKey}`,
+      "content-type": asset.file_type || "application/octet-stream",
+      "x-upsert": "true",
+    },
+    body: bytes,
+  });
+
+  const responseText = await response.text();
+  if (!response.ok) {
+    throw new Error(`Supabase Storage upload failed for ${asset.field}: ${responseText}`);
+  }
+
+  return {
+    field: asset.field,
+    file_name: filename,
+    file_type: asset.file_type || "application/octet-stream",
+    file_size_kb: asset.file_size_kb || Math.round(bytes.length / 1024),
+    storage_bucket: bucket,
+    storage_path: path,
+    public_url: publicStorageUrl(supabaseUrl, bucket, path),
+  };
+}
+
+async function uploadAssets({ supabaseUrl, supabaseServiceRoleKey, offerId, files, assets }) {
+  const updatedFiles = { ...(files || {}) };
+
+  for (const asset of assets || []) {
+    const uploaded = await uploadAssetToStorage({ supabaseUrl, supabaseServiceRoleKey, offerId, asset });
+    if (uploaded) updatedFiles[uploaded.field] = uploaded;
+  }
+
+  return updatedFiles;
+}
+
 function sheetRowForOffer(offer) {
   const details = offer.offer_details || {};
+  const files = offer.files || {};
   return {
     offer_id: offer.offer_id,
     database_id: offer.id,
@@ -53,6 +111,9 @@ function sheetRowForOffer(offer) {
     terms: offer.terms,
     department_confirmation: offer.department_confirmation,
     acknowledgement: offer.acknowledgement,
+    banner_image_url: files.banner_image?.public_url || "",
+    listing_tile_image_url: files.listing_tile_image?.public_url || "",
+    social_image_url: files.social_image?.public_url || "",
     offer_details_json: JSON.stringify(details),
     translations_json: JSON.stringify(offer.auto_translations || offer.translations || {}),
     files_json: JSON.stringify(offer.files || {}),
@@ -159,7 +220,36 @@ exports.handler = async (event) => {
     return json(404, { error: "No matching offer found for that Offer ID and submitter email." });
   }
 
-  const updatedOffer = { ...updated[0], offer_id: formatOfferId(updated[0].id) };
+  let updatedOffer = { ...updated[0], offer_id: formatOfferId(updated[0].id) };
+  const updatedFiles = await uploadAssets({
+    supabaseUrl,
+    supabaseServiceRoleKey,
+    offerId: updatedOffer.offer_id,
+    files: updatedOffer.files,
+    assets: submission.asset_uploads,
+  });
+
+  if (submission.asset_uploads?.length) {
+    const fileResponse = await fetch(`${supabaseUrl}/rest/v1/offer_submissions?id=eq.${id}`, {
+      method: "PATCH",
+      headers: {
+        apikey: supabaseServiceRoleKey,
+        authorization: `Bearer ${supabaseServiceRoleKey}`,
+        "content-type": "application/json",
+        prefer: "return=representation",
+      },
+      body: JSON.stringify({ files: updatedFiles }),
+    });
+
+    const fileResponseText = await fileResponse.text();
+    if (!fileResponse.ok) {
+      return json(fileResponse.status, { error: "Supabase file URL update failed.", details: fileResponseText });
+    }
+
+    const fileRows = JSON.parse(fileResponseText || "[]");
+    updatedOffer = { ...(fileRows[0] || updatedOffer), offer_id: updatedOffer.offer_id };
+  }
+
   const sheets = await syncOfferToSheet("update", updatedOffer);
 
   return json(200, {

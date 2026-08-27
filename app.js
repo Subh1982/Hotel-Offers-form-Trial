@@ -1881,11 +1881,52 @@ async function createSubmissionPackage() {
   downloadBlob(zip, `${packageName}-explorer-offer-submission.zip`);
 }
 
+async function fileToBase64(file) {
+  const dataUrl = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => resolve(reader.result));
+    reader.addEventListener("error", () => reject(reader.error));
+    reader.readAsDataURL(file);
+  });
+
+  return String(dataUrl).split(",")[1] || "";
+}
+
+async function buildStorageUploads() {
+  const uploadMap = {
+    banner_image: resizedBannerFile,
+    listing_tile_image: resizedListingTileFile,
+    social_image: resizedSocialFile,
+  };
+  const uploads = [];
+
+  for (const [field, file] of Object.entries(uploadMap)) {
+    if (!file) continue;
+    uploads.push({
+      field,
+      file_name: file.name,
+      file_type: file.type || "image/jpeg",
+      file_size_kb: Math.round(file.size / 1024),
+      data_base64: await fileToBase64(file),
+    });
+  }
+
+  return uploads;
+}
+
+async function buildRecordForSave(record) {
+  return {
+    ...record,
+    asset_uploads: await buildStorageUploads(),
+  };
+}
+
 async function storeSubmission(record) {
+  const payload = await buildRecordForSave(record);
   const response = await fetch("/.netlify/functions/submit-offer", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify(record),
+    body: JSON.stringify(payload),
   });
 
   const result = await response.json().catch(() => ({}));
@@ -1896,10 +1937,11 @@ async function storeSubmission(record) {
 }
 
 async function updateSubmission(record) {
+  const payload = await buildRecordForSave(record);
   const response = await fetch("/.netlify/functions/update-offer", {
     method: "PATCH",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ offer_id: record.offer_id, verify_email: editingOffer?.email, submission: record }),
+    body: JSON.stringify({ offer_id: record.offer_id, verify_email: editingOffer?.email, submission: payload }),
   });
 
   const result = await response.json().catch(() => ({}));
@@ -1940,6 +1982,9 @@ form.addEventListener("submit", async (event) => {
     const savedSubmission = editingOffer ? await updateSubmission(record) : await storeSubmission(record);
     record.id = savedSubmission.id || record.id;
     record.offer_id = savedSubmission.offer_id || formatOfferId(savedSubmission.id);
+    if (savedSubmission.offer?.files) {
+      record.files = savedSubmission.offer.files;
+    }
     const packageName = safeName(`${record.hotel_name || record.offer_details.partner_name}-${record.offer_tile_title}`);
     const zip = await createZip(getPackageFiles(record));
     downloadBlob(zip, `${packageName}-explorer-offer-submission.zip`);
