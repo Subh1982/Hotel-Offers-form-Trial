@@ -1376,6 +1376,20 @@ async function createSubmissionPackage() {
   downloadBlob(zip, `${packageName}-explorer-offer-submission.zip`);
 }
 
+async function storeSubmission(record) {
+  const response = await fetch("/.netlify/functions/submit-offer", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(record),
+  });
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(result.error || "Submission could not be stored.");
+  }
+  return result;
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   setMessage("");
@@ -1403,10 +1417,14 @@ form.addEventListener("submit", async (event) => {
   submitButton.textContent = "Creating package...";
 
   try {
-    await createSubmissionPackage();
-    setMessage("Submission package created. Nothing was uploaded or stored by this page.", "success");
+    const record = buildSubmissionRecord();
+    await storeSubmission(record);
+    const packageName = safeName(`${record.hotel_name || record.offer_details.partner_name}-${record.offer_tile_title}`);
+    const zip = await createZip(getPackageFiles(record));
+    downloadBlob(zip, `${packageName}-explorer-offer-submission.zip`);
+    setMessage("Submission stored and package created.", "success");
   } catch (error) {
-    setMessage(error.message || "The package could not be created.", "error");
+    setMessage(error.message || "The submission could not be completed.", "error");
   } finally {
     submitButton.disabled = false;
     submitButton.textContent = (uiTranslations[languageSelect.value] || uiTranslations.en).submitButton;
