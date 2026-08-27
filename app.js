@@ -1,4 +1,16 @@
 const form = document.querySelector("#offerForm");
+const offerStartSection = document.querySelector("#offerStartSection");
+const offerWorkspace = document.querySelector("#offerWorkspace");
+const confirmationScreen = document.querySelector("#confirmationScreen");
+const startActionButtons = Array.from(document.querySelectorAll("[data-start-action]"));
+const retrievePanel = document.querySelector("#retrievePanel");
+const retrieveModeLabel = document.querySelector("#retrieveModeLabel");
+const retrieveTitle = document.querySelector("#retrieveTitle");
+const retrieveMessage = document.querySelector("#retrieveMessage");
+const searchOfferButton = document.querySelector("#searchOfferButton");
+const backToStartButton = document.querySelector("#backToStartButton");
+const confirmationNewOfferButton = document.querySelector("#confirmationNewOfferButton");
+const confirmationBackButton = document.querySelector("#confirmationBackButton");
 const offerType = document.querySelector("#offerType");
 const typeSpecificFields = document.querySelector("#typeSpecificFields");
 const masterImageInput = document.querySelector("#masterImageInput");
@@ -28,11 +40,19 @@ const translateContentButton = document.querySelector("#translateContentButton")
 const saveTranslationPreviewButton = document.querySelector("#saveTranslationPreviewButton");
 const translationPreview = document.querySelector("#translationPreview");
 const translationStatus = document.querySelector("#translationStatus");
+const confirmationOfferId = document.querySelector("#confirmationOfferId");
+const confirmationHotelName = document.querySelector("#confirmationHotelName");
+const confirmationHotelCode = document.querySelector("#confirmationHotelCode");
+const confirmationOfferTitle = document.querySelector("#confirmationOfferTitle");
+const confirmationEmail = document.querySelector("#confirmationEmail");
+const confirmationBookingLink = document.querySelector("#confirmationBookingLink");
+const confirmationDateRange = document.querySelector("#confirmationDateRange");
 
 let resizedBannerFile = null;
 let resizedListingTileFile = null;
 let resizedSocialFile = null;
 let generatedContentTranslations = {};
+let retrieveMode = "view";
 
 const maxImageUploadSize = 200 * 1024 * 1024;
 
@@ -77,6 +97,33 @@ const uiTranslations = {
     languageLabel: "Language",
     heroTitle: "ALL Accor+ Explorer Offers Portal",
     heroText: "Create campaign-ready hotel, dining, event, and partner offers for Explorer.",
+    startEyebrow: "Offer workspace",
+    startTitle: "What would you like to do?",
+    startText: "Choose the path that matches your task. New offers open the full submission form, while existing offers can be found by Offer ID or hotel details.",
+    createOfferTitle: "Create a new offer",
+    createOfferText: "Start a fresh stay, dining, event, partner, Red Hot Rooms, or More Escapes submission.",
+    viewOfferTitle: "Retrieve and view an existing offer",
+    viewOfferText: "Look up a submitted offer without changing it.",
+    editOfferTitle: "Retrieve and edit an existing offer",
+    editOfferText: "Find a saved offer, update it, and create a revised package.",
+    retrieveViewEyebrow: "Retrieve and view",
+    retrieveEditEyebrow: "Retrieve and edit",
+    retrieveTitle: "Search for an existing offer",
+    retrieveText: "Use the Offer ID from the confirmation screen for the most accurate result. You can also search by hotel name and submitter email.",
+    offerIdLabel: "Offer ID",
+    retrieveEmailLabel: "Submitter email",
+    retrieveHotelLabel: "Hotel name",
+    retrieveHotelCodeLabel: "Hotel code",
+    offerTitleLabel: "Offer title",
+    searchOfferButton: "Search offer",
+    backToStartButton: "Back to options",
+    retrievePrototypeMessage: "The search screen is ready. The database lookup can be connected in the next release.",
+    confirmationEyebrow: "Submission complete",
+    confirmationTitle: "Offer submitted successfully",
+    confirmationText: "Use this Offer ID to retrieve, view, or edit the offer later.",
+    submissionDateRangeLabel: "Submission date range",
+    createAnotherButton: "Create another offer",
+    backToOptionsButton: "Back to options",
     sideEyebrow: "Explorer partners",
     sideTitle: "Offer submission",
     stepHotel: "Hotel details",
@@ -107,6 +154,33 @@ const uiTranslations = {
     languageLabel: "ภาษา",
     heroTitle: "พอร์ทัลข้อเสนอ ALL Accor+ Explorer",
     heroText: "สร้างข้อเสนอสำหรับโรงแรม ห้องอาหาร อีเวนต์ และพาร์ทเนอร์ให้พร้อมสำหรับแคมเปญ Explorer",
+    startEyebrow: "พื้นที่ทำงานข้อเสนอ",
+    startTitle: "คุณต้องการทำอะไร?",
+    startText: "เลือกเส้นทางที่ตรงกับงานของคุณ ข้อเสนอใหม่จะเปิดแบบฟอร์มเต็ม ส่วนข้อเสนอเดิมสามารถค้นหาด้วย Offer ID หรือรายละเอียดโรงแรม",
+    createOfferTitle: "สร้างข้อเสนอใหม่",
+    createOfferText: "เริ่มส่งข้อเสนอใหม่สำหรับห้องพัก ห้องอาหาร อีเวนต์ พาร์ทเนอร์ Red Hot Rooms หรือ More Escapes",
+    viewOfferTitle: "เรียกดูและดูข้อเสนอเดิม",
+    viewOfferText: "ค้นหาข้อเสนอที่ส่งแล้วโดยไม่แก้ไข",
+    editOfferTitle: "เรียกดูและแก้ไขข้อเสนอเดิม",
+    editOfferText: "ค้นหาข้อเสนอที่บันทึกไว้ แก้ไข และสร้างแพ็กเกจฉบับปรับปรุง",
+    retrieveViewEyebrow: "เรียกดูและดู",
+    retrieveEditEyebrow: "เรียกดูและแก้ไข",
+    retrieveTitle: "ค้นหาข้อเสนอเดิม",
+    retrieveText: "ใช้ Offer ID จากหน้าการยืนยันเพื่อผลลัพธ์ที่แม่นยำที่สุด หรือค้นหาด้วยชื่อโรงแรมและอีเมลผู้ส่ง",
+    offerIdLabel: "Offer ID",
+    retrieveEmailLabel: "อีเมลผู้ส่ง",
+    retrieveHotelLabel: "ชื่อโรงแรม",
+    retrieveHotelCodeLabel: "รหัสโรงแรม",
+    offerTitleLabel: "ชื่อข้อเสนอ",
+    searchOfferButton: "ค้นหาข้อเสนอ",
+    backToStartButton: "กลับไปยังตัวเลือก",
+    retrievePrototypeMessage: "หน้าค้นหาพร้อมแล้ว สามารถเชื่อมต่อการค้นหาฐานข้อมูลในรุ่นถัดไป",
+    confirmationEyebrow: "ส่งข้อมูลเสร็จสมบูรณ์",
+    confirmationTitle: "ส่งข้อเสนอสำเร็จ",
+    confirmationText: "ใช้ Offer ID นี้เพื่อเรียกดู ดู หรือแก้ไขข้อเสนอในภายหลัง",
+    submissionDateRangeLabel: "ช่วงวันที่ของการส่งข้อเสนอ",
+    createAnotherButton: "สร้างข้อเสนออื่น",
+    backToOptionsButton: "กลับไปยังตัวเลือก",
     sideEyebrow: "พันธมิตร Explorer",
     sideTitle: "ส่งข้อเสนอ",
     stepHotel: "รายละเอียดโรงแรม",
@@ -137,6 +211,33 @@ const uiTranslations = {
     languageLabel: "Ngôn ngữ",
     heroTitle: "Cổng ưu đãi ALL Accor+ Explorer",
     heroText: "Tạo ưu đãi khách sạn, ẩm thực, sự kiện và đối tác sẵn sàng cho chiến dịch Explorer.",
+    startEyebrow: "Không gian ưu đãi",
+    startTitle: "Bạn muốn làm gì?",
+    startText: "Chọn luồng phù hợp với công việc. Ưu đãi mới sẽ mở biểu mẫu đầy đủ, còn ưu đãi hiện có có thể tìm bằng Offer ID hoặc thông tin khách sạn.",
+    createOfferTitle: "Tạo ưu đãi mới",
+    createOfferText: "Bắt đầu một ưu đãi lưu trú, ẩm thực, sự kiện, đối tác, Red Hot Rooms hoặc More Escapes mới.",
+    viewOfferTitle: "Truy xuất và xem ưu đãi hiện có",
+    viewOfferText: "Tìm ưu đãi đã gửi mà không thay đổi nội dung.",
+    editOfferTitle: "Truy xuất và chỉnh sửa ưu đãi hiện có",
+    editOfferText: "Tìm ưu đãi đã lưu, cập nhật và tạo gói đã chỉnh sửa.",
+    retrieveViewEyebrow: "Truy xuất và xem",
+    retrieveEditEyebrow: "Truy xuất và chỉnh sửa",
+    retrieveTitle: "Tìm kiếm ưu đãi hiện có",
+    retrieveText: "Dùng Offer ID từ màn hình xác nhận để có kết quả chính xác nhất. Bạn cũng có thể tìm bằng tên khách sạn và email người gửi.",
+    offerIdLabel: "Offer ID",
+    retrieveEmailLabel: "Email người gửi",
+    retrieveHotelLabel: "Tên khách sạn",
+    retrieveHotelCodeLabel: "Mã khách sạn",
+    offerTitleLabel: "Tiêu đề ưu đãi",
+    searchOfferButton: "Tìm ưu đãi",
+    backToStartButton: "Quay lại lựa chọn",
+    retrievePrototypeMessage: "Màn hình tìm kiếm đã sẵn sàng. Có thể kết nối tra cứu cơ sở dữ liệu trong phiên bản tiếp theo.",
+    confirmationEyebrow: "Gửi hoàn tất",
+    confirmationTitle: "Ưu đãi đã được gửi thành công",
+    confirmationText: "Dùng Offer ID này để truy xuất, xem hoặc chỉnh sửa ưu đãi sau.",
+    submissionDateRangeLabel: "Khoảng ngày gửi",
+    createAnotherButton: "Tạo ưu đãi khác",
+    backToOptionsButton: "Quay lại lựa chọn",
     sideEyebrow: "Đối tác Explorer",
     sideTitle: "Gửi ưu đãi",
     stepHotel: "Thông tin khách sạn",
@@ -167,6 +268,33 @@ const uiTranslations = {
     languageLabel: "Bahasa",
     heroTitle: "Portal Penawaran ALL Accor+ Explorer",
     heroText: "Buat penawaran hotel, dining, event, dan partner yang siap untuk kampanye Explorer.",
+    startEyebrow: "Ruang kerja penawaran",
+    startTitle: "Apa yang ingin Anda lakukan?",
+    startText: "Pilih alur yang sesuai dengan tugas Anda. Penawaran baru membuka formulir lengkap, sementara penawaran lama dapat dicari dengan Offer ID atau detail hotel.",
+    createOfferTitle: "Buat penawaran baru",
+    createOfferText: "Mulai pengiriman baru untuk stay, dining, event, partner, Red Hot Rooms, atau More Escapes.",
+    viewOfferTitle: "Ambil dan lihat penawaran yang ada",
+    viewOfferText: "Cari penawaran yang sudah dikirim tanpa mengubahnya.",
+    editOfferTitle: "Ambil dan edit penawaran yang ada",
+    editOfferText: "Temukan penawaran tersimpan, perbarui, lalu buat paket revisi.",
+    retrieveViewEyebrow: "Ambil dan lihat",
+    retrieveEditEyebrow: "Ambil dan edit",
+    retrieveTitle: "Cari penawaran yang ada",
+    retrieveText: "Gunakan Offer ID dari layar konfirmasi untuk hasil paling akurat. Anda juga bisa mencari dengan nama hotel dan email pengirim.",
+    offerIdLabel: "Offer ID",
+    retrieveEmailLabel: "Email pengirim",
+    retrieveHotelLabel: "Nama hotel",
+    retrieveHotelCodeLabel: "Kode hotel",
+    offerTitleLabel: "Judul penawaran",
+    searchOfferButton: "Cari penawaran",
+    backToStartButton: "Kembali ke opsi",
+    retrievePrototypeMessage: "Layar pencarian sudah siap. Pencarian database dapat dihubungkan pada rilis berikutnya.",
+    confirmationEyebrow: "Pengiriman selesai",
+    confirmationTitle: "Penawaran berhasil dikirim",
+    confirmationText: "Gunakan Offer ID ini untuk mengambil, melihat, atau mengedit penawaran nanti.",
+    submissionDateRangeLabel: "Rentang tanggal pengiriman",
+    createAnotherButton: "Buat penawaran lain",
+    backToOptionsButton: "Kembali ke opsi",
     sideEyebrow: "Mitra Explorer",
     sideTitle: "Pengiriman penawaran",
     stepHotel: "Detail hotel",
@@ -197,6 +325,33 @@ const uiTranslations = {
     languageLabel: "言語",
     heroTitle: "ALL Accor+ Explorer オファーポータル",
     heroText: "Explorerキャンペーン向けのホテル、ダイニング、イベント、パートナーオファーを作成します。",
+    startEyebrow: "オファーワークスペース",
+    startTitle: "何を行いますか？",
+    startText: "作業に合う項目を選択してください。新規オファーは提出フォームを開き、既存オファーはOffer IDまたはホテル情報で検索できます。",
+    createOfferTitle: "新しいオファーを作成",
+    createOfferText: "宿泊、ダイニング、イベント、パートナー、Red Hot Rooms、More Escapesの新規提出を開始します。",
+    viewOfferTitle: "既存オファーを取得して表示",
+    viewOfferText: "提出済みオファーを変更せずに確認します。",
+    editOfferTitle: "既存オファーを取得して編集",
+    editOfferText: "保存済みオファーを見つけ、更新し、修正版パッケージを作成します。",
+    retrieveViewEyebrow: "取得して表示",
+    retrieveEditEyebrow: "取得して編集",
+    retrieveTitle: "既存オファーを検索",
+    retrieveText: "確認画面のOffer IDを使うと最も正確です。ホテル名と提出者メールでも検索できます。",
+    offerIdLabel: "Offer ID",
+    retrieveEmailLabel: "提出者メール",
+    retrieveHotelLabel: "ホテル名",
+    retrieveHotelCodeLabel: "ホテルコード",
+    offerTitleLabel: "オファータイトル",
+    searchOfferButton: "オファーを検索",
+    backToStartButton: "選択肢に戻る",
+    retrievePrototypeMessage: "検索画面は準備できています。データベース検索は次のリリースで接続できます。",
+    confirmationEyebrow: "提出完了",
+    confirmationTitle: "オファーが正常に送信されました",
+    confirmationText: "このOffer IDを使って、後でオファーの取得、表示、編集ができます。",
+    submissionDateRangeLabel: "提出日付範囲",
+    createAnotherButton: "別のオファーを作成",
+    backToOptionsButton: "選択肢に戻る",
     sideEyebrow: "Explorer パートナー",
     sideTitle: "オファー提出",
     stepHotel: "ホテル情報",
@@ -444,6 +599,9 @@ function applyLanguage(language) {
   });
   if (heroText) heroText.textContent = copy.heroText || uiTranslations.en.heroText;
   translationSourceDisplay.textContent = labels[language] || contentLanguageLabels[language] || contentLanguageLabels.en;
+  if (!retrievePanel.hidden) {
+    retrieveModeLabel.textContent = retrieveMode === "edit" ? copy.retrieveEditEyebrow : copy.retrieveViewEyebrow;
+  }
   updateTranslationTargetOptions(language);
   localStorage.setItem("explorer-offer-language", language);
 }
@@ -681,6 +839,37 @@ const dateRangePairs = [
 function setMessage(message, type = "") {
   formMessage.textContent = message;
   formMessage.className = `form-message ${type}`.trim();
+}
+
+function showStartScreen() {
+  offerStartSection.classList.remove("is-hidden");
+  offerWorkspace.classList.add("is-hidden");
+  confirmationScreen.classList.add("is-hidden");
+  retrievePanel.hidden = true;
+  retrieveMessage.textContent = "";
+  offerStartSection.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function showCreateForm() {
+  offerStartSection.classList.add("is-hidden");
+  confirmationScreen.classList.add("is-hidden");
+  offerWorkspace.classList.remove("is-hidden");
+  offerWorkspace.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function showRetrievePanel(mode) {
+  retrieveMode = mode;
+  const copy = uiTranslations[languageSelect.value] || uiTranslations.en;
+  retrieveModeLabel.textContent = mode === "edit" ? copy.retrieveEditEyebrow : copy.retrieveViewEyebrow;
+  retrievePanel.hidden = false;
+  retrieveMessage.textContent = "";
+  retrievePanel.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function handleRetrieveSearch() {
+  const copy = uiTranslations[languageSelect.value] || uiTranslations.en;
+  const modeText = retrieveMode === "edit" ? copy.retrieveEditEyebrow : copy.retrieveViewEyebrow;
+  retrieveMessage.textContent = `${modeText}: ${copy.retrievePrototypeMessage}`;
 }
 
 function validateDates() {
@@ -971,6 +1160,25 @@ saveTranslationPreviewButton.addEventListener("click", () => {
   setTranslationStatus(`${contentLanguageLabels[targetLanguage]} preview saved into the package.`);
 });
 
+startActionButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const action = button.dataset.startAction;
+    if (action === "create") {
+      showCreateForm();
+      return;
+    }
+    showRetrievePanel(action);
+  });
+});
+
+searchOfferButton.addEventListener("click", handleRetrieveSearch);
+backToStartButton.addEventListener("click", showStartScreen);
+confirmationNewOfferButton.addEventListener("click", () => {
+  form.reset();
+  showCreateForm();
+});
+confirmationBackButton.addEventListener("click", showStartScreen);
+
 offerType.addEventListener("change", renderTypeSpecificFields);
 languageSelect.addEventListener("change", () => {
   applyLanguage(languageSelect.value);
@@ -1169,6 +1377,56 @@ function buildSubmissionRecord() {
   };
 }
 
+function formatOfferId(databaseId) {
+  const numericId = Number(databaseId);
+  if (Number.isFinite(numericId) && numericId > 0) {
+    return `EXP-${new Date().getFullYear()}-${String(numericId).padStart(6, "0")}`;
+  }
+  return `EXP-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`;
+}
+
+function formatDateForDisplay(value) {
+  if (!value) return "";
+  const date = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+}
+
+function buildDateRangeSummary(record) {
+  const details = record.offer_details || {};
+  const lines = [];
+
+  if (details.booking_start_date || details.booking_end_date) {
+    lines.push(`Booking period: ${formatDateForDisplay(details.booking_start_date) || "Not provided"} to ${formatDateForDisplay(details.booking_end_date) || "Not provided"}`);
+  }
+  if (details.stay_start_date || details.stay_end_date) {
+    lines.push(`Stay period: ${formatDateForDisplay(details.stay_start_date) || "Not provided"} to ${formatDateForDisplay(details.stay_end_date) || "Not provided"}`);
+  }
+  if (details.offer_validity_start_date || details.offer_validity_end_date) {
+    lines.push(`Offer validity: ${formatDateForDisplay(details.offer_validity_start_date) || "Not provided"} to ${formatDateForDisplay(details.offer_validity_end_date) || "Not provided"}`);
+  }
+  if (details.event_date || details.event_time) {
+    lines.push(`Event: ${formatDateForDisplay(details.event_date) || "Not provided"} ${details.event_time || ""}`.trim());
+  }
+
+  return lines.join("\n") || "Not provided";
+}
+
+function showConfirmation(record) {
+  confirmationOfferId.textContent = record.offer_id;
+  confirmationHotelName.textContent = record.hotel_name || record.offer_details.partner_name || "Not provided";
+  confirmationHotelCode.textContent = record.hotel_rid_code || "Not provided";
+  confirmationOfferTitle.textContent = record.offer_tile_title || "Not provided";
+  confirmationEmail.textContent = record.email || "Not provided";
+  confirmationBookingLink.textContent = record.booking_link || "Not provided";
+  confirmationDateRange.textContent = buildDateRangeSummary(record);
+
+  offerWorkspace.classList.add("is-hidden");
+  offerStartSection.classList.add("is-hidden");
+  confirmationScreen.classList.remove("is-hidden");
+  confirmationScreen.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 function buildSummaryText(record) {
   const detailLines = Object.entries(record.offer_details)
     .filter(([, value]) => value)
@@ -1182,6 +1440,7 @@ function buildSummaryText(record) {
   return [
     "Explorer Offer Submission",
     "",
+    `Offer ID: ${record.offer_id || "Pending"}`,
     `Generated: ${record.generated_at}`,
     `Type: ${record.offer_type}`,
     `Hotel / Partner: ${record.hotel_name || record.offer_details.partner_name || "Not provided"}`,
@@ -1418,11 +1677,13 @@ form.addEventListener("submit", async (event) => {
 
   try {
     const record = buildSubmissionRecord();
-    await storeSubmission(record);
+    const storedSubmission = await storeSubmission(record);
+    record.offer_id = formatOfferId(storedSubmission.id);
     const packageName = safeName(`${record.hotel_name || record.offer_details.partner_name}-${record.offer_tile_title}`);
     const zip = await createZip(getPackageFiles(record));
     downloadBlob(zip, `${packageName}-explorer-offer-submission.zip`);
     setMessage("Submission stored and package created.", "success");
+    showConfirmation(record);
   } catch (error) {
     setMessage(error.message || "The submission could not be completed.", "error");
   } finally {
