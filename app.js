@@ -49,6 +49,7 @@ const confirmationOfferTitle = document.querySelector("#confirmationOfferTitle")
 const confirmationEmail = document.querySelector("#confirmationEmail");
 const confirmationBookingLink = document.querySelector("#confirmationBookingLink");
 const confirmationDateRange = document.querySelector("#confirmationDateRange");
+const confirmationEmailStatus = document.querySelector("#confirmationEmailStatus");
 
 let resizedBannerFile = null;
 let resizedListingTileFile = null;
@@ -1666,6 +1667,8 @@ function showConfirmation(record) {
   confirmationEmail.textContent = record.email || "Not provided";
   confirmationBookingLink.textContent = record.booking_link || "Not provided";
   confirmationDateRange.textContent = buildDateRangeSummary(record);
+  confirmationEmailStatus.textContent = "Preparing email package...";
+  confirmationEmailStatus.className = "email-status";
 
   offerWorkspace.classList.add("is-hidden");
   offerStartSection.classList.add("is-hidden");
@@ -1956,6 +1959,7 @@ async function updateSubmission(record) {
 }
 
 async function sendPackageEmail(record, zip, filename) {
+  const attachmentBase64 = await blobToBase64(zip);
   const controller = new AbortController();
   const timeout = window.setTimeout(() => controller.abort(), 15000);
   let response;
@@ -1977,7 +1981,7 @@ async function sendPackageEmail(record, zip, filename) {
         attachment: {
           file_name: filename,
           mime_type: "application/zip",
-          data_base64: await blobToBase64(zip),
+          data_base64: attachmentBase64,
         },
       }),
     });
@@ -2035,12 +2039,17 @@ form.addEventListener("submit", async (event) => {
       editingOffer = savedSubmission.offer || { ...editingOffer, ...record };
     }
     showConfirmation(record);
+    confirmationEmailStatus.textContent = "Sending ZIP package by email...";
     sendPackageEmail(record, zip, packageFilename)
       .then(() => {
         record.email_delivery = { ok: true };
+        confirmationEmailStatus.textContent = "ZIP package email sent to subh.bhatt22@gmail.com.";
+        confirmationEmailStatus.className = "email-status success";
       })
       .catch((error) => {
         record.email_delivery = { ok: false, error: error.message };
+        confirmationEmailStatus.textContent = `ZIP package was downloaded, but email was not sent: ${error.message}`;
+        confirmationEmailStatus.className = "email-status error";
         console.warn("Package email could not be sent.", error);
       });
   } catch (error) {

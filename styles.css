@@ -884,6 +884,21 @@ dialog::backdrop {
   white-space: pre-line;
 }
 
+.email-status {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.email-status.success {
+  color: var(--ok);
+}
+
+.email-status.error {
+  color: var(--warning);
+}
+
 @media (max-width: 900px) {
   .shell {
     padding: 16px;
