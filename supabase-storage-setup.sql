@@ -4,7 +4,7 @@ values (
   'offer-assets',
   true,
   209715200,
-  array['image/jpeg', 'image/png', 'image/webp']
+  array['image/jpeg', 'image/png', 'image/webp', 'application/zip']
 )
 on conflict (id) do update
 set

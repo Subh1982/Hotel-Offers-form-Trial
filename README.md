@@ -37,7 +37,7 @@ The function stores structured form data in Supabase. Resized marketing images c
 
 ## Supabase image storage
 
-This version can store the resized marketing images in Supabase Storage and write their links to the Google Sheet.
+This version can store the resized marketing images and generated ZIP packages in Supabase Storage and write their links to the Google Sheet.
 
 1. In Supabase, run `supabase-storage-setup.sql` in the SQL editor.
 2. This creates a public bucket called `offer-assets`.
@@ -45,11 +45,12 @@ This version can store the resized marketing images in Supabase Storage and writ
    - `SUPABASE_STORAGE_BUCKET`
 4. Redeploy the site from Netlify.
 
-The app uploads these resized images:
+The app uploads these files:
 
 - banner image
 - listing tile image
 - social image
+- generated ZIP package
 
 Proof files such as rate screenshots, menu PDFs, and booking screenshots remain in the downloaded ZIP package for now.
 
@@ -74,10 +75,11 @@ The Sheet includes these image URL columns when Supabase Storage is configured:
 - `banner_image_url`
 - `listing_tile_image_url`
 - `social_image_url`
+- `package_zip_url`
 
 ## Email ZIP package
 
-This version can email the generated ZIP package to:
+This version can email a download link for the generated ZIP package to:
 
 `subh.bhatt22@gmail.com`
 
@@ -89,6 +91,6 @@ The email is sent through the same Google Apps Script Web App used for Google Sh
    - `GOOGLE_SHEETS_WEBHOOK_URL`
 4. Redeploy the site from Netlify.
 
-After a successful submission, the browser downloads the ZIP package and also sends it to the Netlify email function, which forwards it to Apps Script for delivery as an attachment.
+After a successful submission, the browser downloads the ZIP package, uploads the same ZIP directly to Supabase Storage, saves the package link back to Supabase and Google Sheets, then emails the link.
 
-Large ZIP packages may be limited by Netlify or Google Apps Script request size limits. The app currently attaches the generated ZIP package after the marketing images are resized.
+The package is emailed as a link rather than an attachment to avoid Netlify and Google Apps Script request-size limits.

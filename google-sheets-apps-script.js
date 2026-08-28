@@ -36,6 +36,7 @@ const HEADERS = [
   "banner_image_url",
   "listing_tile_image_url",
   "social_image_url",
+  "package_zip_url",
   "offer_details_json",
   "translations_json",
   "files_json",
@@ -44,8 +45,8 @@ const HEADERS = [
 function doPost(e) {
   const payload = JSON.parse(e.postData.contents || "{}");
 
-  if (payload.action === "email_package") {
-    sendPackageEmail(payload.offer || {}, payload.attachment || {});
+  if (payload.action === "email_package_link") {
+    sendPackageEmail(payload.offer || {}, payload.package_file || {});
     return ContentService
       .createTextOutput(JSON.stringify({ ok: true }))
       .setMimeType(ContentService.MimeType.JSON);
@@ -67,16 +68,11 @@ function doPost(e) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-function sendPackageEmail(offer, attachment) {
-  if (!attachment.data_base64 || !attachment.file_name) {
-    throw new Error("Missing ZIP attachment.");
+function sendPackageEmail(offer, packageFile) {
+  if (!packageFile.public_url) {
+    throw new Error("Missing package download link.");
   }
 
-  const blob = Utilities.newBlob(
-    Utilities.base64Decode(attachment.data_base64),
-    attachment.mime_type || "application/zip",
-    attachment.file_name
-  );
   const offerId = offer.offer_id || "New offer";
   const hotelName = offer.hotel_name || offer.partner_name || "Hotel / partner not provided";
   const offerTitle = offer.offer_tile_title || offer.offer_banner_title || "Offer title not provided";
@@ -93,9 +89,9 @@ function sendPackageEmail(offer, attachment) {
       `Submitter email: ${offer.email || "Not provided"}`,
       `Booking link: ${offer.booking_link || "Not provided"}`,
       "",
-      "The ZIP package is attached.",
+      "Download package:",
+      packageFile.public_url,
     ].join("\n"),
-    attachments: [blob],
   });
 }
 

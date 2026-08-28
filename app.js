@@ -1895,10 +1895,6 @@ async function fileToBase64(file) {
   return String(dataUrl).split(",")[1] || "";
 }
 
-async function blobToBase64(blob) {
-  return fileToBase64(blob);
-}
-
 async function buildStorageUploads() {
   const uploadMap = {
     banner_image: resizedBannerFile,
@@ -1958,8 +1954,43 @@ async function updateSubmission(record) {
   return result;
 }
 
-async function sendPackageEmail(record, zip, filename) {
-  const attachmentBase64 = await blobToBase64(zip);
+async function createPackageUpload(record, filename) {
+  const response = await fetch("/.netlify/functions/create-package-upload", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ offer_id: record.offer_id, file_name: filename }),
+  });
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(result.error || "Package upload link could not be created.");
+  }
+  return result;
+}
+
+async function uploadPackageZip(record, zip, filename) {
+  const upload = await createPackageUpload(record, filename);
+  const response = await fetch(upload.signed_url, {
+    method: "PUT",
+    headers: { "content-type": "application/zip" },
+    body: zip,
+  });
+
+  if (!response.ok) {
+    const details = await response.text().catch(() => "");
+    throw new Error(details || "Package could not be uploaded to storage.");
+  }
+
+  return {
+    file_name: filename,
+    file_size_kb: Math.round(zip.size / 1024),
+    storage_bucket: upload.bucket,
+    storage_path: upload.path,
+    public_url: upload.public_url,
+  };
+}
+
+async function sendPackageEmail(record, packageFile) {
   const controller = new AbortController();
   const timeout = window.setTimeout(() => controller.abort(), 15000);
   let response;
@@ -1969,20 +2000,9 @@ async function sendPackageEmail(record, zip, filename) {
       headers: { "content-type": "application/json" },
       signal: controller.signal,
       body: JSON.stringify({
-        offer: {
-          offer_id: record.offer_id,
-          hotel_name: record.hotel_name,
-          partner_name: record.offer_details?.partner_name,
-          offer_tile_title: record.offer_tile_title,
-          offer_banner_title: record.offer_banner_title,
-          email: record.email,
-          booking_link: record.booking_link,
-        },
-        attachment: {
-          file_name: filename,
-          mime_type: "application/zip",
-          data_base64: attachmentBase64,
-        },
+        id: record.id,
+        offer_id: record.offer_id,
+        package_file: packageFile,
       }),
     });
   } finally {
@@ -1991,7 +2011,7 @@ async function sendPackageEmail(record, zip, filename) {
 
   const result = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new Error(result.error || "Package email could not be sent.");
+    throw new Error(result.error || "Package email link could not be sent.");
   }
   return result;
 }
@@ -2039,18 +2059,23 @@ form.addEventListener("submit", async (event) => {
       editingOffer = savedSubmission.offer || { ...editingOffer, ...record };
     }
     showConfirmation(record);
-    confirmationEmailStatus.textContent = "Sending ZIP package by email...";
-    sendPackageEmail(record, zip, packageFilename)
-      .then(() => {
-        record.email_delivery = { ok: true };
-        confirmationEmailStatus.textContent = "ZIP package email sent to subh.bhatt22@gmail.com.";
+    confirmationEmailStatus.textContent = "Uploading ZIP package for email link...";
+    uploadPackageZip(record, zip, packageFilename)
+      .then((packageFile) => {
+        record.files = { ...(record.files || {}), package_zip: packageFile };
+        confirmationEmailStatus.textContent = "Sending ZIP package link by email...";
+        return sendPackageEmail(record, packageFile);
+      })
+      .then((emailResult) => {
+        record.email_delivery = emailResult.email || { ok: true };
+        confirmationEmailStatus.textContent = "ZIP package link emailed to subh.bhatt22@gmail.com.";
         confirmationEmailStatus.className = "email-status success";
       })
       .catch((error) => {
         record.email_delivery = { ok: false, error: error.message };
-        confirmationEmailStatus.textContent = `ZIP package was downloaded, but email was not sent: ${error.message}`;
+        confirmationEmailStatus.textContent = `ZIP package was downloaded, but the email link step failed: ${error.message}`;
         confirmationEmailStatus.className = "email-status error";
-        console.warn("Package email could not be sent.", error);
+        console.warn("Package email link could not be sent.", error);
       });
   } catch (error) {
     setMessage(error.message || "The submission could not be completed.", "error");
