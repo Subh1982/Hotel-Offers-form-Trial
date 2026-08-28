@@ -86,7 +86,7 @@ This version can email a download link for the generated ZIP package to:
 The email is sent through the same Google Apps Script Web App used for Google Sheets sync.
 
 1. Paste the latest `google-sheets-apps-script.js` into Apps Script.
-2. Deploy a new Web App version.
+2. Deploy a new Web App version. This is required; the old deployment may accept the request without sending the email.
 3. Confirm Netlify still has:
    - `GOOGLE_SHEETS_WEBHOOK_URL`
 4. Redeploy the site from Netlify.

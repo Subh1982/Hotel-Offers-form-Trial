@@ -48,7 +48,7 @@ function doPost(e) {
   if (payload.action === "email_package_link") {
     sendPackageEmail(payload.offer || {}, payload.package_file || {});
     return ContentService
-      .createTextOutput(JSON.stringify({ ok: true }))
+      .createTextOutput(JSON.stringify({ ok: true, email_sent: true, recipient: PACKAGE_EMAIL_RECIPIENT }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 
@@ -64,7 +64,7 @@ function doPost(e) {
   }
 
   return ContentService
-    .createTextOutput(JSON.stringify({ ok: true }))
+    .createTextOutput(JSON.stringify({ ok: true, sheet_updated: true }))
     .setMimeType(ContentService.MimeType.JSON);
 }
 

@@ -93,7 +93,23 @@ async function sendPackageEmail(offer, packageFile, webhookUrl) {
 
   const text = await response.text();
   if (!response.ok) return { ok: false, error: text || "Package email failed." };
-  return { ok: true };
+
+  let result = {};
+  try {
+    result = JSON.parse(text || "{}");
+  } catch (error) {
+    result = {};
+  }
+
+  if (result.email_sent !== true) {
+    return {
+      ok: false,
+      error: "Apps Script did not confirm that the email was sent. Paste the latest google-sheets-apps-script.js and deploy a new Web App version.",
+      details: result,
+    };
+  }
+
+  return { ok: true, recipient: result.recipient };
 }
 
 exports.handler = async (event) => {
@@ -166,6 +182,10 @@ exports.handler = async (event) => {
   const updatedOffer = { ...(updatedRows[0] || currentOffer), offer_id: formatOfferId(id) };
   const sheets = await syncOfferToSheet("update", updatedOffer, webhookUrl);
   const email = await sendPackageEmail(updatedOffer, files.package_zip, webhookUrl);
+
+  if (email.ok === false) {
+    return json(502, { error: email.error, details: email.details || null, sheets, package_file: files.package_zip });
+  }
 
   return json(200, { ok: true, offer_id: updatedOffer.offer_id, package_file: files.package_zip, sheets, email });
 };
