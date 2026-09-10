@@ -507,10 +507,11 @@ h3 {
 }
 
 .offer-type-first {
-  margin-top: 26px;
-  padding: 22px;
-  border: 2px solid var(--accent);
-  background: var(--panel);
+  margin-top: 0;
+  padding: 26px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
 }
 
 .offer-type-first h3 {
@@ -529,7 +530,7 @@ h3 {
 }
 
 .offer-type-first select {
-  border-color: var(--accent);
+  border-color: #c7d0da;
   background: var(--surface);
 }
 
@@ -547,7 +548,7 @@ h3 {
 }
 
 .dynamic-fields {
-  margin-top: 18px;
+  margin-top: 0;
 }
 
 .dynamic-grid {
@@ -600,9 +601,9 @@ h3 {
 }
 
 .translation-review-section {
-  background: #f4f8f8;
-  margin-inline: -28px;
-  padding-inline: 28px;
+  background: transparent;
+  margin-inline: 0;
+  padding-inline: 0;
 }
 
 .translation-review-section h3 {
@@ -611,8 +612,12 @@ h3 {
 
 .compact-actions {
   justify-content: flex-start;
-  margin: 16px 0;
+  margin: 18px 0;
   padding-top: 0;
+}
+
+.translation-review-section .compact-actions {
+  justify-content: flex-end;
 }
 
 .compact-actions button {
@@ -702,13 +707,23 @@ textarea:focus {
 
 .upload-zone {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 150px 160px;
+  grid-template-columns: minmax(0, 1fr) 160px 150px;
   gap: 18px;
   align-items: center;
   border: 1px solid var(--line);
   border-radius: 0;
   padding: 16px;
   background: var(--panel);
+}
+
+.upload-zone .file-action {
+  grid-column: 3;
+}
+
+.upload-zone > img,
+.upload-zone > .image-stack {
+  grid-column: 2;
+  grid-row: 1;
 }
 
 .upload-copy {
@@ -1097,6 +1112,13 @@ dialog::backdrop {
   .file-card,
   .upload-zone {
     grid-template-columns: 1fr;
+  }
+
+  .upload-zone .file-action,
+  .upload-zone > img,
+  .upload-zone > .image-stack {
+    grid-column: 1;
+    grid-row: auto;
   }
 
   .file-action small {

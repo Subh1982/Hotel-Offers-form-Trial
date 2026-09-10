@@ -896,7 +896,6 @@ function renderTypeSpecificFields() {
   typeSpecificFields.innerHTML = "";
 
   if (!selected) {
-    typeSpecificFields.innerHTML = `<p class="helper-note">${helperNoteTranslations[language] || helperNoteTranslations.en}</p>`;
     return;
   }
 
