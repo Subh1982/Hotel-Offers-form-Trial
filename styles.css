@@ -639,6 +639,13 @@ h3 {
 
 .brand-tone-actions button {
   flex: 0 0 auto;
+  min-height: 40px;
+  padding: 0 14px;
+  font-size: 12px;
+}
+
+.brand-tone-actions .muted.success {
+  font-weight: 400;
 }
 
 .muted.success {

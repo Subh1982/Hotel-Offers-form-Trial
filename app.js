@@ -153,9 +153,20 @@ const uiTranslations = {
     goBackButton: "Go back",
     confirmButton: "Confirm and submit",
     alignBrandToneButton: "Align with Brand tone",
+    alignBrandToneEmpty: "Enter an offer description first.",
+    alignBrandToneWorking: "Aligning...",
+    alignBrandToneProgress: "Rewriting your description in the Explorer brand tone...",
+    alignBrandToneSuccess: "Brand-aligned draft ready. You can edit it before submitting.",
+    alignBrandToneError: "Brand tone alignment failed.",
   },
   th: {
     alignBrandToneButton: "ปรับให้สอดคล้องกับโทนแบรนด์",
+    alignBrandToneEmpty: "โปรดกรอกรายละเอียดข้อเสนอก่อน",
+    alignBrandToneWorking: "กำลังปรับโทน...",
+    alignBrandToneProgress: "กำลังปรับรายละเอียดให้สอดคล้องกับโทนแบรนด์ Explorer...",
+    alignBrandToneSuccess: "ฉบับร่างที่ปรับตามโทนแบรนด์พร้อมแล้ว คุณสามารถแก้ไขก่อนส่งได้",
+    alignBrandToneError: "ไม่สามารถปรับให้สอดคล้องกับโทนแบรนด์ได้",
+    stepType: "ประเภทข้อเสนอ",
     offerTypeQuestion: "คุณกำลังส่งข้อเสนอประเภทใด?",
     offerTypeHelp: "ตัวเลือกของคุณจะกำหนดวันที่ ราคา และข้อมูลประกอบที่ต้องระบุด้านล่าง",
     marketLabel: "แพลตฟอร์มการตลาดแปซิฟิก",
@@ -222,6 +233,12 @@ const uiTranslations = {
   },
   vi: {
     alignBrandToneButton: "Điều chỉnh theo giọng điệu thương hiệu",
+    alignBrandToneEmpty: "Vui lòng nhập mô tả ưu đãi trước.",
+    alignBrandToneWorking: "Đang điều chỉnh...",
+    alignBrandToneProgress: "Đang viết lại mô tả theo giọng điệu thương hiệu Explorer...",
+    alignBrandToneSuccess: "Bản nháp theo giọng điệu thương hiệu đã sẵn sàng. Bạn có thể chỉnh sửa trước khi gửi.",
+    alignBrandToneError: "Không thể điều chỉnh theo giọng điệu thương hiệu.",
+    stepType: "Loại ưu đãi",
     offerTypeQuestion: "Bạn đang gửi loại ưu đãi nào?",
     offerTypeHelp: "Lựa chọn của bạn sẽ xác định ngày, mức giá và thông tin hỗ trợ cần cung cấp bên dưới.",
     marketLabel: "Nền tảng tiếp thị Pacific",
@@ -288,6 +305,12 @@ const uiTranslations = {
   },
   id: {
     alignBrandToneButton: "Sesuaikan dengan gaya bahasa merek",
+    alignBrandToneEmpty: "Masukkan deskripsi penawaran terlebih dahulu.",
+    alignBrandToneWorking: "Sedang menyesuaikan...",
+    alignBrandToneProgress: "Sedang menulis ulang deskripsi dengan gaya bahasa merek Explorer...",
+    alignBrandToneSuccess: "Draf dengan gaya bahasa merek sudah siap. Anda dapat mengeditnya sebelum mengirim.",
+    alignBrandToneError: "Penyesuaian gaya bahasa merek gagal.",
+    stepType: "Jenis penawaran",
     offerTypeQuestion: "Jenis penawaran apa yang Anda kirimkan?",
     offerTypeHelp: "Pilihan Anda akan menentukan tanggal, harga, dan informasi pendukung yang diminta di bawah ini.",
     marketLabel: "Platform pemasaran Pacific",
@@ -354,6 +377,12 @@ const uiTranslations = {
   },
   ja: {
     alignBrandToneButton: "ブランドトーンに合わせる",
+    alignBrandToneEmpty: "まずオファー説明を入力してください。",
+    alignBrandToneWorking: "調整中...",
+    alignBrandToneProgress: "Explorerのブランドトーンに合わせて説明を書き換えています...",
+    alignBrandToneSuccess: "ブランドトーンに沿った下書きが完成しました。送信前に編集できます。",
+    alignBrandToneError: "ブランドトーンの調整に失敗しました。",
+    stepType: "オファー種別",
     offerTypeQuestion: "どの種類のオファーを送信しますか？",
     offerTypeHelp: "選択した種類に応じて、日付、料金、必要な補足情報が以下に表示されます。",
     marketLabel: "パシフィック マーケティング プラットフォーム",
@@ -461,7 +490,7 @@ const formCopyTranslations = {
     acknowledgementText: "I understand incomplete or inaccurate submissions may delay promotion, and assets are due 6 weeks in advance.",
   },
   th: {
-    formTitle: "ส่งข้อเสนอที่ครบถ้วนในครั้งเดียว",
+    formTitle: "สร้างข้อเสนอ Explorer ของคุณ",
     submitButton: "สร้างแพ็กเกจและส่ง",
     emailLabel: "อีเมล",
     contactNameLabel: "ชื่อผู้รับผิดชอบ",
@@ -502,7 +531,7 @@ const formCopyTranslations = {
     acknowledgementText: "ฉันเข้าใจว่าการส่งข้อมูลที่ไม่ครบถ้วนหรือไม่ถูกต้องอาจทำให้การโปรโมตล่าช้า และต้องส่งไฟล์ล่วงหน้า 6 สัปดาห์",
   },
   vi: {
-    formTitle: "Gửi một ưu đãi hoàn chỉnh trong một lần",
+    formTitle: "Tạo ưu đãi Explorer của bạn",
     submitButton: "Tạo gói và gửi",
     emailLabel: "Email",
     contactNameLabel: "Tên người phụ trách",
@@ -543,7 +572,7 @@ const formCopyTranslations = {
     acknowledgementText: "Tôi hiểu rằng nội dung gửi không đầy đủ hoặc không chính xác có thể làm chậm chương trình khuyến mãi, và tài sản cần gửi trước 6 tuần.",
   },
   id: {
-    formTitle: "Kirim penawaran lengkap dalam satu langkah",
+    formTitle: "Buat penawaran Explorer Anda",
     submitButton: "Buat Paket dan Kirim",
     emailLabel: "Email",
     contactNameLabel: "Nama penanggung jawab",
@@ -584,7 +613,7 @@ const formCopyTranslations = {
     acknowledgementText: "Saya memahami bahwa pengiriman yang tidak lengkap atau tidak akurat dapat menunda promosi, dan aset harus dikirim 6 minggu sebelumnya.",
   },
   ja: {
-    formTitle: "完全なオファーを一度で送信",
+    formTitle: "Explorerオファーを作成",
     submitButton: "パッケージを作成して送信",
     emailLabel: "メール",
     contactNameLabel: "担当者名",
@@ -1133,17 +1162,18 @@ document.querySelectorAll('input[type="file"]').forEach((input) => {
 });
 
 alignBrandToneButton.addEventListener("click", async () => {
+  const copy = uiTranslations[languageSelect.value] || uiTranslations.en;
   const description = offerDescription.value.trim();
   if (!description) {
-    brandToneStatus.textContent = "Enter an offer description first.";
+    brandToneStatus.textContent = copy.alignBrandToneEmpty;
     brandToneStatus.className = "muted error";
     offerDescription.focus();
     return;
   }
 
   alignBrandToneButton.disabled = true;
-  alignBrandToneButton.textContent = "Aligning...";
-  brandToneStatus.textContent = "Rewriting your description in the Explorer brand tone...";
+  alignBrandToneButton.textContent = copy.alignBrandToneWorking;
+  brandToneStatus.textContent = copy.alignBrandToneProgress;
   brandToneStatus.className = "muted";
 
   try {
@@ -1157,11 +1187,11 @@ alignBrandToneButton.addEventListener("click", async () => {
 
     offerDescription.value = result.description;
     offerDescription.dispatchEvent(new Event("input", { bubbles: true }));
-    brandToneStatus.textContent = "Brand-aligned draft ready. You can edit it before submitting.";
+    brandToneStatus.textContent = copy.alignBrandToneSuccess;
     brandToneStatus.className = "muted success";
     offerDescription.focus();
   } catch (error) {
-    brandToneStatus.textContent = error.message || "Brand tone alignment failed.";
+    brandToneStatus.textContent = error.message || copy.alignBrandToneError;
     brandToneStatus.className = "muted error";
   } finally {
     alignBrandToneButton.disabled = false;
