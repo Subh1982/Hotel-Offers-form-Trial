@@ -1687,7 +1687,14 @@ async function storeSubmission(record) {
     if (response.status === 413) {
       throw new Error("Submission files are too large for the upload service. Please use smaller source images and try again.");
     }
-    throw new Error(result.error || `Submission service failed (${response.status}). ${responseText.slice(0, 180)}`.trim());
+    const diagnostic = [result.host && `Host: ${result.host}`, result.reason && `Reason: ${result.reason}`]
+      .filter(Boolean)
+      .join(" · ");
+    throw new Error(
+      [result.error || `Submission service failed (${response.status}). ${responseText.slice(0, 180)}`.trim(), diagnostic]
+        .filter(Boolean)
+        .join(" ")
+    );
   }
   return result;
 }
