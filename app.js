@@ -31,6 +31,7 @@ const translateContentButton = document.querySelector("#translateContentButton")
 const saveTranslationPreviewButton = document.querySelector("#saveTranslationPreviewButton");
 const translationPreview = document.querySelector("#translationPreview");
 const translationStatus = document.querySelector("#translationStatus");
+const translationPreviewPanel = document.querySelector("#translationPreviewPanel");
 const confirmationOfferId = document.querySelector("#confirmationOfferId");
 const confirmationHotelName = document.querySelector("#confirmationHotelName");
 const confirmationHotelCode = document.querySelector("#confirmationHotelCode");
@@ -487,6 +488,7 @@ const formCopyTranslations = {
     previewTranslatedButton: "Preview translated content",
     savePreviewButton: "Save preview to package",
     translatedPreviewLabel: "Translated preview",
+    translationEditHelp: "Review and edit this draft before saving it with the offer.",
     acknowledgementText: "I understand incomplete or inaccurate submissions may delay promotion, and assets are due 6 weeks in advance.",
   },
   th: {
@@ -528,6 +530,7 @@ const formCopyTranslations = {
     previewTranslatedButton: "ดูตัวอย่างคำแปล",
     savePreviewButton: "บันทึกตัวอย่างลงแพ็กเกจ",
     translatedPreviewLabel: "ตัวอย่างคำแปล",
+    translationEditHelp: "ตรวจทานและแก้ไขฉบับร่างนี้ก่อนบันทึกไปพร้อมกับข้อเสนอ",
     acknowledgementText: "ฉันเข้าใจว่าการส่งข้อมูลที่ไม่ครบถ้วนหรือไม่ถูกต้องอาจทำให้การโปรโมตล่าช้า และต้องส่งไฟล์ล่วงหน้า 6 สัปดาห์",
   },
   vi: {
@@ -569,6 +572,7 @@ const formCopyTranslations = {
     previewTranslatedButton: "Xem trước bản dịch",
     savePreviewButton: "Lưu bản xem trước vào gói",
     translatedPreviewLabel: "Bản dịch xem trước",
+    translationEditHelp: "Xem lại và chỉnh sửa bản nháp này trước khi lưu cùng ưu đãi.",
     acknowledgementText: "Tôi hiểu rằng nội dung gửi không đầy đủ hoặc không chính xác có thể làm chậm chương trình khuyến mãi, và tài sản cần gửi trước 6 tuần.",
   },
   id: {
@@ -610,6 +614,7 @@ const formCopyTranslations = {
     previewTranslatedButton: "Pratinjau terjemahan",
     savePreviewButton: "Simpan pratinjau ke paket",
     translatedPreviewLabel: "Pratinjau terjemahan",
+    translationEditHelp: "Tinjau dan edit draf ini sebelum menyimpannya bersama penawaran.",
     acknowledgementText: "Saya memahami bahwa pengiriman yang tidak lengkap atau tidak akurat dapat menunda promosi, dan aset harus dikirim 6 minggu sebelumnya.",
   },
   ja: {
@@ -651,6 +656,7 @@ const formCopyTranslations = {
     previewTranslatedButton: "翻訳をプレビュー",
     savePreviewButton: "プレビューをパッケージに保存",
     translatedPreviewLabel: "翻訳プレビュー",
+    translationEditHelp: "オファーと一緒に保存する前に、この下書きを確認・編集してください。",
     acknowledgementText: "不完全または不正確な提出はプロモーションの遅延につながる可能性があり、素材は6週間前までに提出する必要があることを理解しています。",
   },
 };
@@ -1215,6 +1221,7 @@ translateContentButton.addEventListener("click", async () => {
 
   try {
     translationPreview.value = await translateText(content, sourceLanguage, targetLanguage);
+    translationPreviewPanel.classList.remove("is-hidden");
     setTranslationStatus(`Draft ${contentLanguageLabels[targetLanguage]} translation generated. Review or edit it, then save the preview to the package.`);
   } catch (error) {
     setTranslationStatus(`${error.message} You can still paste a translation into the preview and save it to the package.`);
@@ -1256,6 +1263,12 @@ offerType.addEventListener("change", renderTypeSpecificFields);
 languageSelect.addEventListener("change", () => {
   applyLanguage(languageSelect.value);
   renderTypeSpecificFields();
+});
+
+translationTargetLanguage.addEventListener("change", () => {
+  translationPreview.value = "";
+  translationPreviewPanel.classList.add("is-hidden");
+  setTranslationStatus("");
 });
 
 sectionNavigationButtons.forEach((button) => {
@@ -1970,6 +1983,7 @@ form.addEventListener("reset", () => {
     generatedContentTranslations = {};
     form.querySelector('button[type="submit"]').textContent = (uiTranslations[languageSelect.value] || uiTranslations.en).submitButton;
     translationPreview.value = "";
+    translationPreviewPanel.classList.add("is-hidden");
     setTranslationStatus("");
     dateMessage.textContent = "";
     renderTypeSpecificFields();

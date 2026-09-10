@@ -213,12 +213,17 @@
             </div>
             <div class="actions compact-actions">
               <button type="button" id="translateContentButton" data-i18n="previewTranslatedButton">Preview translated content</button>
-              <button type="button" id="saveTranslationPreviewButton" class="secondary" data-i18n="savePreviewButton">Save preview to package</button>
             </div>
-            <label><span data-i18n="translatedPreviewLabel">Translated preview</span>
-              <textarea id="translationPreview" rows="10" placeholder="The translated preview will appear here. You can edit it before saving."></textarea>
-            </label>
             <p id="translationStatus" class="muted" aria-live="polite"></p>
+            <div id="translationPreviewPanel" class="translation-preview-panel is-hidden">
+              <label><span data-i18n="translatedPreviewLabel">Translated preview</span>
+                <textarea id="translationPreview" rows="10" placeholder="The translated preview will appear here. You can edit it before saving."></textarea>
+              </label>
+              <p class="muted translation-edit-help" data-i18n="translationEditHelp">Review and edit this draft before saving it with the offer.</p>
+              <div class="actions compact-actions">
+                <button type="button" id="saveTranslationPreviewButton" data-i18n="savePreviewButton">Save preview to package</button>
+              </div>
+            </div>
           </section>
 
           <section class="form-section">

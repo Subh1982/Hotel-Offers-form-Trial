@@ -620,6 +620,21 @@ h3 {
   justify-content: flex-end;
 }
 
+.translation-preview-panel {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.translation-edit-help {
+  margin: 8px 0 0;
+  font-size: 12px;
+}
+
+.translation-preview-panel .compact-actions {
+  margin-bottom: 0;
+}
+
 .compact-actions button {
   min-height: 40px;
 }
