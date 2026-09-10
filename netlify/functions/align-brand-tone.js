@@ -33,7 +33,7 @@ exports.handler = async (event) => {
   if (!description) return json(400, { error: "Enter an offer description first." });
   if (description.length > 6000) return json(400, { error: "Offer description must be 6,000 characters or fewer." });
 
-  const model = process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
+  const model = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 20000);
 
