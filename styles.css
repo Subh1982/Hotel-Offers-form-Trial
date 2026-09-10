@@ -506,6 +506,33 @@ h3 {
   border-bottom: 1px solid var(--line);
 }
 
+.offer-type-first {
+  margin-top: 26px;
+  padding: 22px;
+  border: 2px solid var(--accent);
+  background: var(--panel);
+}
+
+.offer-type-first h3 {
+  margin-bottom: 6px;
+}
+
+.offer-type-first > p {
+  margin-bottom: 16px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.offer-type-first label {
+  max-width: 100%;
+}
+
+.offer-type-first select {
+  border-color: var(--accent);
+  background: var(--surface);
+}
+
 .form-section > label,
 .form-section > .upload-zone,
 .form-section > .date-compare,
@@ -675,21 +702,90 @@ textarea:focus {
 
 .upload-zone {
   display: grid;
-  grid-template-columns: minmax(180px, 260px) minmax(0, 1fr) 160px;
+  grid-template-columns: minmax(0, 1fr) 150px 160px;
   gap: 18px;
   align-items: center;
-  border: 1px dashed #9ba8b5;
-  border-radius: 8px;
-  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  padding: 16px;
   background: var(--panel);
 }
 
-.secondary-upload {
-  margin-top: 16px;
+.upload-copy {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
 }
 
-.upload-zone input {
-  background: white;
+.upload-copy strong {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.upload-copy span,
+.upload-copy p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.file-action {
+  display: grid;
+  gap: 6px;
+  align-content: center;
+  cursor: pointer;
+}
+
+.file-action input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.file-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 14px;
+  background: var(--accent);
+  color: white !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.file-action:hover .file-button,
+.file-action:focus-within .file-button {
+  background: var(--teal);
+}
+
+.file-action:focus-within .file-button {
+  outline: 3px solid rgba(39, 102, 110, 0.18);
+  outline-offset: 2px;
+}
+
+.file-action small {
+  display: block;
+  max-width: 150px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 400;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .upload-zone img {
@@ -719,13 +815,17 @@ textarea:focus {
 
 .upload-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-columns: 1fr;
+  gap: 10px;
 }
 
 .file-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px;
+  gap: 18px;
+  align-items: center;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 0;
   padding: 16px;
   background: var(--panel);
 }
@@ -734,6 +834,10 @@ textarea:focus {
   color: var(--muted);
   font-size: 13px;
   font-weight: 600;
+}
+
+.secondary-upload {
+  margin-top: 10px;
 }
 
 .checkline {
@@ -988,6 +1092,15 @@ dialog::backdrop {
   .retrieved-offer-card,
   .retrieved-offer-fields {
     grid-template-columns: 1fr;
+  }
+
+  .file-card,
+  .upload-zone {
+    grid-template-columns: 1fr;
+  }
+
+  .file-action small {
+    max-width: 100%;
   }
 
   .panel {

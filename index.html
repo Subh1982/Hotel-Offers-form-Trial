@@ -44,7 +44,8 @@
             </div>
           </div>
           <ol class="steps" aria-label="Form sections">
-            <li class="active"><button type="button" data-scroll-target="hotelDetailsSection" data-i18n="stepHotel">Hotel details</button></li>
+            <li class="active"><button type="button" data-scroll-target="offerTypeSection" data-i18n="stepType">Offer type</button></li>
+            <li><button type="button" data-scroll-target="hotelDetailsSection" data-i18n="stepHotel">Hotel details</button></li>
             <li><button type="button" data-scroll-target="datesBookingSection" data-i18n="stepOffer">Offer and dates</button></li>
             <li><button type="button" data-scroll-target="proofFormsSection" data-i18n="stepProof">Proof and forms</button></li>
             <li><button type="button" data-scroll-target="imagesSection" data-i18n="stepImages">Images and review</button></li>
@@ -56,9 +57,25 @@
           <div class="form-header">
             <div>
               <p class="eyebrow" data-i18n="formEyebrow">Stay and dining offers</p>
-              <h2 data-i18n="formTitle">Submit a complete offer in one pass</h2>
+              <h2 data-i18n="formTitle">Create your Explorer offer</h2>
             </div>
           </div>
+
+          <section id="offerTypeSection" class="form-section offer-type-first">
+            <h3 data-i18n="offerTypeQuestion">What type of offer are you submitting?</h3>
+            <p data-i18n="offerTypeHelp">Your choice determines the dates, pricing, and supporting information requested below.</p>
+            <label><span data-i18n="offerTypeLabel">Offer type</span>
+              <select id="offerType" name="offer_type" required>
+                <option value="" data-i18n="selectOne">Select one</option>
+                <option value="red_hot_rooms">Red Hot Rooms</option>
+                <option value="more_escapes">More Escapes</option>
+                <option value="hotel_stay">Hotel stay</option>
+                <option value="dining">Dining</option>
+                <option value="events">Events</option>
+                <option value="partners">Partners</option>
+              </select>
+            </label>
+          </section>
 
           <section id="hotelDetailsSection" class="form-section">
             <h3 data-i18n="hotelDetails">Hotel details</h3>
@@ -74,17 +91,6 @@
               </label>
               <label><span data-i18n="hotelNameLabel">Hotel name</span>
                 <input name="hotel_name" autocomplete="organization" placeholder="Example: Swissotel Jakarta PIK Avenue">
-              </label>
-              <label><span data-i18n="offerTypeLabel">Offer type</span>
-                <select id="offerType" name="offer_type" required>
-                  <option value="" data-i18n="selectOne">Select one</option>
-                  <option value="red_hot_rooms">Red Hot Rooms</option>
-                  <option value="more_escapes">More Escapes</option>
-                  <option value="hotel_stay">Hotel stay</option>
-                  <option value="dining">Dining</option>
-                  <option value="events">Events</option>
-                  <option value="partners">Partners</option>
-                </select>
               </label>
               <label><span data-i18n="cityCountryLabel">City - Country</span>
                 <input name="city_country" placeholder="Example: Phuket - Thailand">
@@ -128,29 +134,29 @@
           <section id="proofFormsSection" class="form-section">
             <h3 data-i18n="proofForms">Proof and required forms</h3>
             <div class="upload-grid">
-              <label class="file-card conditional-stay"><span data-i18n="rateScreenshotLabel">Rate screenshot</span>
-                <span data-i18n="rateScreenshotHelp">Please show the loaded rate available at all.com. Max 1 MB image.</span>
-                <input name="rate_screenshot" type="file" accept="image/png,image/jpeg,image/webp">
-              </label>
-              <label class="file-card conditional-dining"><span data-i18n="menuPdfLabel">Dining / event menu PDF</span>
-                <span data-i18n="menuPdfHelp">Please merge PDFs into one file. Max 10 MB.</span>
-                <input name="menu_pdf" type="file" accept="application/pdf">
-              </label>
-              <label class="file-card conditional-dining"><span data-i18n="bookingScreenshotLabel">Final booking page screenshot</span>
-                <span data-i18n="bookingScreenshotHelp">For dining / event offers with a booking URL. Max 1 MB image.</span>
-                <input name="booking_screenshot" type="file" accept="image/png,image/jpeg,image/webp">
-              </label>
+              <div class="file-card upload-row conditional-stay">
+                <div class="upload-copy"><strong data-i18n="rateScreenshotLabel">Rate screenshot</strong><span data-i18n="rateScreenshotHelp">Please show the loaded rate available at all.com. Max 1 MB image.</span></div>
+                <label class="file-action"><input name="rate_screenshot" type="file" accept="image/png,image/jpeg,image/webp"><span class="file-button">Choose image</span><small data-file-name-for="rate_screenshot">No file selected</small></label>
+              </div>
+              <div class="file-card upload-row conditional-dining">
+                <div class="upload-copy"><strong data-i18n="menuPdfLabel">Dining / event menu PDF</strong><span data-i18n="menuPdfHelp">Please merge PDFs into one file. Max 10 MB.</span></div>
+                <label class="file-action"><input name="menu_pdf" type="file" accept="application/pdf"><span class="file-button">Choose PDF</span><small data-file-name-for="menu_pdf">No file selected</small></label>
+              </div>
+              <div class="file-card upload-row conditional-dining">
+                <div class="upload-copy"><strong data-i18n="bookingScreenshotLabel">Final booking page screenshot</strong><span data-i18n="bookingScreenshotHelp">For dining / event offers with a booking URL. Max 1 MB image.</span></div>
+                <label class="file-action"><input name="booking_screenshot" type="file" accept="image/png,image/jpeg,image/webp"><span class="file-button">Choose image</span><small data-file-name-for="booking_screenshot">No file selected</small></label>
+              </div>
             </div>
           </section>
 
           <section id="imagesSection" class="form-section">
             <h3 data-i18n="imagesTitle">Images</h3>
-            <div class="upload-zone">
-              <input id="masterImageInput" name="master_image" type="file" accept="image/png,image/jpeg,image/webp">
-              <div>
+            <div class="upload-zone upload-row">
+              <div class="upload-copy">
                 <strong data-i18n="masterImageTitle">Use one image for all placements</strong>
                 <p data-i18n="masterImageHelp">Upload one high-quality image and the app will resize it into banner, listing tile, and social versions.</p>
               </div>
+              <label class="file-action"><input id="masterImageInput" name="master_image" type="file" accept="image/png,image/jpeg,image/webp"><span class="file-button">Choose image</span><small data-file-name-for="master_image">No file selected</small></label>
               <div class="image-stack">
                 <img id="masterBannerPreview" alt="">
                 <img id="masterListingPreview" alt="">
@@ -158,30 +164,30 @@
               </div>
             </div>
             <p id="masterImageMessage" class="muted"></p>
-            <div class="upload-zone secondary-upload">
-              <input id="bannerInput" name="banner_image" type="file" accept="image/png,image/jpeg,image/webp">
-              <div>
+            <div class="upload-zone upload-row secondary-upload">
+              <div class="upload-copy">
                 <strong data-i18n="bannerImageTitle">Banner image</strong>
                 <p data-i18n="bannerImageHelp">Upload any image size. The app will auto-resize it to 2048 x 1366px JPG. Source file must not exceed 200 MB. No text and no logo.</p>
               </div>
+              <label class="file-action"><input id="bannerInput" name="banner_image" type="file" accept="image/png,image/jpeg,image/webp"><span class="file-button">Choose image</span><small data-file-name-for="banner_image">No file selected</small></label>
               <img id="bannerPreview" alt="">
             </div>
             <p id="bannerMessage" class="muted"></p>
-            <div class="upload-zone secondary-upload">
-              <input id="listingTileInput" name="listing_tile_image" type="file" accept="image/png,image/jpeg,image/webp">
-              <div>
+            <div class="upload-zone upload-row secondary-upload">
+              <div class="upload-copy">
                 <strong data-i18n="listingTileImageTitle">Listing tile image</strong>
                 <p data-i18n="listingTileImageHelp">Upload any image size. The app will auto-resize it to 400 x 250px JPG. Source file must not exceed 200 MB.</p>
               </div>
+              <label class="file-action"><input id="listingTileInput" name="listing_tile_image" type="file" accept="image/png,image/jpeg,image/webp"><span class="file-button">Choose image</span><small data-file-name-for="listing_tile_image">No file selected</small></label>
               <img id="listingTilePreview" alt="">
             </div>
             <p id="listingTileMessage" class="muted"></p>
-            <div class="upload-zone secondary-upload">
-              <input id="socialInput" name="social_image" type="file" accept="image/png,image/jpeg,image/webp">
-              <div>
+            <div class="upload-zone upload-row secondary-upload">
+              <div class="upload-copy">
                 <strong data-i18n="socialImageTitle">Social image</strong>
                 <p data-i18n="socialImageHelp">Upload any image size. The app will auto-resize it to 1080 x 1080px JPG. Source file must not exceed 200 MB.</p>
               </div>
+              <label class="file-action"><input id="socialInput" name="social_image" type="file" accept="image/png,image/jpeg,image/webp"><span class="file-button">Choose image</span><small data-file-name-for="social_image">No file selected</small></label>
               <img id="socialPreview" alt="">
             </div>
             <p id="socialMessage" class="muted"></p>

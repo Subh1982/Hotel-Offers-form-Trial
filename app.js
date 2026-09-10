@@ -124,6 +124,7 @@ const uiTranslations = {
     backToOptionsButton: "Back to options",
     sideEyebrow: "Explorer partners",
     sideTitle: "Offer submission",
+    stepType: "Offer type",
     stepHotel: "Hotel details",
     stepOffer: "Offer and dates",
     stepProof: "Proof and forms",
@@ -132,7 +133,9 @@ const uiTranslations = {
     modeTitle: "Asana workflow",
     modeText: "Submitting creates an Asana task and attaches the selected images for review.",
     formEyebrow: "Stay and dining offers",
-    formTitle: "Submit a complete offer in one pass",
+    formTitle: "Create your Explorer offer",
+    offerTypeQuestion: "What type of offer are you submitting?",
+    offerTypeHelp: "Your choice determines the dates, pricing, and supporting information requested below.",
     statusPill: "Asana submission",
     hotelDetails: "Hotel details",
     coreContent: "Core offer content",
@@ -1101,6 +1104,15 @@ socialInput.addEventListener("change", () => handleImageUpload(
   { width: 1080, height: 1080, cover: true, label: "Social image", outputName: "social-1080x1080.jpg" },
 ));
 
+function updateFileName(input) {
+  const filename = document.querySelector(`[data-file-name-for="${input.name}"]`);
+  if (filename) filename.textContent = input.files[0]?.name || "No file selected";
+}
+
+document.querySelectorAll('input[type="file"]').forEach((input) => {
+  input.addEventListener("change", () => updateFileName(input));
+});
+
 translateContentButton.addEventListener("click", async () => {
   const sourceLanguage = languageSelect.value;
   const targetLanguage = translationTargetLanguage.value;
@@ -1868,6 +1880,7 @@ form.addEventListener("reset", () => {
     bannerMessage.textContent = "";
     listingTileMessage.textContent = "";
     socialMessage.textContent = "";
+    document.querySelectorAll('input[type="file"]').forEach((input) => updateFileName(input));
     generatedContentTranslations = {};
     form.querySelector('button[type="submit"]').textContent = (uiTranslations[languageSelect.value] || uiTranslations.en).submitButton;
     translationPreview.value = "";
