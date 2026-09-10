@@ -668,6 +668,11 @@ textarea {
   background: white;
 }
 
+select {
+  min-height: 54px;
+  padding-block: 14px;
+}
+
 textarea {
   resize: vertical;
 }

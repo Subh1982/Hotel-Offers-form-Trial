@@ -64,8 +64,8 @@
           <section id="offerTypeSection" class="form-section offer-type-first">
             <h3 data-i18n="offerTypeQuestion">What type of offer are you submitting?</h3>
             <p data-i18n="offerTypeHelp">Your choice determines the dates, pricing, and supporting information requested below.</p>
-            <label><span data-i18n="offerTypeLabel">Offer type</span>
-              <select id="offerType" name="offer_type" required>
+            <label class="select-only">
+              <select id="offerType" name="offer_type" required aria-label="Offer type" data-i18n-aria-label="offerTypeLabel">
                 <option value="" data-i18n="selectOne">Select one</option>
                 <option value="red_hot_rooms">Red Hot Rooms</option>
                 <option value="more_escapes">More Escapes</option>

@@ -151,6 +151,8 @@ const uiTranslations = {
     confirmButton: "Confirm and submit",
   },
   th: {
+    offerTypeQuestion: "คุณกำลังส่งข้อเสนอประเภทใด?",
+    offerTypeHelp: "ตัวเลือกของคุณจะกำหนดวันที่ ราคา และข้อมูลประกอบที่ต้องระบุด้านล่าง",
     marketLabel: "แพลตฟอร์มการตลาดแปซิฟิก",
     languageLabel: "ภาษา",
     heroTitle: "พอร์ทัลข้อเสนอ ALL Accor+ Explorer",
@@ -214,6 +216,8 @@ const uiTranslations = {
     confirmButton: "ยืนยันและสร้างแพ็กเกจ",
   },
   vi: {
+    offerTypeQuestion: "Bạn đang gửi loại ưu đãi nào?",
+    offerTypeHelp: "Lựa chọn của bạn sẽ xác định ngày, mức giá và thông tin hỗ trợ cần cung cấp bên dưới.",
     marketLabel: "Nền tảng tiếp thị Pacific",
     languageLabel: "Ngôn ngữ",
     heroTitle: "Cổng ưu đãi ALL Accor+ Explorer",
@@ -277,6 +281,8 @@ const uiTranslations = {
     confirmButton: "Xác nhận và tạo gói",
   },
   id: {
+    offerTypeQuestion: "Jenis penawaran apa yang Anda kirimkan?",
+    offerTypeHelp: "Pilihan Anda akan menentukan tanggal, harga, dan informasi pendukung yang diminta di bawah ini.",
     marketLabel: "Platform pemasaran Pacific",
     languageLabel: "Bahasa",
     heroTitle: "Portal Penawaran ALL Accor+ Explorer",
@@ -340,6 +346,8 @@ const uiTranslations = {
     confirmButton: "Konfirmasi dan buat paket",
   },
   ja: {
+    offerTypeQuestion: "どの種類のオファーを送信しますか？",
+    offerTypeHelp: "選択した種類に応じて、日付、料金、必要な補足情報が以下に表示されます。",
     marketLabel: "パシフィック マーケティング プラットフォーム",
     languageLabel: "言語",
     heroTitle: "ALL Accor+ Explorer オファーポータル",
@@ -621,6 +629,10 @@ function applyLanguage(language) {
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     const key = element.dataset.i18n;
     if (Object.hasOwn(copy, key)) element.textContent = copy[key];
+  });
+  document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
+    const key = element.dataset.i18nAriaLabel;
+    if (Object.hasOwn(copy, key)) element.setAttribute("aria-label", copy[key]);
   });
   if (heroText) heroText.textContent = copy.heroText || uiTranslations.en.heroText;
   translationSourceDisplay.textContent = labels[language] || contentLanguageLabels[language] || contentLanguageLabels.en;
