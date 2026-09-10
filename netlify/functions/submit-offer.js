@@ -251,14 +251,6 @@ exports.handler = async (event) => {
     return json(405, { error: "Method not allowed" });
   }
 
-  const supabaseConfig = supabaseProjectUrl(process.env.SUPABASE_URL);
-  const supabaseUrl = supabaseConfig.url;
-  const supabaseServiceRoleKey = cleanEnvironmentValue(process.env.SUPABASE_SERVICE_ROLE_KEY);
-
-  if (supabaseConfig.error || !supabaseServiceRoleKey) {
-    return json(500, { error: supabaseConfig.error || "SUPABASE_SERVICE_ROLE_KEY is not configured." });
-  }
-
   let submission;
   try {
     submission = JSON.parse(event.body || "{}");
@@ -266,7 +258,9 @@ exports.handler = async (event) => {
     return json(400, { error: "Invalid JSON payload." });
   }
 
-  const payload = {
+  const offer = {
+    id: null,
+    offer_id: `ASANA-TEST-${Date.now()}`,
     generated_at: submission.generated_at,
     email: submission.email,
     person_in_charge_name: submission.person_in_charge_name,
@@ -289,94 +283,21 @@ exports.handler = async (event) => {
     acknowledgement: submission.acknowledgement,
     status: "submitted",
   };
-
-  let response;
-  try {
-    response = await fetch(`${supabaseUrl}/rest/v1/offer_submissions`, {
-      method: "POST",
-      headers: {
-        apikey: supabaseServiceRoleKey,
-        authorization: `Bearer ${supabaseServiceRoleKey}`,
-        "content-type": "application/json",
-        prefer: "return=representation",
-      },
-      body: JSON.stringify(payload),
-    });
-  } catch (error) {
-    console.error("Supabase insert request failed", error);
-    return json(502, {
-      error: "The offer database could not be reached. No Asana task was created.",
-      service: "supabase",
-      host: supabaseConfig.host,
-      reason: error.cause?.code || error.code || error.name || "network_error",
+  const asana = await createAsanaTask(offer);
+  if (!asana.ok) {
+    return json(asana.skipped ? 500 : 502, {
+      error: asana.error || "Asana task creation failed.",
+      details: asana.details,
+      service: "asana",
     });
   }
-
-  const responseText = await response.text();
-  if (!response.ok) {
-    return json(response.status, { error: "Supabase insert failed.", details: responseText });
-  }
-
-  let inserted = [];
-  try {
-    inserted = JSON.parse(responseText);
-  } catch (error) {
-    inserted = [];
-  }
-
-  const savedOffer = inserted[0] || {};
-  let offerWithId = { ...savedOffer, offer_id: formatOfferId(savedOffer.id) };
-  const asana = await createAsanaTask(offerWithId);
-
-  let storage = { ok: true };
-  let updatedFiles = savedOffer.files || {};
-  try {
-    updatedFiles = await uploadAssets({
-      supabaseUrl,
-      supabaseServiceRoleKey,
-      offerId: offerWithId.offer_id,
-      files: savedOffer.files,
-      assets: submission.asset_uploads,
-    });
-  } catch (error) {
-    storage = { ok: false, error: error.message || "Supabase Storage upload failed." };
-  }
-
-  if (submission.asset_uploads?.length && storage.ok) {
-    try {
-      const updateResponse = await fetch(`${supabaseUrl}/rest/v1/offer_submissions?id=eq.${savedOffer.id}`, {
-        method: "PATCH",
-        headers: {
-          apikey: supabaseServiceRoleKey,
-          authorization: `Bearer ${supabaseServiceRoleKey}`,
-          "content-type": "application/json",
-          prefer: "return=representation",
-        },
-        body: JSON.stringify({ files: updatedFiles }),
-      });
-
-      const updateText = await updateResponse.text();
-      if (!updateResponse.ok) {
-        storage = { ok: false, error: `Supabase file URL update failed: ${updateText}` };
-      } else {
-        const updatedRows = JSON.parse(updateText || "[]");
-        offerWithId = { ...(updatedRows[0] || savedOffer), offer_id: offerWithId.offer_id };
-      }
-    } catch (error) {
-      console.error("Supabase file URL update request failed", error);
-      storage = { ok: false, error: "Images uploaded, but their file links could not be saved to the offer record." };
-    }
-  }
-
-  const sheets = await syncOfferToSheet("create", offerWithId);
 
   return json(200, {
     ok: true,
-    id: savedOffer.id || null,
-    offer_id: offerWithId.offer_id,
-    offer: offerWithId,
-    storage,
-    sheets,
+    mode: "asana_only",
+    id: null,
+    offer_id: offer.offer_id,
+    offer,
     asana,
   });
 };

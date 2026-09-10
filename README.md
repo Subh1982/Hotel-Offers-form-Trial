@@ -1,5 +1,7 @@
 # Explorer Offer Submission
 
+> Current test mode: form submission creates an Asana task only. Supabase, Google Sheets, image storage, ZIP generation, and package email are temporarily skipped.
+
 Offer collection form for Pacific hotel offer submissions.
 
 Hotels complete the form in the browser and download a ZIP package containing:

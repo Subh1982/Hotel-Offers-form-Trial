@@ -1,5 +1,7 @@
 # Explorer Offers Collection Platform Architecture
 
+> Current test mode: submissions create an Asana task only. Supabase persistence, image storage, Google Sheets sync, ZIP generation, and package email are temporarily skipped.
+
 ## Overview
 
 The application is a browser-first offer collection system for Pacific hotels. The primary deployment uses a static frontend hosted on Netlify, Netlify Functions for privileged server-side operations, Supabase for structured data and file storage, Google Apps Script for spreadsheet synchronisation and email delivery, and Asana for operational follow-up tasks.
