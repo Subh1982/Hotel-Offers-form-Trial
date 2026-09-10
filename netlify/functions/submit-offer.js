@@ -270,16 +270,25 @@ exports.handler = async (event) => {
     status: "submitted",
   };
 
-  const response = await fetch(`${supabaseUrl}/rest/v1/offer_submissions`, {
-    method: "POST",
-    headers: {
-      apikey: supabaseServiceRoleKey,
-      authorization: `Bearer ${supabaseServiceRoleKey}`,
-      "content-type": "application/json",
-      prefer: "return=representation",
-    },
-    body: JSON.stringify(payload),
-  });
+  let response;
+  try {
+    response = await fetch(`${supabaseUrl}/rest/v1/offer_submissions`, {
+      method: "POST",
+      headers: {
+        apikey: supabaseServiceRoleKey,
+        authorization: `Bearer ${supabaseServiceRoleKey}`,
+        "content-type": "application/json",
+        prefer: "return=representation",
+      },
+      body: JSON.stringify(payload),
+    });
+  } catch (error) {
+    console.error("Supabase insert request failed", error);
+    return json(502, {
+      error: "The offer database could not be reached. No Asana task was created.",
+      service: "supabase",
+    });
+  }
 
   const responseText = await response.text();
   if (!response.ok) {
@@ -312,23 +321,28 @@ exports.handler = async (event) => {
   }
 
   if (submission.asset_uploads?.length && storage.ok) {
-    const updateResponse = await fetch(`${supabaseUrl}/rest/v1/offer_submissions?id=eq.${savedOffer.id}`, {
-      method: "PATCH",
-      headers: {
-        apikey: supabaseServiceRoleKey,
-        authorization: `Bearer ${supabaseServiceRoleKey}`,
-        "content-type": "application/json",
-        prefer: "return=representation",
-      },
-      body: JSON.stringify({ files: updatedFiles }),
-    });
+    try {
+      const updateResponse = await fetch(`${supabaseUrl}/rest/v1/offer_submissions?id=eq.${savedOffer.id}`, {
+        method: "PATCH",
+        headers: {
+          apikey: supabaseServiceRoleKey,
+          authorization: `Bearer ${supabaseServiceRoleKey}`,
+          "content-type": "application/json",
+          prefer: "return=representation",
+        },
+        body: JSON.stringify({ files: updatedFiles }),
+      });
 
-    const updateText = await updateResponse.text();
-    if (!updateResponse.ok) {
-      storage = { ok: false, error: `Supabase file URL update failed: ${updateText}` };
-    } else {
-      const updatedRows = JSON.parse(updateText || "[]");
-      offerWithId = { ...(updatedRows[0] || savedOffer), offer_id: offerWithId.offer_id };
+      const updateText = await updateResponse.text();
+      if (!updateResponse.ok) {
+        storage = { ok: false, error: `Supabase file URL update failed: ${updateText}` };
+      } else {
+        const updatedRows = JSON.parse(updateText || "[]");
+        offerWithId = { ...(updatedRows[0] || savedOffer), offer_id: offerWithId.offer_id };
+      }
+    } catch (error) {
+      console.error("Supabase file URL update request failed", error);
+      storage = { ok: false, error: "Images uploaded, but their file links could not be saved to the offer record." };
     }
   }
 
