@@ -107,6 +107,7 @@ function sheetRowForOffer(offer) {
     banner_image_url: files.banner_image?.public_url || "",
     listing_tile_image_url: files.listing_tile_image?.public_url || "",
     social_image_url: files.social_image?.public_url || "",
+    package_zip_url: files.package_zip?.public_url || "",
     offer_details_json: JSON.stringify(details),
     translations_json: JSON.stringify(offer.auto_translations || offer.translations || {}),
     files_json: JSON.stringify(offer.files || {}),
@@ -129,6 +130,84 @@ async function syncOfferToSheet(action, offer) {
   }
 
   return { ok: true };
+}
+
+function asanaTaskNotes(offer) {
+  const details = offer.offer_details || {};
+  const detailLines = Object.entries(details)
+    .filter(([, value]) => value)
+    .map(([key, value]) => `${key.replace(/_/g, " ")}: ${value}`);
+
+  return [
+    `Explorer Offer ID: ${offer.offer_id}`,
+    `Status: ${offer.status || "submitted"}`,
+    `Hotel / partner: ${offer.hotel_name || details.partner_name || "Not provided"}`,
+    `Hotel RID code: ${offer.hotel_rid_code || "Not provided"}`,
+    `City / country: ${offer.city_country || "Not provided"}`,
+    `Offer type: ${offer.offer_type || "Not provided"}`,
+    `Offer title: ${offer.offer_tile_title || "Not provided"}`,
+    `Offer banner title: ${offer.offer_banner_title || "Not provided"}`,
+    `Offer subtitle: ${offer.offer_subtitle || "Not provided"}`,
+    `Submitter: ${offer.person_in_charge_name || "Not provided"} (${offer.email || "No email"})`,
+    `Booking link: ${offer.booking_link || "Not provided"}`,
+    "",
+    "Offer description",
+    offer.offer_description || "Not provided",
+    "",
+    "Offer details",
+    ...(detailLines.length ? detailLines : ["Not provided"]),
+    "",
+    "Terms and conditions",
+    offer.terms || "Not provided",
+  ].join("\n");
+}
+
+async function createAsanaTask(offer) {
+  const accessToken = process.env.ASANA_ACCESS_TOKEN;
+  const projectGid = process.env.ASANA_PROJECT_GID;
+  const assigneeGid = process.env.ASANA_ASSIGNEE_GID;
+
+  if (!accessToken || !projectGid) {
+    return {
+      ok: false,
+      skipped: true,
+      error: "Asana is not configured. Add ASANA_ACCESS_TOKEN and ASANA_PROJECT_GID in Netlify.",
+    };
+  }
+
+  const taskData = {
+    name: `[${offer.offer_id}] ${offer.offer_tile_title || offer.offer_banner_title || "New Explorer offer"}`.slice(0, 255),
+    notes: asanaTaskNotes(offer),
+    projects: [projectGid],
+  };
+  if (assigneeGid) taskData.assignee = assigneeGid;
+
+  try {
+    const response = await fetch("https://app.asana.com/api/1.0/tasks?opt_fields=gid,name,permalink_url", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        authorization: `Bearer ${accessToken}`,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ data: taskData }),
+    });
+    const responseText = await response.text();
+
+    if (!response.ok) {
+      return { ok: false, error: `Asana task creation failed (${response.status}).`, details: responseText };
+    }
+
+    const result = JSON.parse(responseText || "{}");
+    return {
+      ok: true,
+      gid: result.data?.gid || "",
+      name: result.data?.name || taskData.name,
+      permalink_url: result.data?.permalink_url || "",
+    };
+  } catch (error) {
+    return { ok: false, error: error.message || "Asana task creation failed." };
+  }
 }
 
 exports.handler = async (event) => {
@@ -228,7 +307,10 @@ exports.handler = async (event) => {
     offerWithId = { ...(updatedRows[0] || savedOffer), offer_id: offerWithId.offer_id };
   }
 
-  const sheets = await syncOfferToSheet("create", offerWithId);
+  const [sheets, asana] = await Promise.all([
+    syncOfferToSheet("create", offerWithId),
+    createAsanaTask(offerWithId),
+  ]);
 
-  return json(200, { ok: true, id: savedOffer.id || null, offer_id: offerWithId.offer_id, offer: offerWithId, sheets });
+  return json(200, { ok: true, id: savedOffer.id || null, offer_id: offerWithId.offer_id, offer: offerWithId, sheets, asana });
 };

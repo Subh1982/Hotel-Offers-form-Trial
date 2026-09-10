@@ -23,6 +23,18 @@ The page interface can be displayed in English, Thai, Vietnamese, Bahasa Indones
 
 Offer content is stored in Supabase when the Netlify environment variables are configured. Offer content is sent to the public MyMemory translation endpoint only when the hotel clicks the preview translation button.
 
+## Asana task creation
+
+Each successful offer submission can create a task in an Asana project. The task includes the generated Explorer Offer ID, hotel or partner information, submitter, booking link, offer content, offer-specific details, and terms.
+
+Add these environment variables in Netlify and redeploy:
+
+- `ASANA_ACCESS_TOKEN`: a secret Asana access token with permission to create tasks;
+- `ASANA_PROJECT_GID`: the destination Asana project ID; and
+- `ASANA_ASSIGNEE_GID`: optional user ID to assign every new task.
+
+If Asana is not configured or task creation fails, the offer submission still succeeds and the confirmation panel displays the integration warning. This avoids duplicate offers caused by resubmission.
+
 ## Supabase storage
 
 This Netlify version includes a serverless function that stores structured offer data in Supabase before downloading the ZIP package.

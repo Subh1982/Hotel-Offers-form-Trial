@@ -34,69 +34,7 @@
           </figure>
         </section>
       </header>
-      <section id="offerStartSection" class="start-section" aria-labelledby="startTitle">
-        <div class="start-header">
-          <div>
-            <p class="eyebrow" data-i18n="startEyebrow">Offer workspace</p>
-            <h2 id="startTitle" data-i18n="startTitle">What would you like to do?</h2>
-          </div>
-          <p data-i18n="startText">Choose the path that matches your task. New offers open the full submission form, while existing offers can be found by Offer ID or hotel details.</p>
-        </div>
-
-        <div class="start-options">
-          <button type="button" class="start-card primary-start-card" data-start-action="create">
-            <span class="start-icon" aria-hidden="true">+</span>
-            <span>
-              <strong data-i18n="createOfferTitle">Create a new offer</strong>
-              <small data-i18n="createOfferText">Start a fresh stay, dining, event, partner, Red Hot Rooms, or More Escapes submission.</small>
-            </span>
-          </button>
-          <button type="button" class="start-card" data-start-action="view">
-            <span class="start-icon" aria-hidden="true">⌕</span>
-            <span>
-              <strong data-i18n="viewOfferTitle">Retrieve and view an existing offer</strong>
-              <small data-i18n="viewOfferText">Look up a submitted offer without changing it.</small>
-            </span>
-          </button>
-          <button type="button" class="start-card" data-start-action="edit">
-            <span class="start-icon" aria-hidden="true">✎</span>
-            <span>
-              <strong data-i18n="editOfferTitle">Retrieve and edit an existing offer</strong>
-              <small data-i18n="editOfferText">Find a saved offer, update it, and create a revised package.</small>
-            </span>
-          </button>
-        </div>
-
-        <div id="retrievePanel" class="retrieve-panel" hidden>
-          <div>
-            <p class="eyebrow" id="retrieveModeLabel" data-i18n="retrieveViewEyebrow">Retrieve and view</p>
-            <h3 id="retrieveTitle" data-i18n="retrieveTitle">Search for an existing offer</h3>
-            <p data-i18n="retrieveText">Use the Offer ID from the confirmation screen for the most accurate result. You can also search by hotel name and submitter email.</p>
-          </div>
-          <div class="grid two">
-            <label><span data-i18n="offerIdLabel">Offer ID</span>
-              <input id="offerSearchId" placeholder="EXP-2026-000124">
-            </label>
-            <label><span data-i18n="retrieveEmailLabel">Submitter email</span>
-              <input id="offerSearchEmail" type="email" placeholder="person@hotel.com">
-            </label>
-            <label><span data-i18n="retrieveHotelLabel">Hotel name</span>
-              <input id="offerSearchHotel" placeholder="Example: Sofitel Bangkok Sukhumvit">
-            </label>
-            <label><span data-i18n="retrieveHotelCodeLabel">Hotel code</span>
-              <input id="offerSearchHotelCode" placeholder="Example: B590">
-            </label>
-          </div>
-          <p id="retrieveMessage" class="muted" aria-live="polite"></p>
-          <div id="retrieveResults" class="retrieve-results" aria-live="polite"></div>
-          <div class="actions compact-actions">
-            <button type="button" id="searchOfferButton" data-i18n="searchOfferButton">Search offer</button>
-            <button type="button" class="secondary" id="backToStartButton" data-i18n="backToStartButton">Back to options</button>
-          </div>
-        </div>
-      </section>
-
-      <section id="offerWorkspace" class="workspace is-hidden">
+      <section id="offerWorkspace" class="workspace">
         <aside class="panel">
           <div class="brand">
             <span class="mark">EX</span>
@@ -123,7 +61,6 @@
             <div>
               <p class="eyebrow" data-i18n="formEyebrow">Stay and dining offers</p>
               <h2 data-i18n="formTitle">Submit a complete offer in one pass</h2>
-              <p id="editModeNotice" class="edit-mode-notice" hidden></p>
             </div>
             <span class="status-pill" data-i18n="statusPill">Static package</span>
           </div>
@@ -304,7 +241,7 @@
           <div class="success-mark" aria-hidden="true">✓</div>
           <p class="eyebrow" data-i18n="confirmationEyebrow">Submission complete</p>
           <h2 id="confirmationTitle" data-i18n="confirmationTitle">Offer submitted successfully</h2>
-          <p data-i18n="confirmationText">Use this Offer ID to retrieve, view, or edit the offer later.</p>
+          <p data-i18n="confirmationText">Your offer package has been created and the submission has been recorded.</p>
 
           <div class="offer-id-box">
             <span data-i18n="offerIdLabel">Offer ID</span>
@@ -337,11 +274,11 @@
               <dd id="confirmationDateRange"></dd>
             </div>
           </dl>
+          <p id="confirmationAsanaStatus" class="email-status" aria-live="polite"></p>
           <p id="confirmationEmailStatus" class="email-status" aria-live="polite"></p>
 
           <div class="actions compact-actions">
             <button type="button" id="confirmationNewOfferButton" data-i18n="createAnotherButton">Create another offer</button>
-            <button type="button" class="secondary" id="confirmationBackButton" data-i18n="backToOptionsButton">Back to options</button>
           </div>
         </div>
       </section>
