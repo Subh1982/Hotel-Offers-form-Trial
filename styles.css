@@ -442,7 +442,7 @@ h3 {
 
 .steps button {
   width: 100%;
-  min-height: auto;
+  min-height: 48px;
   border-radius: 8px;
   padding: 12px 14px;
   background: transparent;
@@ -610,6 +610,23 @@ h3 {
   color: var(--teal);
 }
 
+.translation-controls {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) auto;
+  gap: 16px;
+  align-items: end;
+}
+
+.translation-controls label {
+  margin: 0;
+}
+
+.translation-controls select,
+.translation-controls button {
+  min-height: 48px;
+  height: 48px;
+}
+
 .compact-actions {
   justify-content: flex-start;
   margin: 18px 0;
@@ -636,7 +653,7 @@ h3 {
 }
 
 .compact-actions button {
-  min-height: 40px;
+  min-height: 48px;
 }
 
 .brand-tone-actions {
@@ -654,9 +671,9 @@ h3 {
 
 .brand-tone-actions button {
   flex: 0 0 auto;
-  min-height: 40px;
-  padding: 0 14px;
-  font-size: 12px;
+  min-height: 48px;
+  padding: 0 18px;
+  font-size: 13px;
 }
 
 .brand-tone-actions .muted.success {
@@ -815,11 +832,11 @@ textarea:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
-  padding: 0 14px;
+  min-height: 48px;
+  padding: 0 18px;
   background: var(--accent);
   color: white !important;
-  font-size: 12px !important;
+  font-size: 13px !important;
   font-weight: 600 !important;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -933,14 +950,22 @@ textarea:focus {
   padding-top: 22px;
 }
 
+#offerForm > .actions button[type="submit"] {
+  min-height: 56px;
+  padding: 0 30px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
 button {
-  min-height: 44px;
+  min-height: 48px;
   border: 0;
   border-radius: 0;
   padding: 0 18px;
   background: var(--accent);
   color: white;
   font: inherit;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -1078,12 +1103,13 @@ dialog::backdrop {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  padding: 0.75rem 1.1rem;
+  min-height: 48px;
+  padding: 0 18px;
   border-radius: 0;
   background: var(--accent, #7a1735);
   color: #fff;
   font-weight: 600;
+  font-size: 13px;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   text-decoration: none;
@@ -1185,6 +1211,14 @@ dialog::backdrop {
   }
 
   .brand-tone-actions button {
+    width: 100%;
+  }
+
+  .translation-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .translation-controls button {
     width: 100%;
   }
 }

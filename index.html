@@ -200,7 +200,7 @@
           <section id="translationsSection" class="form-section translation-review-section">
             <h3 data-i18n="translationPreviewTitle">Preview translated content</h3>
             <p class="muted"><span data-i18n="translationSourcePrefix">The offer content entered above is treated as</span> <strong id="translationSourceDisplay">English</strong>, <span data-i18n="translationSourceSuffix">based on the language selected in the top-right corner.</span></p>
-            <div class="grid two">
+            <div class="translation-controls">
               <label><span data-i18n="previewInLabel">Preview in</span>
                 <select id="translationTargetLanguage">
                   <option value="th">Thai</option>
@@ -210,8 +210,6 @@
                   <option value="en">English</option>
                 </select>
               </label>
-            </div>
-            <div class="actions compact-actions">
               <button type="button" id="translateContentButton" data-i18n="previewTranslatedButton">Preview translated content</button>
             </div>
             <p id="translationStatus" class="muted" aria-live="polite"></p>
