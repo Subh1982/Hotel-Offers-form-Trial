@@ -4,7 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Explorer Offers Collection</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=style-guide-1">
   </head>
   <body>
     <main class="shell">
@@ -51,8 +54,8 @@
             <li><button type="button" data-scroll-target="translationsSection" data-i18n="stepTranslations">Translations</button></li>
           </ol>
           <div class="submission-list">
-            <h2 data-i18n="modeTitle">No-backend mode</h2>
-            <div class="recent-empty" data-i18n="modeText">Submissions are packaged in the browser as a ZIP file. Nothing is stored on this page.</div>
+            <h2 data-i18n="modeTitle">Asana workflow</h2>
+            <div class="recent-empty" data-i18n="modeText">Submitting creates an Asana task and attaches the selected images for review.</div>
           </div>
         </aside>
 
@@ -62,7 +65,7 @@
               <p class="eyebrow" data-i18n="formEyebrow">Stay and dining offers</p>
               <h2 data-i18n="formTitle">Submit a complete offer in one pass</h2>
             </div>
-            <span class="status-pill" data-i18n="statusPill">Static package</span>
+            <span class="status-pill" data-i18n="statusPill">Asana submission</span>
           </div>
 
           <section id="hotelDetailsSection" class="form-section">
@@ -231,7 +234,7 @@
           <div id="formMessage" class="form-message" role="status"></div>
           <div class="actions">
             <button type="reset" class="secondary" data-i18n="clearButton">Clear</button>
-            <button type="submit" data-i18n="submitButton">Create Package and Submit</button>
+            <button type="submit" data-i18n="submitButton">Submit to Asana</button>
           </div>
         </form>
       </section>
@@ -291,7 +294,7 @@
         <a id="bookingPreview" href="#" target="_blank" rel="noreferrer"></a>
         <div class="actions">
           <button value="cancel" class="secondary" data-i18n="goBackButton">Go back</button>
-          <button value="confirm" data-i18n="confirmButton">Confirm and create package</button>
+          <button value="confirm" data-i18n="confirmButton">Confirm and submit</button>
         </div>
       </form>
     </dialog>

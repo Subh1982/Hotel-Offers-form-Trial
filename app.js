@@ -129,11 +129,11 @@ const uiTranslations = {
     stepProof: "Proof and forms",
     stepImages: "Images and review",
     stepTranslations: "Translations",
-    modeTitle: "No-backend mode",
-    modeText: "Submissions are packaged in the browser as a ZIP file. Nothing is stored on this page.",
+    modeTitle: "Asana workflow",
+    modeText: "Submitting creates an Asana task and attaches the selected images for review.",
     formEyebrow: "Stay and dining offers",
     formTitle: "Submit a complete offer in one pass",
-    statusPill: "Static package",
+    statusPill: "Asana submission",
     hotelDetails: "Hotel details",
     coreContent: "Core offer content",
     datesBooking: "Dates and booking",
@@ -141,11 +141,11 @@ const uiTranslations = {
     imagesTitle: "Images",
     finalAcknowledgement: "Final acknowledgement",
     clearButton: "Clear",
-    submitButton: "Create Package and Submit",
+    submitButton: "Submit to Asana",
     dialogTitle: "Double-check the booking link",
     dialogText: "Hotels will send guests to this exact URL. Please confirm it opens the correct booking page for this offer.",
     goBackButton: "Go back",
-    confirmButton: "Confirm and create package",
+    confirmButton: "Confirm and submit",
   },
   th: {
     marketLabel: "แพลตฟอร์มการตลาดแปซิฟิก",
@@ -1785,7 +1785,7 @@ form.addEventListener("submit", async (event) => {
 
   const submitButton = form.querySelector('button[type="submit"]');
   submitButton.disabled = true;
-  submitButton.textContent = "Creating package...";
+  submitButton.textContent = "Creating Asana task...";
 
   try {
     const record = buildSubmissionRecord();

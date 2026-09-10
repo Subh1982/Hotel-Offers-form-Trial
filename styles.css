@@ -1,17 +1,17 @@
 :root {
   color-scheme: light;
-  --ink: #151515;
-  --muted: #66717f;
-  --line: #ded7cc;
-  --panel: #f8f6f2;
+  --ink: #221b1a;
+  --muted: #5a5778;
+  --line: #dbdae1;
+  --panel: #f4f2fd;
   --surface: #ffffff;
-  --accent: #7a5a20;
-  --accent-dark: #3f331d;
-  --teal: #0f766e;
-  --warning: #b45309;
-  --danger: #b42318;
-  --ok: #13795b;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --accent: #050033;
+  --accent-dark: #050033;
+  --teal: #27666e;
+  --warning: #f2d166;
+  --danger: #c62035;
+  --ok: #27666e;
+  font-family: "Montserrat", Arial, sans-serif;
 }
 
 * {
@@ -20,8 +20,7 @@
 
 body {
   margin: 0;
-  background:
-    linear-gradient(180deg, #efe9de 0, #f6f3ee 320px, #eef3f6 100%);
+  background: #f7f7f8;
   color: var(--ink);
 }
 
@@ -56,10 +55,10 @@ body {
 }
 
 .market-label {
-  color: #4f5660;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -85,10 +84,10 @@ body {
   grid-template-columns: minmax(360px, 0.82fr) minmax(0, 1.18fr);
   min-height: 340px;
   overflow: hidden;
-  background: #151515;
+  background: var(--accent);
   border: 1px solid rgba(21, 21, 21, 0.18);
-  border-radius: 8px;
-  box-shadow: 0 24px 70px rgba(24, 32, 40, 0.16);
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .hero-copy {
@@ -106,15 +105,16 @@ body {
 .hero-copy h1 {
   max-width: 600px;
   margin-bottom: 16px;
-  font-size: clamp(36px, 5vw, 58px);
-  line-height: 0.98;
+  font-size: clamp(36px, 5vw, 48px);
+  font-weight: 600;
+  line-height: 1.3;
 }
 
 .hero-text {
   max-width: 520px;
   color: rgba(255, 255, 255, 0.78);
   font-size: 18px;
-  line-height: 1.55;
+  line-height: 1.4;
 }
 
 .hero-visual {
@@ -368,8 +368,8 @@ body {
 .form-surface {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 8px;
-  box-shadow: 0 18px 60px rgba(24, 32, 40, 0.09);
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .panel {
@@ -393,8 +393,8 @@ body {
   place-items: center;
   width: 44px;
   height: 44px;
-  border-radius: 8px;
-  background: #151515;
+  border-radius: 0;
+  background: var(--accent);
   color: white;
   font-weight: 800;
 }
@@ -403,8 +403,8 @@ body {
   margin: 0 0 4px;
   color: var(--teal);
   font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0;
+  font-weight: 400;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -417,11 +417,15 @@ p {
 
 h2 {
   margin-bottom: 0;
-  font-size: 24px;
+  font-size: 32px;
+  line-height: 1.3;
+  font-weight: 600;
 }
 
 h3 {
-  font-size: 18px;
+  font-size: 24px;
+  line-height: 1.3;
+  font-weight: 600;
   margin-bottom: 18px;
 }
 
@@ -449,8 +453,8 @@ h3 {
 
 .steps button:hover,
 .steps li.active button {
-  background: #f2eadb;
-  color: var(--accent-dark);
+  background: #ebf0f7;
+  color: var(--accent);
 }
 
 .form-section {
@@ -624,7 +628,7 @@ select,
 textarea {
   width: 100%;
   border: 1px solid #c7d0da;
-  border-radius: 8px;
+  border-radius: 0;
   padding: 12px 13px;
   color: var(--ink);
   font: inherit;
@@ -639,7 +643,7 @@ textarea {
 input:focus,
 select:focus,
 textarea:focus {
-  outline: 3px solid rgba(122, 90, 32, 0.16);
+  outline: 3px solid rgba(39, 102, 110, 0.18);
   border-color: var(--accent);
 }
 
@@ -769,22 +773,30 @@ textarea:focus {
 button {
   min-height: 44px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 0;
   padding: 0 18px;
   background: var(--accent);
   color: white;
   font: inherit;
-  font-weight: 800;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   cursor: pointer;
 }
 
 button:hover {
-  background: var(--accent-dark);
+  background: var(--teal);
 }
 
 button.secondary {
-  background: #e8edf2;
-  color: #27313b;
+  border: 1px solid var(--accent);
+  background: white;
+  color: var(--accent);
+}
+
+button.secondary:hover {
+  background: var(--accent);
+  color: white;
 }
 
 dialog {
@@ -823,8 +835,8 @@ dialog::backdrop {
   width: 54px;
   height: 54px;
   margin-bottom: 18px;
-  border-radius: 8px;
-  background: #e4f3ed;
+  border-radius: 0;
+  background: #e5f0f1;
   color: var(--ok);
   font-size: 30px;
   font-weight: 800;
@@ -842,7 +854,7 @@ dialog::backdrop {
   padding: 18px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #f2eadb;
+  background: #f4f2fd;
 }
 
 .offer-id-box span {
@@ -896,7 +908,7 @@ dialog::backdrop {
 }
 
 .email-status.error {
-  color: var(--warning);
+  color: var(--danger);
 }
 
 .button-link {
@@ -905,10 +917,12 @@ dialog::backdrop {
   justify-content: center;
   min-height: 44px;
   padding: 0.75rem 1.1rem;
-  border-radius: 8px;
+  border-radius: 0;
   background: var(--accent, #7a1735);
   color: #fff;
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   text-decoration: none;
 }
 
@@ -946,7 +960,15 @@ dialog::backdrop {
   }
 
   .hero-copy h1 {
-    font-size: 34px;
+    font-size: 32px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  h3 {
+    font-size: 22px;
   }
 
   .hero-visual {
