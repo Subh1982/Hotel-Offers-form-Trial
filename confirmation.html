@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Offer submitted | Explorer Offers Collection</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="masthead">
+        <nav class="topbar" aria-label="Platform header">
+          <img class="brand-logo" src="assets/all-accor-plus-logo.png" alt="ALL Accor Plus">
+          <span class="market-label">Pacific marketing platform</span>
+        </nav>
+      </header>
+      <section class="confirmation-screen" aria-labelledby="confirmationTitle">
+        <div class="confirmation-card">
+          <div class="success-mark" aria-hidden="true">✓</div>
+          <p class="eyebrow">Submission complete</p>
+          <h1 id="confirmationTitle">Asana task created successfully</h1>
+          <p>Your offer has been sent to Asana for the team to review.</p>
+
+          <div class="offer-id-box">
+            <span>Reference</span>
+            <strong id="confirmationOfferId"></strong>
+          </div>
+
+          <dl class="confirmation-details">
+            <div><dt>Hotel name</dt><dd id="confirmationHotelName"></dd></div>
+            <div><dt>Hotel code</dt><dd id="confirmationHotelCode"></dd></div>
+            <div><dt>Offer title</dt><dd id="confirmationOfferTitle"></dd></div>
+            <div><dt>Submitter email</dt><dd id="confirmationEmail"></dd></div>
+            <div><dt>Booking link</dt><dd id="confirmationBookingLink"></dd></div>
+            <div><dt>Submission date range</dt><dd id="confirmationDateRange"></dd></div>
+          </dl>
+
+          <p id="confirmationAsanaStatus" class="email-status success" aria-live="polite"></p>
+          <p id="confirmationAttachmentStatus" class="email-status" aria-live="polite"></p>
+          <div class="actions compact-actions">
+            <a class="button-link" href="/">Create another offer</a>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="confirmation.js"></script>
+  </body>
+</html>

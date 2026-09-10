@@ -1,6 +1,6 @@
 # Explorer Offers Collection Platform Architecture
 
-> Current test mode: submissions create an Asana task only. Supabase persistence, image storage, Google Sheets sync, ZIP generation, and package email are temporarily skipped.
+> Current test mode: submissions create an Asana task and attach the selected images directly to it, then open a dedicated confirmation page. Supabase persistence, Google Sheets sync, ZIP generation, and package email are temporarily skipped.
 
 ## Overview
 

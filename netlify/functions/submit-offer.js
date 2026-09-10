@@ -246,6 +246,44 @@ async function createAsanaTask(offer) {
   }
 }
 
+async function attachImagesToAsanaTask(taskGid, assets) {
+  const accessToken = cleanEnvironmentValue(process.env.ASANA_ACCESS_TOKEN);
+  const images = (assets || []).filter((asset) => asset?.data_base64 && String(asset.file_type || "").startsWith("image/"));
+  const results = [];
+
+  for (const asset of images) {
+    try {
+      const bytes = Buffer.from(asset.data_base64, "base64");
+      const form = new FormData();
+      form.append("parent", taskGid);
+      form.append("file", new Blob([bytes], { type: asset.file_type }), asset.file_name || `${asset.field || "image"}.jpg`);
+      const response = await fetch("https://app.asana.com/api/1.0/attachments", {
+        method: "POST",
+        headers: { authorization: `Bearer ${accessToken}` },
+        body: form,
+      });
+      const responseText = await response.text();
+      if (!response.ok) {
+        results.push({ file_name: asset.file_name, ok: false, error: `Asana attachment failed (${response.status}).` });
+        console.error("Asana attachment upload failed", responseText);
+        continue;
+      }
+      const result = JSON.parse(responseText || "{}");
+      results.push({ file_name: asset.file_name, ok: true, gid: result.data?.gid || "" });
+    } catch (error) {
+      console.error("Asana attachment request failed", error);
+      results.push({ file_name: asset.file_name, ok: false, error: error.message || "Asana attachment upload failed." });
+    }
+  }
+
+  return {
+    attempted: images.length,
+    attached: results.filter((result) => result.ok).length,
+    failed: results.filter((result) => !result.ok).length,
+    results,
+  };
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
@@ -291,6 +329,7 @@ exports.handler = async (event) => {
       service: "asana",
     });
   }
+  const attachments = await attachImagesToAsanaTask(asana.gid, submission.asset_uploads);
 
   return json(200, {
     ok: true,
@@ -299,5 +338,6 @@ exports.handler = async (event) => {
     offer_id: offer.offer_id,
     offer,
     asana,
+    attachments,
   });
 };

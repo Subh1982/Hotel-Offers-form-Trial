@@ -1,6 +1,6 @@
 # Explorer Offer Submission
 
-> Current test mode: form submission creates an Asana task only. Supabase, Google Sheets, image storage, ZIP generation, and package email are temporarily skipped.
+> Current test mode: form submission creates an Asana task, attaches selected images directly to it, and opens a dedicated confirmation page. Supabase, Google Sheets, ZIP generation, and package email are temporarily skipped.
 
 Offer collection form for Pacific hotel offer submissions.
 

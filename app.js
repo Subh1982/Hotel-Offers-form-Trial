@@ -1669,10 +1669,11 @@ async function buildRecordForSave(record) {
 }
 
 async function storeSubmission(record) {
+  const payload = await buildRecordForSave(record);
   const response = await fetch("/.netlify/functions/submit-offer", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify(record),
+    body: JSON.stringify(payload),
   });
 
   const responseText = await response.text();
@@ -1798,10 +1799,19 @@ form.addEventListener("submit", async (event) => {
       record.files = savedSubmission.offer.files;
     }
     if (savedSubmission.mode === "asana_only") {
-      setMessage("Asana task created successfully.", "success");
-      showConfirmation(record);
-      confirmationEmailStatus.textContent = "Package storage and email were skipped for this Asana-only test.";
-      confirmationEmailStatus.className = "email-status";
+      const confirmation = {
+        offer_id: record.offer_id,
+        hotel_name: record.hotel_name || record.offer_details.partner_name || "Not provided",
+        hotel_rid_code: record.hotel_rid_code || "Not provided",
+        offer_tile_title: record.offer_tile_title || "Not provided",
+        email: record.email || "Not provided",
+        booking_link: record.booking_link || "Not provided",
+        date_range: buildDateRangeSummary(record),
+        asana: record.asana,
+        attachments: savedSubmission.attachments || { attempted: 0, attached: 0, failed: 0 },
+      };
+      sessionStorage.setItem("offerSubmissionConfirmation", JSON.stringify(confirmation));
+      window.location.assign("/confirmation.html");
       return;
     }
     const packageName = safeName(`${record.hotel_name || record.offer_details.partner_name}-${record.offer_tile_title}`);

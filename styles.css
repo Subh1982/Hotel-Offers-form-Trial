@@ -899,6 +899,19 @@ dialog::backdrop {
   color: var(--warning);
 }
 
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.75rem 1.1rem;
+  border-radius: 8px;
+  background: var(--accent, #7a1735);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 @media (max-width: 900px) {
   .shell {
     padding: 16px;
