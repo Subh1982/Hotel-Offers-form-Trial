@@ -6,6 +6,25 @@ function json(statusCode, body) {
   };
 }
 
+function cleanEnvironmentValue(value) {
+  return String(value || "").trim().replace(/^(['"])(.*)\1$/, "$2").trim();
+}
+
+function supabaseProjectUrl(value) {
+  const cleaned = cleanEnvironmentValue(value).replace(/\/+$/, "");
+  if (!cleaned) return { error: "SUPABASE_URL is not configured." };
+
+  try {
+    const url = new URL(cleaned);
+    if (url.protocol !== "https:") {
+      return { error: "SUPABASE_URL must be the HTTPS project URL, not a database connection string." };
+    }
+    return { url: url.toString().replace(/\/+$/, ""), host: url.host };
+  } catch (error) {
+    return { error: "SUPABASE_URL is not a valid URL." };
+  }
+}
+
 function formatOfferId(id) {
   const numericId = Number(id);
   if (!Number.isFinite(numericId) || numericId <= 0) return "";
@@ -232,11 +251,12 @@ exports.handler = async (event) => {
     return json(405, { error: "Method not allowed" });
   }
 
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseConfig = supabaseProjectUrl(process.env.SUPABASE_URL);
+  const supabaseUrl = supabaseConfig.url;
+  const supabaseServiceRoleKey = cleanEnvironmentValue(process.env.SUPABASE_SERVICE_ROLE_KEY);
 
-  if (!supabaseUrl || !supabaseServiceRoleKey) {
-    return json(500, { error: "Supabase environment variables are not configured." });
+  if (supabaseConfig.error || !supabaseServiceRoleKey) {
+    return json(500, { error: supabaseConfig.error || "SUPABASE_SERVICE_ROLE_KEY is not configured." });
   }
 
   let submission;
@@ -287,6 +307,8 @@ exports.handler = async (event) => {
     return json(502, {
       error: "The offer database could not be reached. No Asana task was created.",
       service: "supabase",
+      host: supabaseConfig.host,
+      reason: error.cause?.code || error.code || error.name || "network_error",
     });
   }
 
