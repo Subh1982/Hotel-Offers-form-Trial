@@ -40,6 +40,9 @@ const confirmationBookingLink = document.querySelector("#confirmationBookingLink
 const confirmationDateRange = document.querySelector("#confirmationDateRange");
 const confirmationAsanaStatus = document.querySelector("#confirmationAsanaStatus");
 const confirmationEmailStatus = document.querySelector("#confirmationEmailStatus");
+const offerDescription = document.querySelector("#offerDescription");
+const alignBrandToneButton = document.querySelector("#alignBrandToneButton");
+const brandToneStatus = document.querySelector("#brandToneStatus");
 
 let resizedBannerFile = null;
 let resizedListingTileFile = null;
@@ -149,8 +152,10 @@ const uiTranslations = {
     dialogText: "Hotels will send guests to this exact URL. Please confirm it opens the correct booking page for this offer.",
     goBackButton: "Go back",
     confirmButton: "Confirm and submit",
+    alignBrandToneButton: "Align with Brand tone",
   },
   th: {
+    alignBrandToneButton: "ปรับให้สอดคล้องกับโทนแบรนด์",
     offerTypeQuestion: "คุณกำลังส่งข้อเสนอประเภทใด?",
     offerTypeHelp: "ตัวเลือกของคุณจะกำหนดวันที่ ราคา และข้อมูลประกอบที่ต้องระบุด้านล่าง",
     marketLabel: "แพลตฟอร์มการตลาดแปซิฟิก",
@@ -216,6 +221,7 @@ const uiTranslations = {
     confirmButton: "ยืนยันและสร้างแพ็กเกจ",
   },
   vi: {
+    alignBrandToneButton: "Điều chỉnh theo giọng điệu thương hiệu",
     offerTypeQuestion: "Bạn đang gửi loại ưu đãi nào?",
     offerTypeHelp: "Lựa chọn của bạn sẽ xác định ngày, mức giá và thông tin hỗ trợ cần cung cấp bên dưới.",
     marketLabel: "Nền tảng tiếp thị Pacific",
@@ -281,6 +287,7 @@ const uiTranslations = {
     confirmButton: "Xác nhận và tạo gói",
   },
   id: {
+    alignBrandToneButton: "Sesuaikan dengan gaya bahasa merek",
     offerTypeQuestion: "Jenis penawaran apa yang Anda kirimkan?",
     offerTypeHelp: "Pilihan Anda akan menentukan tanggal, harga, dan informasi pendukung yang diminta di bawah ini.",
     marketLabel: "Platform pemasaran Pacific",
@@ -346,6 +353,7 @@ const uiTranslations = {
     confirmButton: "Konfirmasi dan buat paket",
   },
   ja: {
+    alignBrandToneButton: "ブランドトーンに合わせる",
     offerTypeQuestion: "どの種類のオファーを送信しますか？",
     offerTypeHelp: "選択した種類に応じて、日付、料金、必要な補足情報が以下に表示されます。",
     marketLabel: "パシフィック マーケティング プラットフォーム",
@@ -1122,6 +1130,43 @@ function updateFileName(input) {
 
 document.querySelectorAll('input[type="file"]').forEach((input) => {
   input.addEventListener("change", () => updateFileName(input));
+});
+
+alignBrandToneButton.addEventListener("click", async () => {
+  const description = offerDescription.value.trim();
+  if (!description) {
+    brandToneStatus.textContent = "Enter an offer description first.";
+    brandToneStatus.className = "muted error";
+    offerDescription.focus();
+    return;
+  }
+
+  alignBrandToneButton.disabled = true;
+  alignBrandToneButton.textContent = "Aligning...";
+  brandToneStatus.textContent = "Rewriting your description in the Explorer brand tone...";
+  brandToneStatus.className = "muted";
+
+  try {
+    const response = await fetch("/.netlify/functions/align-brand-tone", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ description }),
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.error || "Brand tone alignment failed.");
+
+    offerDescription.value = result.description;
+    offerDescription.dispatchEvent(new Event("input", { bubbles: true }));
+    brandToneStatus.textContent = "Brand-aligned draft ready. You can edit it before submitting.";
+    brandToneStatus.className = "muted success";
+    offerDescription.focus();
+  } catch (error) {
+    brandToneStatus.textContent = error.message || "Brand tone alignment failed.";
+    brandToneStatus.className = "muted error";
+  } finally {
+    alignBrandToneButton.disabled = false;
+    alignBrandToneButton.textContent = (uiTranslations[languageSelect.value] || uiTranslations.en).alignBrandToneButton;
+  }
 });
 
 translateContentButton.addEventListener("click", async () => {

@@ -115,8 +115,12 @@
               </label>
             </div>
             <label><span data-i18n="offerDescriptionLabel">Offer description</span>
-              <textarea name="offer_description" required rows="5" placeholder="Describe the offer, experience, inclusions, and member value."></textarea>
+              <textarea id="offerDescription" name="offer_description" required rows="7" placeholder="Describe the offer, experience, inclusions, and member value."></textarea>
             </label>
+            <div class="brand-tone-actions">
+              <p id="brandToneStatus" class="muted" aria-live="polite"></p>
+              <button type="button" id="alignBrandToneButton" class="secondary" data-i18n="alignBrandToneButton">Align with Brand tone</button>
+            </div>
           </section>
 
           <section id="datesBookingSection" class="form-section">

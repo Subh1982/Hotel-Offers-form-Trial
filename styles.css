@@ -624,6 +624,23 @@ h3 {
   min-height: 40px;
 }
 
+.brand-tone-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.brand-tone-actions p {
+  flex: 1 1 auto;
+  margin: 0;
+}
+
+.brand-tone-actions button {
+  flex: 0 0 auto;
+}
+
 .muted.success {
   color: var(--ok);
   font-weight: 800;
@@ -1138,5 +1155,14 @@ dialog::backdrop {
   .actions {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .brand-tone-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .brand-tone-actions button {
+    width: 100%;
   }
 }

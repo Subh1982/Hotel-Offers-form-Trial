@@ -34,6 +34,8 @@ Add these environment variables in Netlify and redeploy:
 - `ASANA_ACCESS_TOKEN`: a secret Asana access token with permission to create tasks;
 - `ASANA_PROJECT_GID`: the destination Asana project ID; and
 - `ASANA_ASSIGNEE_GID`: optional user ID to assign every new task.
+- `GEMINI_API_KEY`: Gemini API key used server-side for brand-tone alignment.
+- `GEMINI_MODEL`: optional model override; defaults to `gemini-2.5-flash-lite`.
 
 If Asana is not configured or task creation fails, the offer submission still succeeds and the confirmation panel displays the integration warning. This avoids duplicate offers caused by resubmission.
 

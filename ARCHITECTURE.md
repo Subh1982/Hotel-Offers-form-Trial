@@ -130,6 +130,8 @@ The Netlify deployment uses these environment variables:
 | `ASANA_ACCESS_TOKEN` | Secret Asana personal access token or OAuth access token with task-write access. |
 | `ASANA_PROJECT_GID` | Asana project in which new offer tasks are created. |
 | `ASANA_ASSIGNEE_GID` | Optional Asana user to assign to every new offer task. |
+| `GEMINI_API_KEY` | Gemini API key used server-side to align offer descriptions with the Explorer brand tone. |
+| `GEMINI_MODEL` | Optional Gemini model override; defaults to `gemini-2.5-flash-lite`. |
 
 ## Local and legacy implementation
 
