@@ -93,7 +93,7 @@ The ZIP is sent as a link instead of an attachment to avoid Netlify and Apps Scr
 
 ### Asana
 
-After Supabase assigns the public offer ID, `submit-offer.js` creates a task in the configured Asana project. The task title contains the offer ID and offer title. Its description contains the hotel or partner, submitter, booking link, offer content, offer-specific details, and terms.
+Immediately after Supabase creates the core record and assigns the public offer ID, `submit-offer.js` creates a task in the configured Asana project. This happens before image storage and spreadsheet synchronisation. The task title contains the offer ID and offer title. Its description contains the hotel or partner, submitter, booking link, offer content, offer-specific details, and terms. Image files and image links are intentionally excluded from the Asana task in the first iteration.
 
 Asana task creation uses the official REST API from the Netlify Function, so the access token is never exposed to the browser. An optional assignee can be configured. If Asana is unavailable, the offer remains submitted and the confirmation panel displays a warning; this prevents a retry from creating a duplicate offer.
 
@@ -108,11 +108,12 @@ This is a prototype integration and should be replaced by an approved translatio
 1. A hotel user completes the offer form and uploads the required assets.
 2. The browser validates the form and resizes marketing images.
 3. `submit-offer` creates the database record and uploads selected marketing assets.
-4. The function assigns the formatted public offer ID and synchronises the offer to Google Sheets.
-5. The function creates an Asana task for operational follow-up.
-6. The browser generates and downloads the ZIP package.
-7. The browser requests a signed upload URL and uploads the ZIP directly to Supabase Storage.
-8. `email-package` records the ZIP URL, refreshes the spreadsheet row, and triggers the package-link email.
+4. The function assigns the formatted public offer ID.
+5. The function creates an Asana task for operational follow-up, without image links.
+6. The function stores resized marketing images and synchronises the offer to Google Sheets.
+7. The browser generates and downloads the ZIP package.
+8. The browser requests a signed upload URL and uploads the ZIP directly to Supabase Storage.
+9. `email-package` records the ZIP URL, refreshes the spreadsheet row, and triggers the package-link email.
 
 ## Configuration
 

@@ -25,7 +25,7 @@ Offer content is stored in Supabase when the Netlify environment variables are c
 
 ## Asana task creation
 
-Each successful offer submission can create a task in an Asana project. The task includes the generated Explorer Offer ID, hotel or partner information, submitter, booking link, offer content, offer-specific details, and terms.
+Each successful offer submission can create a task in an Asana project. The task is created immediately after the core Supabase record, before image uploads and spreadsheet synchronisation. It includes the generated Explorer Offer ID, hotel or partner information, submitter, booking link, offer content, offer-specific details, and terms. Image files and image links are not included in this first iteration.
 
 Add these environment variables in Netlify and redeploy:
 

@@ -295,6 +295,8 @@ exports.handler = async (event) => {
 
   const savedOffer = inserted[0] || {};
   let offerWithId = { ...savedOffer, offer_id: formatOfferId(savedOffer.id) };
+  const asana = await createAsanaTask(offerWithId);
+
   let storage = { ok: true };
   let updatedFiles = savedOffer.files || {};
   try {
@@ -323,17 +325,14 @@ exports.handler = async (event) => {
 
     const updateText = await updateResponse.text();
     if (!updateResponse.ok) {
-      return json(updateResponse.status, { error: "Supabase file URL update failed.", details: updateText });
+      storage = { ok: false, error: `Supabase file URL update failed: ${updateText}` };
+    } else {
+      const updatedRows = JSON.parse(updateText || "[]");
+      offerWithId = { ...(updatedRows[0] || savedOffer), offer_id: offerWithId.offer_id };
     }
-
-    const updatedRows = JSON.parse(updateText || "[]");
-    offerWithId = { ...(updatedRows[0] || savedOffer), offer_id: offerWithId.offer_id };
   }
 
-  const [sheets, asana] = await Promise.all([
-    syncOfferToSheet("create", offerWithId),
-    createAsanaTask(offerWithId),
-  ]);
+  const sheets = await syncOfferToSheet("create", offerWithId);
 
   return json(200, {
     ok: true,
