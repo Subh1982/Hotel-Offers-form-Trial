@@ -118,18 +118,27 @@ async function syncOfferToSheet(action, offer) {
   const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
   if (!webhookUrl) return { skipped: true };
 
-  const response = await fetch(webhookUrl, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ action, offer: sheetRowForOffer(offer) }),
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 12000);
+  try {
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      signal: controller.signal,
+      body: JSON.stringify({ action, offer: sheetRowForOffer(offer) }),
+    });
 
-  const text = await response.text();
-  if (!response.ok) {
-    return { ok: false, error: text || "Google Sheets sync failed." };
+    const text = await response.text();
+    if (!response.ok) {
+      return { ok: false, error: text || "Google Sheets sync failed." };
+    }
+
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: error.name === "AbortError" ? "Google Sheets sync timed out." : error.message };
+  } finally {
+    clearTimeout(timeout);
   }
-
-  return { ok: true };
 }
 
 function asanaTaskNotes(offer) {
@@ -182,6 +191,8 @@ async function createAsanaTask(offer) {
   };
   if (assigneeGid) taskData.assignee = assigneeGid;
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 12000);
   try {
     const response = await fetch("https://app.asana.com/api/1.0/tasks?opt_fields=gid,name,permalink_url", {
       method: "POST",
@@ -190,6 +201,7 @@ async function createAsanaTask(offer) {
         authorization: `Bearer ${accessToken}`,
         "content-type": "application/json",
       },
+      signal: controller.signal,
       body: JSON.stringify({ data: taskData }),
     });
     const responseText = await response.text();
@@ -206,7 +218,12 @@ async function createAsanaTask(offer) {
       permalink_url: result.data?.permalink_url || "",
     };
   } catch (error) {
-    return { ok: false, error: error.message || "Asana task creation failed." };
+    return {
+      ok: false,
+      error: error.name === "AbortError" ? "Asana task creation timed out." : error.message || "Asana task creation failed.",
+    };
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
@@ -278,15 +295,21 @@ exports.handler = async (event) => {
 
   const savedOffer = inserted[0] || {};
   let offerWithId = { ...savedOffer, offer_id: formatOfferId(savedOffer.id) };
-  const updatedFiles = await uploadAssets({
-    supabaseUrl,
-    supabaseServiceRoleKey,
-    offerId: offerWithId.offer_id,
-    files: savedOffer.files,
-    assets: submission.asset_uploads,
-  });
+  let storage = { ok: true };
+  let updatedFiles = savedOffer.files || {};
+  try {
+    updatedFiles = await uploadAssets({
+      supabaseUrl,
+      supabaseServiceRoleKey,
+      offerId: offerWithId.offer_id,
+      files: savedOffer.files,
+      assets: submission.asset_uploads,
+    });
+  } catch (error) {
+    storage = { ok: false, error: error.message || "Supabase Storage upload failed." };
+  }
 
-  if (submission.asset_uploads?.length) {
+  if (submission.asset_uploads?.length && storage.ok) {
     const updateResponse = await fetch(`${supabaseUrl}/rest/v1/offer_submissions?id=eq.${savedOffer.id}`, {
       method: "PATCH",
       headers: {
@@ -312,5 +335,13 @@ exports.handler = async (event) => {
     createAsanaTask(offerWithId),
   ]);
 
-  return json(200, { ok: true, id: savedOffer.id || null, offer_id: offerWithId.offer_id, offer: offerWithId, sheets, asana });
+  return json(200, {
+    ok: true,
+    id: savedOffer.id || null,
+    offer_id: offerWithId.offer_id,
+    offer: offerWithId,
+    storage,
+    sheets,
+    asana,
+  });
 };

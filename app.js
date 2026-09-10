@@ -1676,9 +1676,18 @@ async function storeSubmission(record) {
     body: JSON.stringify(payload),
   });
 
-  const result = await response.json().catch(() => ({}));
+  const responseText = await response.text();
+  let result = {};
+  try {
+    result = JSON.parse(responseText || "{}");
+  } catch (error) {
+    result = {};
+  }
   if (!response.ok) {
-    throw new Error(result.error || "Submission could not be stored.");
+    if (response.status === 413) {
+      throw new Error("Submission files are too large for the upload service. Please use smaller source images and try again.");
+    }
+    throw new Error(result.error || `Submission service failed (${response.status}). ${responseText.slice(0, 180)}`.trim());
   }
   return result;
 }
@@ -1777,6 +1786,8 @@ form.addEventListener("submit", async (event) => {
     record.id = savedSubmission.id || record.id;
     record.offer_id = savedSubmission.offer_id || formatOfferId(savedSubmission.id);
     record.asana = savedSubmission.asana || null;
+    record.storage = savedSubmission.storage || null;
+    record.sheets = savedSubmission.sheets || null;
     if (savedSubmission.offer?.files) {
       record.files = savedSubmission.offer.files;
     }
@@ -1784,7 +1795,16 @@ form.addEventListener("submit", async (event) => {
     const packageFilename = `${packageName}-explorer-offer-submission.zip`;
     const zip = await createZip(getPackageFiles(record));
     downloadBlob(zip, packageFilename);
-    setMessage("Submission stored and package created.", "success");
+    const integrationWarnings = [
+      record.storage?.ok === false ? record.storage.error : "",
+      record.sheets?.ok === false ? record.sheets.error : "",
+    ].filter(Boolean);
+    setMessage(
+      integrationWarnings.length
+        ? `Submission stored and package created. Warning: ${integrationWarnings.join(" ")}`
+        : "Submission stored and package created.",
+      integrationWarnings.length ? "error" : "success",
+    );
     showConfirmation(record);
     confirmationEmailStatus.textContent = "Uploading ZIP package for email link...";
     uploadPackageZip(record, zip, packageFilename)
