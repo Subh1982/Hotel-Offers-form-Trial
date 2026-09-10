@@ -15,7 +15,6 @@
         <nav class="topbar" aria-label="Platform header">
           <img class="brand-logo" src="assets/all-accor-plus-logo.png" alt="ALL Accor Plus">
           <div class="topbar-actions">
-            <span class="market-label" data-i18n="marketLabel">Pacific marketing platform</span>
             <label class="language-control"><span data-i18n="languageLabel">Language</span>
               <select id="languageSelect" aria-label="Language">
                 <option value="en">English</option>
@@ -30,7 +29,7 @@
         <section class="hero-panel" aria-labelledby="pageTitle">
           <div class="hero-copy">
             <h1 id="pageTitle" data-i18n="heroTitle">ALL Accor+ Explorer Offers Portal</h1>
-            <p class="hero-text" data-i18n="heroText">Create campaign-ready hotel, dining, event, and partner offers for Explorer.</p>
+            <p class="hero-text" data-i18n="heroText">Submit stay, dining, event, and partner offers for ALL Accor+ Explorer.</p>
           </div>
           <figure class="hero-visual">
             <img src="assets/explorer-resort-hero.jpg" alt="Tropical resort pool overlooking palm trees and the ocean at sunset">
@@ -40,9 +39,7 @@
       <section id="offerWorkspace" class="workspace">
         <aside class="panel">
           <div class="brand">
-            <span class="mark">EX</span>
             <div>
-              <p class="eyebrow" data-i18n="sideEyebrow">Explorer partners</p>
               <h2 data-i18n="sideTitle">Offer submission</h2>
             </div>
           </div>
@@ -53,10 +50,6 @@
             <li><button type="button" data-scroll-target="imagesSection" data-i18n="stepImages">Images and review</button></li>
             <li><button type="button" data-scroll-target="translationsSection" data-i18n="stepTranslations">Translations</button></li>
           </ol>
-          <div class="submission-list">
-            <h2 data-i18n="modeTitle">Asana workflow</h2>
-            <div class="recent-empty" data-i18n="modeText">Submitting creates an Asana task and attaches the selected images for review.</div>
-          </div>
         </aside>
 
         <form id="offerForm" class="form-surface" novalidate>
@@ -65,7 +58,6 @@
               <p class="eyebrow" data-i18n="formEyebrow">Stay and dining offers</p>
               <h2 data-i18n="formTitle">Submit a complete offer in one pass</h2>
             </div>
-            <span class="status-pill" data-i18n="statusPill">Asana submission</span>
           </div>
 
           <section id="hotelDetailsSection" class="form-section">
@@ -149,10 +141,6 @@
                 <input name="booking_screenshot" type="file" accept="image/png,image/jpeg,image/webp">
               </label>
             </div>
-            <label class="checkline">
-              <input name="department_confirmation" type="checkbox" value="Yes" required>
-              <span data-i18n="departmentConfirmationText">All relevant hotel departments can confirm the rate loading is set up correctly for members to book.</span>
-            </label>
           </section>
 
           <section id="imagesSection" class="form-section">
@@ -234,7 +222,7 @@
           <div id="formMessage" class="form-message" role="status"></div>
           <div class="actions">
             <button type="reset" class="secondary" data-i18n="clearButton">Clear</button>
-            <button type="submit" data-i18n="submitButton">Submit to Asana</button>
+            <button type="submit" data-i18n="submitButton">Submit Offer</button>
           </div>
         </form>
       </section>

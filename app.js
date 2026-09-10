@@ -88,7 +88,7 @@ const uiTranslations = {
     marketLabel: "Pacific marketing platform",
     languageLabel: "Language",
     heroTitle: "ALL Accor+ Explorer Offers Portal",
-    heroText: "Create campaign-ready hotel, dining, event, and partner offers for Explorer.",
+    heroText: "Submit stay, dining, event, and partner offers for ALL Accor+ Explorer.",
     startEyebrow: "Offer workspace",
     startTitle: "What would you like to do?",
     startText: "Choose the path that matches your task. New offers open the full submission form, while existing offers can be found by Offer ID or hotel details.",
@@ -141,7 +141,7 @@ const uiTranslations = {
     imagesTitle: "Images",
     finalAcknowledgement: "Final acknowledgement",
     clearButton: "Clear",
-    submitButton: "Submit to Asana",
+    submitButton: "Submit Offer",
     dialogTitle: "Double-check the booking link",
     dialogText: "Hotels will send guests to this exact URL. Please confirm it opens the correct booking page for this offer.",
     goBackButton: "Go back",
@@ -1236,7 +1236,6 @@ function buildContentForTranslation() {
     ...dynamicLines,
     ["Booking link", fieldValue("booking_link")],
     ["Terms and conditions", fieldValue("terms")],
-    ["Department confirmation", fieldValue("department_confirmation")],
     ["Final acknowledgement", fieldValue("acknowledgement")],
   ].filter(([, value]) => value);
 
@@ -1341,7 +1340,6 @@ function buildSubmissionRecord() {
     offer_details: collectDynamicFields(),
     booking_link: fieldValue("booking_link"),
     terms: fieldValue("terms"),
-    department_confirmation: fieldValue("department_confirmation"),
     acknowledgement: fieldValue("acknowledgement"),
     files: {
       rate_screenshot: fileInfo("rate_screenshot"),
@@ -1461,7 +1459,6 @@ function buildSummaryText(record) {
     record.terms || "Not provided",
     "",
     "Confirmations",
-    `Department confirmation: ${record.department_confirmation}`,
     `Acknowledgement: ${record.acknowledgement}`,
   ].join("\n");
 }
