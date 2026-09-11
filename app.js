@@ -127,7 +127,7 @@ const uiTranslations = {
     createAnotherButton: "Create another offer",
     backToOptionsButton: "Back to options",
     sideEyebrow: "Explorer partners",
-    sideTitle: "Offer submission",
+    sideTitle: "Offer Submission",
     stepType: "Offer type",
     stepHotel: "Hotel details",
     stepOffer: "Offer and dates",
@@ -1271,16 +1271,48 @@ translationTargetLanguage.addEventListener("change", () => {
   setTranslationStatus("");
 });
 
+function setActiveFormSection(sectionId) {
+  sectionNavigationButtons.forEach((button) => {
+    button.parentElement.classList.toggle("active", button.dataset.scrollTarget === sectionId);
+  });
+}
+
+function updateActiveFormSection() {
+  const marker = window.innerHeight * 0.32;
+  let activeSectionId = sectionNavigationButtons[0]?.dataset.scrollTarget;
+
+  sectionNavigationButtons.forEach((button) => {
+    const section = document.getElementById(button.dataset.scrollTarget);
+    if (section && section.getBoundingClientRect().top <= marker) {
+      activeSectionId = section.id;
+    }
+  });
+
+  if (activeSectionId) setActiveFormSection(activeSectionId);
+}
+
+let sectionScrollFrame = null;
+function scheduleActiveFormSectionUpdate() {
+  if (sectionScrollFrame !== null) return;
+  sectionScrollFrame = window.requestAnimationFrame(() => {
+    updateActiveFormSection();
+    sectionScrollFrame = null;
+  });
+}
+
 sectionNavigationButtons.forEach((button) => {
   button.addEventListener("click", () => {
     const target = document.getElementById(button.dataset.scrollTarget);
     if (!target) return;
 
-    sectionNavigationButtons.forEach((item) => item.parentElement.classList.remove("active"));
-    button.parentElement.classList.add("active");
+    setActiveFormSection(target.id);
     target.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 });
+
+window.addEventListener("scroll", scheduleActiveFormSectionUpdate, { passive: true });
+window.addEventListener("resize", scheduleActiveFormSectionUpdate);
+updateActiveFormSection();
 
 function fieldValue(name) {
   const element = form.elements[name];
