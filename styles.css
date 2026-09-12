@@ -816,6 +816,10 @@ textarea:focus {
   font-weight: 700;
 }
 
+.inline-alert:empty {
+  display: none;
+}
+
 .upload-zone {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 160px 150px;
