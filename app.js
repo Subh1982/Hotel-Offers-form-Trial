@@ -52,6 +52,7 @@ let resizedBannerFile = null;
 let resizedListingTileFile = null;
 let resizedSocialFile = null;
 let generatedContentTranslations = {};
+let activeTurnstileWidgetId = null;
 
 const maxImageUploadSize = 200 * 1024 * 1024;
 
@@ -1930,31 +1931,42 @@ async function waitForTurnstile() {
 
 async function requestTurnstileToken() {
   const turnstile = await waitForTurnstile();
+  if (activeTurnstileWidgetId !== null) {
+    turnstile.remove(activeTurnstileWidgetId);
+    activeTurnstileWidgetId = null;
+  }
   turnstileContainer.replaceChildren();
 
   return new Promise((resolve, reject) => {
-    let widgetId;
     const fail = () => {
-      if (widgetId !== undefined) turnstile.remove(widgetId);
+      if (activeTurnstileWidgetId !== null) {
+        turnstile.remove(activeTurnstileWidgetId);
+        activeTurnstileWidgetId = null;
+      }
       reject(new Error("Turnstile verification failed."));
     };
 
-    widgetId = turnstile.render(turnstileContainer, {
+    activeTurnstileWidgetId = turnstile.render(turnstileContainer, {
       sitekey: TURNSTILE_SITE_KEY,
       action: "submit_offer",
       execution: "execute",
-      appearance: "interaction-only",
+      appearance: "always",
       size: "flexible",
-      callback: (token) => {
-        turnstile.remove(widgetId);
-        resolve(token);
-      },
+      callback: (token) => resolve(token),
       "error-callback": fail,
       "expired-callback": fail,
       "timeout-callback": fail,
     });
-    turnstile.execute(widgetId);
+    turnstile.execute(activeTurnstileWidgetId);
   });
+}
+
+function clearTurnstileWidget() {
+  if (activeTurnstileWidgetId !== null && window.turnstile) {
+    window.turnstile.remove(activeTurnstileWidgetId);
+    activeTurnstileWidgetId = null;
+  }
+  turnstileContainer.replaceChildren();
 }
 
 form.addEventListener("submit", async (event) => {
@@ -2050,7 +2062,7 @@ form.addEventListener("submit", async (event) => {
     const isTurnstileError = /turnstile/i.test(error.message || "");
     setMessage(isTurnstileError ? copy.turnstileUnavailable : (error.message || "The submission could not be completed."), "error");
   } finally {
-    turnstileContainer.replaceChildren();
+    clearTurnstileWidget();
     submitButton.disabled = false;
     submitButton.textContent = copy.submitButton;
   }

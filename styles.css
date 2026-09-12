@@ -946,6 +946,12 @@ textarea:focus {
   color: var(--ok);
 }
 
+.turnstile-container:not(:empty) {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
 .actions {
   padding-top: 22px;
 }
