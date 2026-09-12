@@ -10,7 +10,7 @@ The application is a browser-first offer collection system for Pacific hotels. T
 flowchart LR
     Hotel["Hotel user"] --> UI["Static web application on Netlify"]
     UI --> Images["Browser-side image processing"]
-    UI --> Translation["MyMemory translation API"]
+    UI --> Translation["Gemini translation Netlify Function"]
     UI --> API["Netlify Functions"]
     API --> Database["Supabase Postgres"]
     API --> Storage["Supabase Storage"]
@@ -101,9 +101,9 @@ Asana task creation uses the official REST API from the Netlify Function, so the
 
 ### Translation
 
-The browser calls the public MyMemory translation API only when the user requests a translation preview. The chosen interface language is treated as the source language. Users can review and edit generated text before saving it into the submission package.
+The browser calls a Netlify Function backed by Gemini only when the user requests a translation preview. The chosen interface language is treated as the source language. Users can review and edit generated text before saving it into the submission package.
 
-This is a prototype integration and should be replaced by an approved translation service and privacy-reviewed before handling sensitive content.
+The translation integration should be privacy-reviewed before handling sensitive content.
 
 ## Submission flow
 

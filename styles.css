@@ -558,6 +558,10 @@ h3 {
   margin-top: 16px;
 }
 
+.dynamic-grid .full-width-field {
+  grid-column: 1 / -1;
+}
+
 .booking-method-fieldset {
   margin: 22px 0 0;
   padding: 0;

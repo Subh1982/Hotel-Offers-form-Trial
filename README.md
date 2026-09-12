@@ -21,9 +21,9 @@ Images can be uploaded individually, or the hotel can upload one master image th
 Image source files must not exceed 200 MB.
 If a different-sized image is uploaded for banner, listing tile, or social, the app automatically resizes it to the required output size.
 
-The page interface can be displayed in English, Thai, Vietnamese, Bahasa Indonesia, or Japanese. The selected page language is treated as the source language for entered content. The bottom translation preview can generate a draft translation through the public MyMemory translation endpoint, show it for review/editing, and save the approved preview into the ZIP package.
+The page interface can be displayed in English, Thai, Vietnamese, Bahasa Indonesia, or Japanese. The selected page language is treated as the source language for entered content. The bottom translation preview uses Gemini to generate a draft translation, shows it for review/editing, and saves the approved preview into the submission package.
 
-Offer content is stored in Supabase when the Netlify environment variables are configured. Offer content is sent to the public MyMemory translation endpoint only when the hotel clicks the preview translation button.
+Offer content is sent to Gemini through a Netlify Function only when the hotel clicks the preview translation button.
 
 ## Asana task creation
 

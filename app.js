@@ -1034,6 +1034,7 @@ function renderTypeSpecificFields() {
 
   fields.forEach((field) => {
     const label = document.createElement("label");
+    if (field.name === "member_benefits") label.classList.add("full-width-field");
     label.textContent = dynamicFieldLabels[language]?.[field.name] || field.label;
     const input = document.createElement(field.type === "textarea" ? "textarea" : "input");
     input.name = field.name;
@@ -1317,7 +1318,7 @@ saveTranslationPreviewButton.addEventListener("click", () => {
     language: contentLanguageLabels[targetLanguage],
     source_language_code: sourceLanguage,
     source_language: contentLanguageLabels[sourceLanguage],
-    provider: sourceLanguage === targetLanguage ? "Copied source content" : "MyMemory public API prototype",
+    provider: sourceLanguage === targetLanguage ? "Copied source content" : "Google Gemini",
     saved_at: new Date().toISOString(),
     text,
   };
@@ -1462,66 +1463,16 @@ function buildContentForTranslation() {
   return contentLines.map(([label, value]) => `${label}:\n${value}`).join("\n\n");
 }
 
-function chunkText(text, maxLength = 450) {
-  const chunks = [];
-  let current = "";
-
-  text.split(/\n{2,}/).forEach((paragraph) => {
-    const trimmed = paragraph.trim();
-    if (!trimmed) return;
-
-    if ([current, trimmed].filter(Boolean).join("\n\n").length <= maxLength) {
-      current = [current, trimmed].filter(Boolean).join("\n\n");
-      return;
-    }
-
-    if (current) chunks.push(current);
-    current = "";
-
-    if (trimmed.length <= maxLength) {
-      current = trimmed;
-      return;
-    }
-
-    trimmed.split(/\s+/).forEach((word) => {
-      if ([current, word].filter(Boolean).join(" ").length > maxLength) {
-        if (current) chunks.push(current);
-        current = word;
-      } else {
-        current = [current, word].filter(Boolean).join(" ");
-      }
-    });
-  });
-
-  if (current) chunks.push(current);
-  return chunks;
-}
-
-async function translateChunk(chunk, sourceLanguage, targetLanguage) {
-  if (sourceLanguage === targetLanguage) return chunk;
-
-  const langpair = `${sourceLanguage}|${targetLanguage}`;
-  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(chunk)}&langpair=${encodeURIComponent(langpair)}&mt=1`;
-  const response = await fetch(url);
-  if (!response.ok) throw new Error("The translation service is not available right now.");
-
-  const data = await response.json();
-  const translatedText = data?.responseData?.translatedText;
-  if (!translatedText || data.responseStatus >= 400) {
-    throw new Error(data?.responseDetails || "No translation was returned.");
-  }
-  return translatedText;
-}
-
 async function translateText(text, sourceLanguage, targetLanguage) {
-  const chunks = chunkText(text);
-  const translatedChunks = [];
-
-  for (const chunk of chunks) {
-    translatedChunks.push(await translateChunk(chunk, sourceLanguage, targetLanguage));
-  }
-
-  return translatedChunks.join("\n\n");
+  if (sourceLanguage === targetLanguage) return text;
+  const response = await fetch("/.netlify/functions/translate-content", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ text, source_language: sourceLanguage, target_language: targetLanguage }),
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(result.error || "The translation service is not available right now.");
+  return result.translation;
 }
 
 function setTranslationStatus(message, type = "") {
