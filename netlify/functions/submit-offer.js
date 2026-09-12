@@ -10,6 +10,46 @@ function cleanEnvironmentValue(value) {
   return String(value || "").trim().replace(/^(['"])(.*)\1$/, "$2").trim();
 }
 
+async function verifyTurnstileToken(token, remoteIp = "") {
+  const secret = cleanEnvironmentValue(process.env.TURNSTILE_SECRET_KEY);
+  if (!secret) return { ok: false, status: 500, error: "Turnstile is not configured." };
+  if (!token) return { ok: false, status: 403, error: "Submission verification is required." };
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
+  try {
+    const body = new URLSearchParams({ secret, response: String(token) });
+    if (remoteIp) body.set("remoteip", remoteIp);
+    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      body,
+      signal: controller.signal,
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result.success) {
+      console.warn("Turnstile verification rejected", result["error-codes"] || response.status);
+      return { ok: false, status: 403, error: "Submission verification failed." };
+    }
+
+    const allowedHostnames = cleanEnvironmentValue(process.env.TURNSTILE_ALLOWED_HOSTNAMES || "hotelsoffer.netlify.app")
+      .split(",")
+      .map((hostname) => hostname.trim().toLowerCase())
+      .filter(Boolean);
+    if (result.action !== "submit_offer" || !allowedHostnames.includes(String(result.hostname || "").toLowerCase())) {
+      console.warn("Turnstile verification context mismatch", { action: result.action, hostname: result.hostname });
+      return { ok: false, status: 403, error: "Submission verification failed." };
+    }
+
+    return { ok: true };
+  } catch (error) {
+    console.error("Turnstile verification request failed", error);
+    return { ok: false, status: 502, error: "Submission verification service could not be reached." };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 function supabaseProjectUrl(value) {
   const cleaned = cleanEnvironmentValue(value).replace(/\/+$/, "");
   if (!cleaned) return { error: "SUPABASE_URL is not configured." };
@@ -294,6 +334,14 @@ exports.handler = async (event) => {
     submission = JSON.parse(event.body || "{}");
   } catch (error) {
     return json(400, { error: "Invalid JSON payload." });
+  }
+
+  const forwardedFor = String(event.headers?.["x-forwarded-for"] || event.headers?.["X-Forwarded-For"] || "")
+    .split(",")[0]
+    .trim();
+  const verification = await verifyTurnstileToken(submission.turnstile_token, forwardedFor);
+  if (!verification.ok) {
+    return json(verification.status, { error: verification.error, service: "turnstile" });
   }
 
   const offer = {

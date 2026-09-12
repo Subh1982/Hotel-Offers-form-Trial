@@ -36,6 +36,8 @@ Add these environment variables in Netlify and redeploy:
 - `ASANA_ASSIGNEE_GID`: optional user ID to assign every new task.
 - `GEMINI_API_KEY`: Gemini API key used server-side for brand-tone alignment.
 - `GEMINI_MODEL`: optional model override; defaults to `gemini-3.5-flash-lite`.
+- `TURNSTILE_SECRET_KEY`: Cloudflare Turnstile secret used to verify submissions before Asana task creation.
+- `TURNSTILE_ALLOWED_HOSTNAMES`: optional comma-separated hostname allowlist; defaults to `hotelsoffer.netlify.app`.
 
 If Asana is not configured or task creation fails, the offer submission still succeeds and the confirmation panel displays the integration warning. This avoids duplicate offers caused by resubmission.
 

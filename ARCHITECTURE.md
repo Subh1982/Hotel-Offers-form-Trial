@@ -132,6 +132,8 @@ The Netlify deployment uses these environment variables:
 | `ASANA_ASSIGNEE_GID` | Optional Asana user to assign to every new offer task. |
 | `GEMINI_API_KEY` | Gemini API key used server-side to align offer descriptions with the Explorer brand tone. |
 | `GEMINI_MODEL` | Optional Gemini model override; defaults to `gemini-3.5-flash-lite`. |
+| `TURNSTILE_SECRET_KEY` | Cloudflare Turnstile secret used by the submission function. |
+| `TURNSTILE_ALLOWED_HOSTNAMES` | Optional comma-separated hostname allowlist; defaults to `hotelsoffer.netlify.app`. |
 
 ## Local and legacy implementation
 

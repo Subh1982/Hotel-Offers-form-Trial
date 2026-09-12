@@ -44,6 +44,9 @@ const confirmationEmailStatus = document.querySelector("#confirmationEmailStatus
 const offerDescription = document.querySelector("#offerDescription");
 const alignBrandToneButton = document.querySelector("#alignBrandToneButton");
 const brandToneStatus = document.querySelector("#brandToneStatus");
+const turnstileContainer = document.querySelector("#turnstileContainer");
+
+const TURNSTILE_SITE_KEY = "0x4AAAAAAEx2NTrp7G-EkGjO";
 
 let resizedBannerFile = null;
 let resizedListingTileFile = null;
@@ -159,6 +162,8 @@ const uiTranslations = {
     alignBrandToneProgress: "Rewriting your description in the Explorer brand tone...",
     alignBrandToneSuccess: "Brand-aligned draft ready. You can edit it before submitting.",
     alignBrandToneError: "Brand tone alignment failed.",
+    turnstileVerifying: "Verifying submission...",
+    turnstileUnavailable: "We could not verify this submission. Please try again.",
   },
   th: {
     alignBrandToneButton: "ปรับให้สอดคล้องกับโทนแบรนด์",
@@ -167,6 +172,8 @@ const uiTranslations = {
     alignBrandToneProgress: "กำลังปรับรายละเอียดให้สอดคล้องกับโทนแบรนด์ Explorer...",
     alignBrandToneSuccess: "ฉบับร่างที่ปรับตามโทนแบรนด์พร้อมแล้ว คุณสามารถแก้ไขก่อนส่งได้",
     alignBrandToneError: "ไม่สามารถปรับให้สอดคล้องกับโทนแบรนด์ได้",
+    turnstileVerifying: "กำลังตรวจสอบการส่งข้อมูล...",
+    turnstileUnavailable: "เราไม่สามารถตรวจสอบการส่งข้อมูลนี้ได้ โปรดลองอีกครั้ง",
     stepType: "ประเภทข้อเสนอ",
     offerTypeQuestion: "คุณกำลังส่งข้อเสนอประเภทใด?",
     offerTypeHelp: "ตัวเลือกของคุณจะกำหนดวันที่ ราคา และข้อมูลประกอบที่ต้องระบุด้านล่าง",
@@ -239,6 +246,8 @@ const uiTranslations = {
     alignBrandToneProgress: "Đang viết lại mô tả theo giọng điệu thương hiệu Explorer...",
     alignBrandToneSuccess: "Bản nháp theo giọng điệu thương hiệu đã sẵn sàng. Bạn có thể chỉnh sửa trước khi gửi.",
     alignBrandToneError: "Không thể điều chỉnh theo giọng điệu thương hiệu.",
+    turnstileVerifying: "Đang xác minh nội dung gửi...",
+    turnstileUnavailable: "Không thể xác minh nội dung gửi này. Vui lòng thử lại.",
     stepType: "Loại ưu đãi",
     offerTypeQuestion: "Bạn đang gửi loại ưu đãi nào?",
     offerTypeHelp: "Lựa chọn của bạn sẽ xác định ngày, mức giá và thông tin hỗ trợ cần cung cấp bên dưới.",
@@ -311,6 +320,8 @@ const uiTranslations = {
     alignBrandToneProgress: "Sedang menulis ulang deskripsi dengan gaya bahasa merek Explorer...",
     alignBrandToneSuccess: "Draf dengan gaya bahasa merek sudah siap. Anda dapat mengeditnya sebelum mengirim.",
     alignBrandToneError: "Penyesuaian gaya bahasa merek gagal.",
+    turnstileVerifying: "Sedang memverifikasi pengiriman...",
+    turnstileUnavailable: "Kami tidak dapat memverifikasi pengiriman ini. Silakan coba lagi.",
     stepType: "Jenis penawaran",
     offerTypeQuestion: "Jenis penawaran apa yang Anda kirimkan?",
     offerTypeHelp: "Pilihan Anda akan menentukan tanggal, harga, dan informasi pendukung yang diminta di bawah ini.",
@@ -383,6 +394,8 @@ const uiTranslations = {
     alignBrandToneProgress: "Explorerのブランドトーンに合わせて説明を書き換えています...",
     alignBrandToneSuccess: "ブランドトーンに沿った下書きが完成しました。送信前に編集できます。",
     alignBrandToneError: "ブランドトーンの調整に失敗しました。",
+    turnstileVerifying: "送信内容を確認しています...",
+    turnstileUnavailable: "この送信を確認できませんでした。もう一度お試しください。",
     stepType: "オファー種別",
     offerTypeQuestion: "どの種類のオファーを送信しますか？",
     offerTypeHelp: "選択した種類に応じて、日付、料金、必要な補足情報が以下に表示されます。",
@@ -1808,8 +1821,11 @@ async function buildRecordForSave(record) {
   };
 }
 
-async function storeSubmission(record) {
-  const payload = await buildRecordForSave(record);
+async function storeSubmission(record, turnstileToken = "") {
+  const payload = {
+    ...await buildRecordForSave(record),
+    turnstile_token: turnstileToken,
+  };
   const response = await fetch("/.netlify/functions/submit-offer", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -1901,6 +1917,46 @@ async function sendPackageEmail(record, packageFile) {
   return result;
 }
 
+async function waitForTurnstile() {
+  const startedAt = Date.now();
+  while (!window.turnstile) {
+    if (Date.now() - startedAt > 10000) {
+      throw new Error("Turnstile did not load.");
+    }
+    await new Promise((resolve) => window.setTimeout(resolve, 50));
+  }
+  return window.turnstile;
+}
+
+async function requestTurnstileToken() {
+  const turnstile = await waitForTurnstile();
+  turnstileContainer.replaceChildren();
+
+  return new Promise((resolve, reject) => {
+    let widgetId;
+    const fail = () => {
+      if (widgetId !== undefined) turnstile.remove(widgetId);
+      reject(new Error("Turnstile verification failed."));
+    };
+
+    widgetId = turnstile.render(turnstileContainer, {
+      sitekey: TURNSTILE_SITE_KEY,
+      action: "submit_offer",
+      execution: "execute",
+      appearance: "interaction-only",
+      size: "flexible",
+      callback: (token) => {
+        turnstile.remove(widgetId);
+        resolve(token);
+      },
+      "error-callback": fail,
+      "expired-callback": fail,
+      "timeout-callback": fail,
+    });
+    turnstile.execute(widgetId);
+  });
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   setMessage("");
@@ -1925,11 +1981,14 @@ form.addEventListener("submit", async (event) => {
 
   const submitButton = form.querySelector('button[type="submit"]');
   submitButton.disabled = true;
-  submitButton.textContent = "Creating Asana task...";
+  const copy = uiTranslations[languageSelect.value] || uiTranslations.en;
+  submitButton.textContent = copy.turnstileVerifying;
 
   try {
     const record = buildSubmissionRecord();
-    const savedSubmission = await storeSubmission(record);
+    const turnstileToken = await requestTurnstileToken();
+    submitButton.textContent = "Creating Asana task...";
+    const savedSubmission = await storeSubmission(record, turnstileToken);
     record.id = savedSubmission.id || record.id;
     record.offer_id = savedSubmission.offer_id || formatOfferId(savedSubmission.id);
     record.asana = savedSubmission.asana || null;
@@ -1988,10 +2047,11 @@ form.addEventListener("submit", async (event) => {
         console.warn("Package email link could not be sent.", error);
       });
   } catch (error) {
-    setMessage(error.message || "The submission could not be completed.", "error");
+    const isTurnstileError = /turnstile/i.test(error.message || "");
+    setMessage(isTurnstileError ? copy.turnstileUnavailable : (error.message || "The submission could not be completed."), "error");
   } finally {
+    turnstileContainer.replaceChildren();
     submitButton.disabled = false;
-    const copy = uiTranslations[languageSelect.value] || uiTranslations.en;
     submitButton.textContent = copy.submitButton;
   }
 });
