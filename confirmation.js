@@ -13,7 +13,7 @@ if (!rawConfirmation) {
   setText("confirmationHotelCode", confirmation.hotel_rid_code);
   setText("confirmationOfferTitle", confirmation.offer_tile_title);
   setText("confirmationEmail", confirmation.email);
-  setText("confirmationBookingLink", confirmation.booking_link);
+  setText("confirmationBookingLink", confirmation.booking_details || confirmation.booking_link);
   setText("confirmationDateRange", confirmation.date_range);
 
   const asanaStatus = document.getElementById("confirmationAsanaStatus");

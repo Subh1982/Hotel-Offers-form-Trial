@@ -530,6 +530,9 @@ h3 {
 }
 
 .offer-type-first select {
+  min-height: 48px;
+  height: 48px;
+  padding-block: 0;
   border-color: #c7d0da;
   background: var(--surface);
 }
@@ -552,6 +555,53 @@ h3 {
 }
 
 .dynamic-grid {
+  margin-top: 16px;
+}
+
+.booking-method-fieldset {
+  margin: 22px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.booking-method-fieldset legend {
+  margin-bottom: 10px;
+  color: #34404c;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.booking-method-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.booking-method-options label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.booking-method-options label:has(input:checked) {
+  border-color: var(--accent);
+  background: #f4f2fd;
+  color: var(--accent);
+}
+
+.booking-method-options input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+.booking-method-fields {
   margin-top: 16px;
 }
 
@@ -1221,6 +1271,10 @@ dialog::backdrop {
   }
 
   .translation-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-method-options {
     grid-template-columns: 1fr;
   }
 

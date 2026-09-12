@@ -45,6 +45,9 @@ const offerDescription = document.querySelector("#offerDescription");
 const alignBrandToneButton = document.querySelector("#alignBrandToneButton");
 const brandToneStatus = document.querySelector("#brandToneStatus");
 const turnstileContainer = document.querySelector("#turnstileContainer");
+const bookingLinkFields = document.querySelector("#bookingLinkFields");
+const bookingEmailFields = document.querySelector("#bookingEmailFields");
+const bookingScreenshotCard = document.querySelector("#bookingScreenshotCard");
 
 const TURNSTILE_SITE_KEY = "0x4AAAAAAEx2NTrp7G-EkGjO";
 
@@ -479,6 +482,11 @@ const formCopyTranslations = {
     metaDescriptionLabel: "Meta description",
     offerDescriptionLabel: "Offer description",
     bookingLinkLabel: "Booking link",
+    bookingMethodQuestion: "How can members book?",
+    bookingMethodLink: "Booking link",
+    bookingMethodEmailRsvp: "Booking via email / RSVP form",
+    bookingEmailRsvpLabel: "Booking email or RSVP form",
+    bookingEmailRsvpPlaceholder: "Enter the email address, email instructions, or RSVP form URL.",
     termsLabel: "Terms and conditions",
     rateScreenshotLabel: "Rate screenshot",
     rateScreenshotHelp: "Please show the loaded rate available at all.com. Max 1 MB image.",
@@ -521,6 +529,11 @@ const formCopyTranslations = {
     metaDescriptionLabel: "คำอธิบายเมตา",
     offerDescriptionLabel: "รายละเอียดข้อเสนอ",
     bookingLinkLabel: "ลิงก์จอง",
+    bookingMethodQuestion: "สมาชิกสามารถจองได้อย่างไร?",
+    bookingMethodLink: "ลิงก์จอง",
+    bookingMethodEmailRsvp: "จองผ่านอีเมล / แบบฟอร์ม RSVP",
+    bookingEmailRsvpLabel: "อีเมลสำหรับจองหรือแบบฟอร์ม RSVP",
+    bookingEmailRsvpPlaceholder: "กรอกที่อยู่อีเมล คำแนะนำทางอีเมล หรือ URL แบบฟอร์ม RSVP",
     termsLabel: "ข้อกำหนดและเงื่อนไข",
     rateScreenshotLabel: "ภาพหน้าจอราคา",
     rateScreenshotHelp: "โปรดแสดงราคาที่โหลดไว้บน all.com ขนาดภาพสูงสุด 1 MB",
@@ -563,6 +576,11 @@ const formCopyTranslations = {
     metaDescriptionLabel: "Mô tả meta",
     offerDescriptionLabel: "Mô tả ưu đãi",
     bookingLinkLabel: "Liên kết đặt chỗ",
+    bookingMethodQuestion: "Thành viên có thể đặt chỗ bằng cách nào?",
+    bookingMethodLink: "Liên kết đặt chỗ",
+    bookingMethodEmailRsvp: "Đặt qua email / biểu mẫu RSVP",
+    bookingEmailRsvpLabel: "Email đặt chỗ hoặc biểu mẫu RSVP",
+    bookingEmailRsvpPlaceholder: "Nhập địa chỉ email, hướng dẫn qua email hoặc URL biểu mẫu RSVP.",
     termsLabel: "Điều khoản và điều kiện",
     rateScreenshotLabel: "Ảnh chụp màn hình giá",
     rateScreenshotHelp: "Vui lòng hiển thị mức giá đã được tải trên all.com. Ảnh tối đa 1 MB.",
@@ -605,6 +623,11 @@ const formCopyTranslations = {
     metaDescriptionLabel: "Deskripsi meta",
     offerDescriptionLabel: "Deskripsi penawaran",
     bookingLinkLabel: "Tautan pemesanan",
+    bookingMethodQuestion: "Bagaimana anggota dapat memesan?",
+    bookingMethodLink: "Tautan pemesanan",
+    bookingMethodEmailRsvp: "Pemesanan melalui email / formulir RSVP",
+    bookingEmailRsvpLabel: "Email pemesanan atau formulir RSVP",
+    bookingEmailRsvpPlaceholder: "Masukkan alamat email, petunjuk melalui email, atau URL formulir RSVP.",
     termsLabel: "Syarat dan ketentuan",
     rateScreenshotLabel: "Screenshot tarif",
     rateScreenshotHelp: "Tampilkan tarif yang sudah dimuat di all.com. Gambar maks. 1 MB.",
@@ -647,6 +670,11 @@ const formCopyTranslations = {
     metaDescriptionLabel: "メタ説明",
     offerDescriptionLabel: "オファー説明",
     bookingLinkLabel: "予約リンク",
+    bookingMethodQuestion: "会員はどのように予約できますか？",
+    bookingMethodLink: "予約リンク",
+    bookingMethodEmailRsvp: "メール / RSVPフォームで予約",
+    bookingEmailRsvpLabel: "予約メールまたはRSVPフォーム",
+    bookingEmailRsvpPlaceholder: "メールアドレス、メールでの予約方法、またはRSVPフォームのURLを入力してください。",
     termsLabel: "利用規約",
     rateScreenshotLabel: "料金スクリーンショット",
     rateScreenshotHelp: "all.comで読み込まれた料金を表示してください。画像は最大1 MBです。",
@@ -690,6 +718,10 @@ function applyLanguage(language) {
   document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
     const key = element.dataset.i18nAriaLabel;
     if (Object.hasOwn(copy, key)) element.setAttribute("aria-label", copy[key]);
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+    const key = element.dataset.i18nPlaceholder;
+    if (Object.hasOwn(copy, key)) element.setAttribute("placeholder", copy[key]);
   });
   if (heroText) heroText.textContent = copy.heroText || uiTranslations.en.heroText;
   translationSourceDisplay.textContent = labels[language] || contentLanguageLabels[language] || contentLanguageLabels.en;
@@ -751,7 +783,6 @@ const typeFieldGroups = {
     { name: "offer_validity_end_date", label: "Offer validity end date", type: "date", required: true },
     { name: "venue", label: "Venue", placeholder: "Example: The Cliff at Sofitel Singapore Sentosa Resort and Spa", required: true },
     { name: "member_benefits", label: "Member benefits", type: "textarea", placeholder: "Describe the member dining benefit, discount, inclusions, or early bird offer.", required: true },
-    { name: "booking_email", label: "Booking via email", placeholder: "Example: recipient and subject, or NIL" },
   ],
   events: [
     { name: "accommodation_details", label: "Accommodation details", type: "textarea", placeholder: "Optional stay package or room-night details connected to the event." },
@@ -760,14 +791,12 @@ const typeFieldGroups = {
     { name: "event_time", label: "Event time", type: "time", required: true },
     { name: "venue", label: "Venue", placeholder: "Example: Room81 at Sofitel Gold Coast Broadbeach", required: true },
     { name: "member_price", label: "Member price", placeholder: "Example: AUD 139 per person", required: true },
-    { name: "booking_email", label: "Booking via email / RSVP form", placeholder: "Example: recipient and subject, RSVP form URL, or NIL" },
   ],
   partners: [
     { name: "partner_name", label: "Partner name", placeholder: "Example: Europcar", required: true },
     { name: "offer_validity_start_date", label: "Offer validity start date", type: "date", required: true },
     { name: "offer_validity_end_date", label: "Offer validity end date", type: "date", required: true },
     { name: "member_benefits", label: "Member benefits", type: "textarea", placeholder: "Describe the exclusive partner benefit for Accor Plus members.", required: true },
-    { name: "booking_email", label: "Booking via email / RSVP form", placeholder: "Example: recipient and subject, form URL, or NIL" },
   ],
 };
 
@@ -957,6 +986,33 @@ function isPartnerOffer() {
   return offerType.value === "partners";
 }
 
+function selectedBookingMethod() {
+  return form.elements.booking_method?.value || "";
+}
+
+function updateBookingMethodFields(clearInactive = false) {
+  const method = selectedBookingMethod();
+  const usesBookingLink = method === "booking_link";
+  const usesEmailRsvp = method === "email_rsvp";
+  const bookingLinkInput = form.elements.booking_link;
+  const bookingEmailInput = form.elements.booking_email;
+  const bookingScreenshotInput = form.elements.booking_screenshot;
+  const needsBookingScreenshot = usesBookingLink && isDiningOrEventOffer();
+
+  bookingLinkFields.classList.toggle("is-hidden", !usesBookingLink);
+  bookingEmailFields.classList.toggle("is-hidden", !usesEmailRsvp);
+  bookingScreenshotCard.classList.toggle("is-hidden", !needsBookingScreenshot);
+  bookingLinkInput.required = usesBookingLink;
+  bookingEmailInput.required = usesEmailRsvp;
+
+  if (clearInactive && !usesBookingLink) bookingLinkInput.value = "";
+  if (clearInactive && !usesEmailRsvp) bookingEmailInput.value = "";
+  if (!needsBookingScreenshot) {
+    bookingScreenshotInput.value = "";
+    updateFileName(bookingScreenshotInput);
+  }
+}
+
 function renderTypeSpecificFields() {
   const selected = offerType.value;
   const fields = typeFieldGroups[selected] || [];
@@ -993,6 +1049,7 @@ function renderTypeSpecificFields() {
   });
 
   typeSpecificFields.append(grid);
+  updateBookingMethodFields();
 }
 
 function validateRequiredDetails() {
@@ -1021,7 +1078,7 @@ function validateRequiredUploads() {
   if (isDiningOrEventOffer() && !form.elements.menu_pdf.files.length) {
     missing.push("menu PDF");
   }
-  if (isDiningOrEventOffer() && !form.elements.booking_screenshot.files.length) {
+  if (selectedBookingMethod() === "booking_link" && isDiningOrEventOffer() && !form.elements.booking_screenshot.files.length) {
     missing.push("final booking-page screenshot");
   }
   if (!resizedBannerFile) {
@@ -1273,7 +1330,13 @@ confirmationNewOfferButton.addEventListener("click", () => {
   offerWorkspace.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
-offerType.addEventListener("change", renderTypeSpecificFields);
+offerType.addEventListener("change", () => {
+  renderTypeSpecificFields();
+  updateBookingMethodFields();
+});
+form.querySelectorAll('input[name="booking_method"]').forEach((input) => {
+  input.addEventListener("change", () => updateBookingMethodFields(true));
+});
 languageSelect.addEventListener("change", () => {
   applyLanguage(languageSelect.value);
   renderTypeSpecificFields();
@@ -1494,7 +1557,11 @@ function buildSubmissionRecord() {
     translations: collectTranslations(),
     auto_translations: generatedContentTranslations,
     meta_description: fieldValue("meta_description"),
-    offer_details: collectDynamicFields(),
+    offer_details: {
+      ...collectDynamicFields(),
+      booking_method: selectedBookingMethod() === "booking_link" ? "Booking link" : "Booking via email / RSVP form",
+      booking_email: fieldValue("booking_email"),
+    },
     booking_link: fieldValue("booking_link"),
     terms: fieldValue("terms"),
     acknowledgement: fieldValue("acknowledgement"),
@@ -1598,7 +1665,8 @@ function buildSummaryText(record) {
     `Offer banner title: ${record.offer_banner_title}`,
     `Subtitle: ${record.offer_subtitle}`,
     `Contact: ${record.person_in_charge_name} <${record.email}>`,
-    `Booking link: ${record.booking_link}`,
+    `Booking method: ${record.offer_details.booking_method || "Not provided"}`,
+    `Booking details: ${record.booking_link || record.offer_details.booking_email || "Not provided"}`,
     "",
     "Core content",
     record.offer_description,
@@ -1980,16 +2048,18 @@ form.addEventListener("submit", async (event) => {
     return;
   }
 
-  const bookingLink = form.elements.booking_link.value.trim();
-  bookingPreview.href = bookingLink;
-  bookingPreview.textContent = bookingLink;
+  if (selectedBookingMethod() === "booking_link") {
+    const bookingLink = form.elements.booking_link.value.trim();
+    bookingPreview.href = bookingLink;
+    bookingPreview.textContent = bookingLink;
 
-  const result = await new Promise((resolve) => {
-    bookingDialog.addEventListener("close", () => resolve(bookingDialog.returnValue), { once: true });
-    bookingDialog.showModal();
-  });
+    const result = await new Promise((resolve) => {
+      bookingDialog.addEventListener("close", () => resolve(bookingDialog.returnValue), { once: true });
+      bookingDialog.showModal();
+    });
 
-  if (result !== "confirm") return;
+    if (result !== "confirm") return;
+  }
 
   const submitButton = form.querySelector('button[type="submit"]');
   submitButton.disabled = true;
@@ -2017,6 +2087,7 @@ form.addEventListener("submit", async (event) => {
         offer_tile_title: record.offer_tile_title || "Not provided",
         email: record.email || "Not provided",
         booking_link: record.booking_link || "Not provided",
+        booking_details: record.booking_link || record.offer_details.booking_email || "Not provided",
         date_range: buildDateRangeSummary(record),
         asana: record.asana,
         attachments: savedSubmission.attachments || { attempted: 0, attached: 0, failed: 0 },
@@ -2091,6 +2162,7 @@ form.addEventListener("reset", () => {
     setTranslationStatus("");
     dateMessage.textContent = "";
     renderTypeSpecificFields();
+    updateBookingMethodFields();
     setMessage("");
   });
 });
@@ -2099,3 +2171,4 @@ const savedLanguage = localStorage.getItem("explorer-offer-language") || "en";
 languageSelect.value = savedLanguage;
 applyLanguage(savedLanguage);
 renderTypeSpecificFields();
+updateBookingMethodFields();

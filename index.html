@@ -127,9 +127,23 @@
             <h3 data-i18n="datesBooking">Dates and booking</h3>
             <div id="typeSpecificFields" class="dynamic-fields" aria-live="polite"></div>
             <p id="dateMessage" class="inline-alert" aria-live="polite"></p>
-            <label><span data-i18n="bookingLinkLabel">Booking link</span>
-              <input name="booking_link" type="url" required placeholder="https://">
-            </label>
+            <fieldset class="booking-method-fieldset">
+              <legend data-i18n="bookingMethodQuestion">How can members book?</legend>
+              <div class="booking-method-options">
+                <label><input name="booking_method" type="radio" value="booking_link" required><span data-i18n="bookingMethodLink">Booking link</span></label>
+                <label><input name="booking_method" type="radio" value="email_rsvp" required><span data-i18n="bookingMethodEmailRsvp">Booking via email / RSVP form</span></label>
+              </div>
+            </fieldset>
+            <div id="bookingLinkFields" class="booking-method-fields is-hidden">
+              <label><span data-i18n="bookingLinkLabel">Booking link</span>
+                <input name="booking_link" type="url" placeholder="https://">
+              </label>
+            </div>
+            <div id="bookingEmailFields" class="booking-method-fields is-hidden">
+              <label><span data-i18n="bookingEmailRsvpLabel">Booking email or RSVP form</span>
+                <textarea name="booking_email" rows="3" data-i18n-placeholder="bookingEmailRsvpPlaceholder" placeholder="Enter the email address, email instructions, or RSVP form URL."></textarea>
+              </label>
+            </div>
             <label><span data-i18n="termsLabel">Terms and conditions</span>
               <textarea name="terms" rows="4" placeholder="Minimum stays, blackout dates, redemption instructions, exclusions..."></textarea>
             </label>
@@ -142,7 +156,7 @@
                 <div class="upload-copy"><strong data-i18n="rateScreenshotLabel">Rate screenshot</strong><span data-i18n="rateScreenshotHelp">Please show the loaded rate available at all.com. Max 1 MB image.</span></div>
                 <label class="file-action"><input name="rate_screenshot" type="file" accept="image/png,image/jpeg,image/webp"><span class="file-button">Choose image</span><small data-file-name-for="rate_screenshot">No file selected</small></label>
               </div>
-              <div class="file-card upload-row conditional-dining">
+              <div id="bookingScreenshotCard" class="file-card upload-row conditional-dining is-hidden">
                 <div class="upload-copy"><strong data-i18n="menuPdfLabel">Dining / event menu PDF</strong><span data-i18n="menuPdfHelp">Please merge PDFs into one file. Max 10 MB.</span></div>
                 <label class="file-action"><input name="menu_pdf" type="file" accept="application/pdf"><span class="file-button">Choose PDF</span><small data-file-name-for="menu_pdf">No file selected</small></label>
               </div>
