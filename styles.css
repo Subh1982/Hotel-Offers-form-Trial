@@ -723,6 +723,10 @@ h3 {
   height: 48px;
 }
 
+#translationStatus:not(:empty) {
+  margin: 18px 0 0;
+}
+
 .compact-actions {
   justify-content: flex-start;
   margin: 18px 0;

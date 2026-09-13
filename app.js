@@ -149,6 +149,10 @@ const uiTranslations = {
     formTitle: "Create your Explorer offer",
     offerTypeQuestion: "What type of offer are you submitting?",
     offerTypeHelp: "Your choice determines the dates, pricing, and supporting information requested below.",
+    offerTypeHotelStay: "Hotel stay",
+    offerTypeDining: "Dining",
+    offerTypeEvents: "Events",
+    offerTypePartners: "Partners",
     statusPill: "Asana submission",
     hotelDetails: "Hotel details",
     coreContent: "Core offer content",
@@ -807,15 +811,18 @@ function applyLanguage(language) {
   document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     const key = element.dataset.i18n;
-    if (Object.hasOwn(copy, key)) element.textContent = copy[key];
+    const value = copy[key] ?? uiTranslations.en[key];
+    if (value !== undefined) element.textContent = value;
   });
   document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
     const key = element.dataset.i18nAriaLabel;
-    if (Object.hasOwn(copy, key)) element.setAttribute("aria-label", copy[key]);
+    const value = copy[key] ?? uiTranslations.en[key];
+    if (value !== undefined) element.setAttribute("aria-label", value);
   });
   document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
     const key = element.dataset.i18nPlaceholder;
-    if (Object.hasOwn(copy, key)) element.setAttribute("placeholder", copy[key]);
+    const value = copy[key] ?? uiTranslations.en[key];
+    if (value !== undefined) element.setAttribute("placeholder", value);
   });
   if (heroText) heroText.textContent = copy.heroText || uiTranslations.en.heroText;
   translationSourceDisplay.textContent = labels[language] || contentLanguageLabels[language] || contentLanguageLabels.en;
