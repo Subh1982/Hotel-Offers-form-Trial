@@ -6,8 +6,8 @@
     <title>Explorer Offers Collection</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=style-guide-1">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=arabic-rtl-1">
   </head>
   <body>
     <main class="shell">
@@ -22,6 +22,7 @@
                 <option value="vi">Tiếng Việt</option>
                 <option value="id">Bahasa Indonesia</option>
                 <option value="ja">日本語</option>
+                <option value="ar">العربية</option>
               </select>
             </label>
           </div>
@@ -69,10 +70,10 @@
                 <option value="" data-i18n="selectOne">Select one</option>
                 <option value="red_hot_rooms">Red Hot Rooms</option>
                 <option value="more_escapes">More Escapes</option>
-                <option value="hotel_stay">Hotel stay</option>
-                <option value="dining">Dining</option>
-                <option value="events">Events</option>
-                <option value="partners">Partners</option>
+                <option value="hotel_stay" data-i18n="offerTypeHotelStay">Hotel stay</option>
+                <option value="dining" data-i18n="offerTypeDining">Dining</option>
+                <option value="events" data-i18n="offerTypeEvents">Events</option>
+                <option value="partners" data-i18n="offerTypePartners">Partners</option>
               </select>
             </label>
           </section>
@@ -222,6 +223,7 @@
                   <option value="id">Bahasa Indonesia</option>
                   <option value="ja">Japanese</option>
                   <option value="en">English</option>
+                  <option value="ar">Arabic</option>
                 </select>
               </label>
               <button type="button" id="translateContentButton" data-i18n="previewTranslatedButton">Preview translated content</button>
@@ -316,6 +318,6 @@
     </dialog>
 
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
-    <script src="app.js"></script>
+    <script src="app.js?v=arabic-rtl-1"></script>
   </body>
 </html>

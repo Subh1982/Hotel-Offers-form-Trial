@@ -24,6 +24,48 @@ body {
   color: var(--ink);
 }
 
+html[dir="rtl"] body {
+  font-family: "Noto Sans Arabic", Arial, sans-serif;
+  text-align: right;
+}
+
+html[dir="rtl"] input[type="email"],
+html[dir="rtl"] input[type="url"] {
+  direction: ltr;
+  text-align: left;
+}
+
+html[dir="rtl"] .topbar,
+html[dir="rtl"] .form-header,
+html[dir="rtl"] .brand-tone-actions,
+html[dir="rtl"] .actions {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .steps {
+  padding-right: 0;
+}
+
+html[dir="rtl"] .steps li::before {
+  left: auto;
+  right: 0;
+}
+
+html[dir="rtl"] .steps button {
+  text-align: right;
+}
+
+html[dir="rtl"] .file-action,
+html[dir="rtl"] .translation-review-section .compact-actions {
+  justify-content: flex-start;
+}
+
+html[dir="rtl"] select {
+  background-position: left 12px center;
+  padding-left: 40px;
+  padding-right: 14px;
+}
+
 .shell {
   min-height: 100vh;
   padding: 32px;
@@ -1288,5 +1330,11 @@ dialog::backdrop {
 
   .translation-controls button {
     width: 100%;
+  }
+
+  html[dir="rtl"] .form-header,
+  html[dir="rtl"] .actions,
+  html[dir="rtl"] .brand-tone-actions {
+    flex-direction: column;
   }
 }

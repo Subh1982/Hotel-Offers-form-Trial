@@ -6,8 +6,8 @@
     <title>Offer submitted | Explorer Offers Collection</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=style-guide-1">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=arabic-rtl-1">
   </head>
   <body>
     <main class="shell">
@@ -20,32 +20,32 @@
       <section class="confirmation-screen" aria-labelledby="confirmationTitle">
         <div class="confirmation-card">
           <div class="success-mark" aria-hidden="true">✓</div>
-          <p class="eyebrow">Submission complete</p>
-          <h1 id="confirmationTitle">Asana task created successfully</h1>
-          <p>Your offer has been sent to Asana for the team to review.</p>
+          <p class="eyebrow" data-confirmation-i18n="eyebrow">Submission complete</p>
+          <h1 id="confirmationTitle" data-confirmation-i18n="title">Asana task created successfully</h1>
+          <p data-confirmation-i18n="intro">Your offer has been sent to Asana for the team to review.</p>
 
           <div class="offer-id-box">
-            <span>Reference</span>
+            <span data-confirmation-i18n="reference">Reference</span>
             <strong id="confirmationOfferId"></strong>
           </div>
 
           <dl class="confirmation-details">
-            <div><dt>Hotel name</dt><dd id="confirmationHotelName"></dd></div>
-            <div><dt>Hotel code</dt><dd id="confirmationHotelCode"></dd></div>
-            <div><dt>Offer title</dt><dd id="confirmationOfferTitle"></dd></div>
-            <div><dt>Submitter email</dt><dd id="confirmationEmail"></dd></div>
-            <div><dt>Booking method</dt><dd id="confirmationBookingLink"></dd></div>
-            <div><dt>Submission date range</dt><dd id="confirmationDateRange"></dd></div>
+            <div><dt data-confirmation-i18n="hotelName">Hotel name</dt><dd id="confirmationHotelName"></dd></div>
+            <div><dt data-confirmation-i18n="hotelCode">Hotel code</dt><dd id="confirmationHotelCode"></dd></div>
+            <div><dt data-confirmation-i18n="offerTitle">Offer title</dt><dd id="confirmationOfferTitle"></dd></div>
+            <div><dt data-confirmation-i18n="submitterEmail">Submitter email</dt><dd id="confirmationEmail"></dd></div>
+            <div><dt data-confirmation-i18n="bookingMethod">Booking method</dt><dd id="confirmationBookingLink"></dd></div>
+            <div><dt data-confirmation-i18n="dateRange">Submission date range</dt><dd id="confirmationDateRange"></dd></div>
           </dl>
 
           <p id="confirmationAsanaStatus" class="email-status success" aria-live="polite"></p>
           <p id="confirmationAttachmentStatus" class="email-status" aria-live="polite"></p>
           <div class="actions compact-actions">
-            <a class="button-link" href="/">Create another offer</a>
+            <a class="button-link" href="/" data-confirmation-i18n="createAnother">Create another offer</a>
           </div>
         </div>
       </section>
     </main>
-    <script src="confirmation.js"></script>
+    <script src="confirmation.js?v=arabic-rtl-1"></script>
   </body>
 </html>

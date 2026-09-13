@@ -65,14 +65,16 @@ const contentLanguageLabels = {
   vi: "Vietnamese",
   id: "Bahasa Indonesia",
   ja: "Japanese",
+  ar: "Arabic",
 };
 
 const localizedLanguageLabels = {
-  en: { en: "English", th: "Thai", vi: "Vietnamese", id: "Bahasa Indonesia", ja: "Japanese" },
-  th: { en: "อังกฤษ", th: "ไทย", vi: "เวียดนาม", id: "บาฮาซาอินโดนีเซีย", ja: "ญี่ปุ่น" },
-  vi: { en: "Tiếng Anh", th: "Tiếng Thái", vi: "Tiếng Việt", id: "Bahasa Indonesia", ja: "Tiếng Nhật" },
-  id: { en: "Inggris", th: "Thailand", vi: "Vietnam", id: "Bahasa Indonesia", ja: "Jepang" },
-  ja: { en: "英語", th: "タイ語", vi: "ベトナム語", id: "インドネシア語", ja: "日本語" },
+  en: { en: "English", th: "Thai", vi: "Vietnamese", id: "Bahasa Indonesia", ja: "Japanese", ar: "Arabic" },
+  th: { en: "อังกฤษ", th: "ไทย", vi: "เวียดนาม", id: "บาฮาซาอินโดนีเซีย", ja: "ญี่ปุ่น", ar: "อาหรับ" },
+  vi: { en: "Tiếng Anh", th: "Tiếng Thái", vi: "Tiếng Việt", id: "Bahasa Indonesia", ja: "Tiếng Nhật", ar: "Tiếng Ả Rập" },
+  id: { en: "Inggris", th: "Thailand", vi: "Vietnam", id: "Bahasa Indonesia", ja: "Jepang", ar: "Arab" },
+  ja: { en: "英語", th: "タイ語", vi: "ベトナム語", id: "インドネシア語", ja: "日本語", ar: "アラビア語" },
+  ar: { en: "الإنجليزية", th: "التايلاندية", vi: "الفيتنامية", id: "الإندونيسية", ja: "اليابانية", ar: "العربية" },
 };
 
 function updateTranslationTargetOptions(sourceLanguage) {
@@ -465,6 +467,51 @@ const uiTranslations = {
     goBackButton: "戻る",
     confirmButton: "確認してパッケージ作成",
   },
+  ar: {
+    languageLabel: "اللغة",
+    heroTitle: "بوابة عروض ALL Accor+ Explorer",
+    heroText: "أرسل عروض الإقامة والمطاعم والفعاليات والشركاء إلى ALL Accor+ Explorer.",
+    confirmationEyebrow: "اكتمل الإرسال",
+    confirmationTitle: "تم إرسال العرض بنجاح",
+    confirmationText: "تم إنشاء حزمة العرض وتسجيل الإرسال.",
+    submissionDateRangeLabel: "نطاق تاريخ الإرسال",
+    createAnotherButton: "إنشاء عرض آخر",
+    sideTitle: "إرسال العرض",
+    stepType: "نوع العرض",
+    stepHotel: "تفاصيل الفندق",
+    stepOffer: "العرض والتواريخ",
+    stepProof: "الإثباتات والنماذج",
+    stepImages: "الصور والمراجعة",
+    stepTranslations: "الترجمات",
+    formEyebrow: "عروض الإقامة والمطاعم",
+    formTitle: "أنشئ عرض Explorer الخاص بك",
+    offerTypeQuestion: "ما نوع العرض الذي ترسله؟",
+    offerTypeHelp: "يحدد اختيارك التواريخ والأسعار والمعلومات الداعمة المطلوبة أدناه.",
+    offerTypeHotelStay: "إقامة فندقية",
+    offerTypeDining: "مطاعم",
+    offerTypeEvents: "فعاليات",
+    offerTypePartners: "شركاء",
+    hotelDetails: "تفاصيل الفندق",
+    coreContent: "محتوى العرض الأساسي",
+    datesBooking: "التواريخ والحجز",
+    proofForms: "الإثباتات والنماذج المطلوبة",
+    imagesTitle: "الصور",
+    finalAcknowledgement: "الإقرار النهائي",
+    clearButton: "مسح",
+    submitButton: "إرسال العرض",
+    dialogTitle: "تحقق من رابط الحجز",
+    dialogText: "سيتم توجيه الضيوف إلى هذا الرابط تحديدًا. يرجى التأكد من أنه يفتح صفحة الحجز الصحيحة لهذا العرض.",
+    goBackButton: "رجوع",
+    confirmButton: "تأكيد وإرسال",
+    alignBrandToneButton: "مواءمة مع نبرة العلامة التجارية",
+    alignBrandToneEmpty: "أدخل وصف العرض أولًا.",
+    alignBrandToneWorking: "جارٍ المواءمة...",
+    alignBrandToneProgress: "جارٍ إعادة صياغة الوصف وفق نبرة علامة Explorer...",
+    alignBrandToneSuccess: "المسودة المتوافقة مع نبرة العلامة جاهزة. يمكنك تعديلها قبل الإرسال.",
+    alignBrandToneError: "تعذرت مواءمة نبرة العلامة التجارية.",
+    turnstileVerifying: "جارٍ التحقق من الإرسال...",
+    turnstileUnavailable: "تعذر التحقق من هذا الإرسال. يرجى المحاولة مرة أخرى.",
+  },
 };
 
 const formCopyTranslations = {
@@ -701,6 +748,52 @@ const formCopyTranslations = {
     translationEditHelp: "オファーと一緒に保存する前に、この下書きを確認・編集してください。",
     acknowledgementText: "不完全または不正確な提出はプロモーションの遅延につながる可能性があり、素材は6週間前までに提出する必要があることを理解しています。",
   },
+  ar: {
+    formTitle: "أنشئ عرض Explorer الخاص بك",
+    submitButton: "إرسال العرض",
+    emailLabel: "البريد الإلكتروني",
+    contactNameLabel: "اسم الشخص المسؤول",
+    hotelRidLabel: "رمز RID للفندق",
+    hotelNameLabel: "اسم الفندق",
+    offerTypeLabel: "نوع العرض",
+    selectOne: "اختر خيارًا",
+    cityCountryLabel: "المدينة - الدولة",
+    offerTileTitleLabel: "عنوان بطاقة العرض",
+    offerBannerTitleLabel: "عنوان لافتة العرض",
+    offerSubtitleLabel: "العنوان الفرعي للعرض",
+    metaDescriptionLabel: "الوصف التعريفي",
+    offerDescriptionLabel: "وصف العرض",
+    bookingLinkLabel: "رابط الحجز",
+    bookingMethodQuestion: "كيف يمكن للأعضاء الحجز؟",
+    bookingMethodLink: "رابط الحجز",
+    bookingMethodEmailRsvp: "الحجز عبر البريد الإلكتروني / نموذج تأكيد الحضور",
+    bookingEmailRsvpLabel: "البريد الإلكتروني للحجز أو نموذج تأكيد الحضور",
+    bookingEmailRsvpPlaceholder: "أدخل عنوان البريد الإلكتروني أو تعليمات البريد أو رابط نموذج تأكيد الحضور.",
+    termsLabel: "الشروط والأحكام",
+    rateScreenshotLabel: "لقطة شاشة للسعر",
+    rateScreenshotHelp: "يرجى إظهار السعر المحمّل والمتاح على all.com. الحد الأقصى للصورة 1 ميغابايت.",
+    menuPdfLabel: "قائمة المطعم / الفعالية بصيغة PDF",
+    menuPdfHelp: "يرجى دمج ملفات PDF في ملف واحد. الحد الأقصى 10 ميغابايت.",
+    bookingScreenshotLabel: "لقطة شاشة لصفحة الحجز النهائية",
+    bookingScreenshotHelp: "لعروض المطاعم / الفعاليات التي تتضمن رابط حجز. الحد الأقصى للصورة 1 ميغابايت.",
+    masterImageTitle: "استخدم صورة واحدة لجميع المواضع",
+    masterImageHelp: "حمّل صورة واحدة عالية الجودة وسيغيّر التطبيق حجمها لإصدارات اللافتة وبطاقة القائمة ووسائل التواصل.",
+    bannerImageTitle: "صورة اللافتة",
+    bannerImageHelp: "حمّل صورة بأي حجم. سيغيّر التطبيق حجمها تلقائيًا إلى JPG بمقاس 2048 × 1366 بكسل. يجب ألا يتجاوز الملف 200 ميغابايت، ومن دون نص أو شعار.",
+    listingTileImageTitle: "صورة بطاقة القائمة",
+    listingTileImageHelp: "حمّل صورة بأي حجم. سيغيّر التطبيق حجمها تلقائيًا إلى JPG بمقاس 400 × 250 بكسل. يجب ألا يتجاوز الملف 200 ميغابايت.",
+    socialImageTitle: "صورة وسائل التواصل",
+    socialImageHelp: "حمّل صورة بأي حجم. سيغيّر التطبيق حجمها تلقائيًا إلى JPG بمقاس 1080 × 1080 بكسل. يجب ألا يتجاوز الملف 200 ميغابايت.",
+    translationPreviewTitle: "معاينة المحتوى المترجم",
+    translationSourcePrefix: "يُعامل محتوى العرض المُدخل أعلاه على أنه باللغة",
+    translationSourceSuffix: "بناءً على اللغة المحددة في الزاوية العلوية.",
+    previewInLabel: "المعاينة باللغة",
+    previewTranslatedButton: "معاينة المحتوى المترجم",
+    savePreviewButton: "حفظ المعاينة في الحزمة",
+    translatedPreviewLabel: "معاينة الترجمة",
+    translationEditHelp: "راجع هذه المسودة وعدّلها قبل حفظها مع العرض.",
+    acknowledgementText: "أقر بأن الإرسالات غير المكتملة أو غير الدقيقة قد تؤخر الترويج، وأن المواد مطلوبة قبل 6 أسابيع.",
+  },
 };
 
 Object.entries(formCopyTranslations).forEach(([language, copy]) => {
@@ -711,6 +804,7 @@ function applyLanguage(language) {
   const copy = uiTranslations[language] || uiTranslations.en;
   const labels = localizedLanguageLabels[language] || localizedLanguageLabels.en;
   document.documentElement.lang = language;
+  document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     const key = element.dataset.i18n;
     if (Object.hasOwn(copy, key)) element.textContent = copy[key];
@@ -905,6 +999,32 @@ const dynamicFieldLabels = {
     member_price: "会員価格",
     partner_name: "パートナー名",
   },
+  ar: {
+    booking_start_date: "تاريخ بدء الحجز",
+    booking_end_date: "تاريخ انتهاء الحجز",
+    stay_start_date: "تاريخ بدء الإقامة",
+    stay_end_date: "تاريخ انتهاء الإقامة",
+    room_type: "نوع الغرفة",
+    member_benefits: "مزايا الأعضاء",
+    original_price: "السعر الأصلي",
+    discounted_price: "السعر المخفّض",
+    package_details: "تفاصيل الباقة",
+    member_package_price: "سعر الباقة للأعضاء",
+    public_package_value: "قيمة الباقة العامة",
+    member_price_per_night: "سعر العضو لليلة",
+    public_price_per_night: "السعر العام لليلة",
+    price: "السعر",
+    offer_validity_start_date: "تاريخ بدء صلاحية العرض",
+    offer_validity_end_date: "تاريخ انتهاء صلاحية العرض",
+    venue: "المكان",
+    booking_email: "الحجز عبر البريد الإلكتروني",
+    accommodation_details: "تفاصيل الإقامة",
+    public_price: "السعر العام",
+    event_date: "تاريخ الفعالية",
+    event_time: "وقت الفعالية",
+    member_price: "سعر العضو",
+    partner_name: "اسم الشريك",
+  },
 };
 
 const helperNoteTranslations = {
@@ -913,6 +1033,7 @@ const helperNoteTranslations = {
   vi: "Chọn loại ưu đãi để xem các trường cần thiết cho quy trình đó.",
   id: "Pilih jenis penawaran untuk melihat kolom yang diperlukan untuk proses tersebut.",
   ja: "オファー種別を選択すると、その手順に必要な項目が表示されます。",
+  ar: "اختر نوع العرض لعرض الحقول المطلوبة لهذه العملية.",
 };
 
 const offerTypeGuidanceTranslations = {
@@ -947,6 +1068,14 @@ const offerTypeGuidanceTranslations = {
     dining: "会員向けレストランまたはバーのオファーで、通常はTable Plus / ResDiaryまたはメールで予約できます。",
     events: "イベント日、RSVP期限、会場、価格、必要に応じた宿泊詳細を含む会員イベントまたはホテルイベントです。",
     partners: "Accor Plus会員向けのパートナーオファーで、通常はホテル所在地に紐づきません。",
+  },
+  ar: {
+    red_hot_rooms: "سعر غرف خاص بالأعضاء ولفترة محدودة.",
+    more_escapes: "باقة لإقامتين أو أكثر تشمل مزايا مثل المطاعم أو العافية أو النقل أو مواقف السيارات أو تجارب من جهات خارجية.",
+    hotel_stay: "عرض فندقي حصري للأعضاء، ويكون عادةً أقل من السعر العام بنسبة 10% على الأقل.",
+    dining: "عرض مطعم أو بار للأعضاء، ويمكن حجزه عادةً عبر Table Plus / ResDiary أو البريد الإلكتروني.",
+    events: "فعالية للأعضاء أو فعالية فندقية تتضمن التاريخ وموعد تأكيد الحضور والمكان والسعر وتفاصيل الإقامة عند توفرها.",
+    partners: "عرض شريك متاح لأعضاء Accor Plus ولا يرتبط عادةً بموقع فندق.",
   },
 };
 
@@ -1232,7 +1361,7 @@ socialInput.addEventListener("change", () => handleImageUpload(
 
 function updateFileName(input) {
   const filename = document.querySelector(`[data-file-name-for="${input.name}"]`);
-  if (filename) filename.textContent = input.files[0]?.name || "No file selected";
+  if (filename) filename.textContent = input.files[0]?.name || ((uiTranslations[languageSelect.value] || uiTranslations.en).noFileSelected || "No file selected");
 }
 
 document.querySelectorAll('input[type="file"]').forEach((input) => {
