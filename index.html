@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=arabic-rtl-2">
+    <link rel="stylesheet" href="styles.css?v=required-fields-1">
   </head>
   <body>
     <main class="shell">
@@ -59,11 +59,12 @@
             <div>
               <p class="eyebrow" data-i18n="formEyebrow">Stay and dining offers</p>
               <h2 data-i18n="formTitle">Create your Explorer offer</h2>
+              <p class="required-fields-note" data-i18n="requiredFieldsNote">Fields marked * are mandatory.</p>
             </div>
           </div>
 
           <section id="offerTypeSection" class="form-section offer-type-first">
-            <h3 data-i18n="offerTypeQuestion">What type of offer are you submitting?</h3>
+            <h3 class="required-label" data-i18n="offerTypeQuestion">What type of offer are you submitting?</h3>
             <p data-i18n="offerTypeHelp">Your choice determines the dates, pricing, and supporting information requested below.</p>
             <label class="select-only">
               <select id="offerType" name="offer_type" required aria-label="Offer type" data-i18n-aria-label="offerTypeLabel">
@@ -129,7 +130,7 @@
             <div id="typeSpecificFields" class="dynamic-fields" aria-live="polite"></div>
             <p id="dateMessage" class="inline-alert" aria-live="polite"></p>
             <fieldset class="booking-method-fieldset">
-              <legend data-i18n="bookingMethodQuestion">How can members book?</legend>
+              <legend class="required-label" data-i18n="bookingMethodQuestion">How can members book?</legend>
               <div class="booking-method-options">
                 <label><input name="booking_method" type="radio" value="booking_link" required><span data-i18n="bookingMethodLink">Booking link</span></label>
                 <label><input name="booking_method" type="radio" value="email_rsvp" required><span data-i18n="bookingMethodEmailRsvp">Booking via email / RSVP form</span></label>
@@ -153,16 +154,16 @@
           <section id="proofFormsSection" class="form-section">
             <h3 data-i18n="proofForms">Proof and required forms</h3>
             <div class="upload-grid">
-              <div class="file-card upload-row conditional-stay">
+              <div id="rateScreenshotCard" class="file-card upload-row conditional-stay is-hidden">
                 <div class="upload-copy"><strong data-i18n="rateScreenshotLabel">Rate screenshot</strong><span data-i18n="rateScreenshotHelp">Please show the loaded rate available at all.com. Max 1 MB image.</span></div>
                 <label class="file-action"><input name="rate_screenshot" type="file" accept="image/png,image/jpeg,image/webp"><span class="file-button">Choose image</span><small data-file-name-for="rate_screenshot">No file selected</small></label>
               </div>
-              <div id="bookingScreenshotCard" class="file-card upload-row conditional-dining is-hidden">
+              <div id="menuPdfCard" class="file-card upload-row conditional-dining is-hidden">
                 <div class="upload-copy"><strong data-i18n="menuPdfLabel">Dining / event menu PDF</strong><span data-i18n="menuPdfHelp">Please merge PDFs into one file. Max 10 MB.</span></div>
                 <label class="file-action"><input name="menu_pdf" type="file" accept="application/pdf"><span class="file-button">Choose PDF</span><small data-file-name-for="menu_pdf">No file selected</small></label>
               </div>
-              <div class="file-card upload-row conditional-dining">
-                <div class="upload-copy"><strong data-i18n="bookingScreenshotLabel">Final booking page screenshot</strong><span data-i18n="bookingScreenshotHelp">For dining / event offers with a booking URL. Max 1 MB image.</span></div>
+              <div id="bookingScreenshotCard" class="file-card upload-row conditional-booking-proof is-hidden">
+                <div class="upload-copy"><strong data-i18n="bookingScreenshotLabel">Final booking page screenshot</strong><span data-i18n="bookingScreenshotHelp">Required for dining, event, and partner offers. Max 1 MB image.</span></div>
                 <label class="file-action"><input name="booking_screenshot" type="file" accept="image/png,image/jpeg,image/webp"><span class="file-button">Choose image</span><small data-file-name-for="booking_screenshot">No file selected</small></label>
               </div>
             </div>
@@ -242,7 +243,7 @@
 
           <section class="form-section">
             <h3 data-i18n="finalAcknowledgement">Final acknowledgement</h3>
-            <label class="checkline">
+            <label class="checkline required-field">
               <input name="acknowledgement" type="checkbox" value="I understand" required>
               <span data-i18n="acknowledgementText">I understand incomplete or inaccurate submissions may delay promotion, and assets are due 6 weeks in advance.</span>
             </label>
@@ -318,6 +319,6 @@
     </dialog>
 
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
-    <script src="app.js?v=arabic-rtl-2"></script>
+    <script src="app.js?v=required-fields-1"></script>
   </body>
 </html>

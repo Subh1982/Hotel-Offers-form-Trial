@@ -534,6 +534,23 @@ h3 {
   border-bottom: 1px solid var(--line);
 }
 
+.required-fields-note {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.required-label::after,
+.required-field > span:first-child::after,
+.form-section label:not(.select-only):not(.booking-method-options label):has(> input[required]) > span:first-child::after,
+.form-section label:has(> textarea[required]) > span:first-child::after,
+.form-section label:has(> select[required]) > span:first-child::after {
+  content: " *";
+  color: var(--danger);
+  font-weight: 700;
+}
+
 .status-pill {
   padding: 8px 12px;
   border-radius: 999px;

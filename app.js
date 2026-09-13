@@ -47,6 +47,8 @@ const brandToneStatus = document.querySelector("#brandToneStatus");
 const turnstileContainer = document.querySelector("#turnstileContainer");
 const bookingLinkFields = document.querySelector("#bookingLinkFields");
 const bookingEmailFields = document.querySelector("#bookingEmailFields");
+const rateScreenshotCard = document.querySelector("#rateScreenshotCard");
+const menuPdfCard = document.querySelector("#menuPdfCard");
 const bookingScreenshotCard = document.querySelector("#bookingScreenshotCard");
 
 const TURNSTILE_SITE_KEY = "0x4AAAAAAEx2NTrp7G-EkGjO";
@@ -58,6 +60,15 @@ let generatedContentTranslations = {};
 let activeTurnstileWidgetId = null;
 
 const maxImageUploadSize = 200 * 1024 * 1024;
+
+const uploadRequirementsByOfferType = {
+  red_hot_rooms: { rateScreenshot: true, menuPdf: false, bookingScreenshot: false },
+  more_escapes: { rateScreenshot: true, menuPdf: false, bookingScreenshot: false },
+  hotel_stay: { rateScreenshot: true, menuPdf: false, bookingScreenshot: false },
+  dining: { rateScreenshot: false, menuPdf: true, bookingScreenshot: true },
+  events: { rateScreenshot: false, menuPdf: true, bookingScreenshot: true },
+  partners: { rateScreenshot: false, menuPdf: false, bookingScreenshot: true },
+};
 
 const contentLanguageLabels = {
   en: "English",
@@ -521,6 +532,7 @@ const uiTranslations = {
 const formCopyTranslations = {
   en: {
     emailLabel: "Email",
+    requiredFieldsNote: "Fields marked * are mandatory.",
     contactNameLabel: "Person in-charge name",
     hotelRidLabel: "Hotel RID code",
     hotelNameLabel: "Hotel name",
@@ -544,7 +556,7 @@ const formCopyTranslations = {
     menuPdfLabel: "Dining / event menu PDF",
     menuPdfHelp: "Please merge PDFs into one file. Max 10 MB.",
     bookingScreenshotLabel: "Final booking page screenshot",
-    bookingScreenshotHelp: "For dining / event offers with a booking URL. Max 1 MB image.",
+    bookingScreenshotHelp: "Required for dining, event, and partner offers. Max 1 MB image.",
     departmentConfirmationText: "All relevant hotel departments can confirm the rate loading is set up correctly for members to book.",
     masterImageTitle: "Use one image for all placements",
     masterImageHelp: "Upload one high-quality image and the app will resize it into banner, listing tile, and social versions.",
@@ -566,6 +578,7 @@ const formCopyTranslations = {
   },
   th: {
     formTitle: "สร้างข้อเสนอ Explorer ของคุณ",
+    requiredFieldsNote: "ช่องที่มีเครื่องหมาย * จำเป็นต้องกรอก",
     submitButton: "สร้างแพ็กเกจและส่ง",
     emailLabel: "อีเมล",
     contactNameLabel: "ชื่อผู้รับผิดชอบ",
@@ -591,7 +604,7 @@ const formCopyTranslations = {
     menuPdfLabel: "เมนู PDF สำหรับห้องอาหาร / อีเวนต์",
     menuPdfHelp: "โปรดรวมไฟล์ PDF เป็นไฟล์เดียว ขนาดสูงสุด 10 MB",
     bookingScreenshotLabel: "ภาพหน้าจอหน้าจองสุดท้าย",
-    bookingScreenshotHelp: "สำหรับข้อเสนอห้องอาหาร / อีเวนต์ที่มี URL จอง ขนาดภาพสูงสุด 1 MB",
+    bookingScreenshotHelp: "จำเป็นสำหรับข้อเสนอห้องอาหาร อีเวนต์ และพาร์ทเนอร์ ขนาดภาพสูงสุด 1 MB",
     departmentConfirmationText: "ทุกแผนกที่เกี่ยวข้องของโรงแรมยืนยันได้ว่าการโหลดราคาได้รับการตั้งค่าอย่างถูกต้องเพื่อให้สมาชิกจองได้",
     masterImageTitle: "ใช้ภาพเดียวสำหรับทุกตำแหน่ง",
     masterImageHelp: "อัปโหลดภาพคุณภาพสูงหนึ่งภาพ แล้วระบบจะปรับขนาดเป็นแบนเนอร์ ไทล์รายการ และภาพโซเชียล",
@@ -613,6 +626,7 @@ const formCopyTranslations = {
   },
   vi: {
     formTitle: "Tạo ưu đãi Explorer của bạn",
+    requiredFieldsNote: "Các trường có dấu * là bắt buộc.",
     submitButton: "Tạo gói và gửi",
     emailLabel: "Email",
     contactNameLabel: "Tên người phụ trách",
@@ -638,7 +652,7 @@ const formCopyTranslations = {
     menuPdfLabel: "PDF menu ẩm thực / sự kiện",
     menuPdfHelp: "Vui lòng gộp các PDF thành một tệp. Tối đa 10 MB.",
     bookingScreenshotLabel: "Ảnh chụp trang đặt chỗ cuối cùng",
-    bookingScreenshotHelp: "Dành cho ưu đãi ẩm thực / sự kiện có URL đặt chỗ. Ảnh tối đa 1 MB.",
+    bookingScreenshotHelp: "Bắt buộc đối với ưu đãi ẩm thực, sự kiện và đối tác. Ảnh tối đa 1 MB.",
     departmentConfirmationText: "Tất cả bộ phận liên quan của khách sạn xác nhận việc tải giá đã được thiết lập đúng để thành viên đặt chỗ.",
     masterImageTitle: "Dùng một ảnh cho mọi vị trí",
     masterImageHelp: "Tải lên một ảnh chất lượng cao và ứng dụng sẽ đổi kích thước thành banner, ô danh sách và ảnh mạng xã hội.",
@@ -660,6 +674,7 @@ const formCopyTranslations = {
   },
   id: {
     formTitle: "Buat penawaran Explorer Anda",
+    requiredFieldsNote: "Kolom bertanda * wajib diisi.",
     submitButton: "Buat Paket dan Kirim",
     emailLabel: "Email",
     contactNameLabel: "Nama penanggung jawab",
@@ -685,7 +700,7 @@ const formCopyTranslations = {
     menuPdfLabel: "PDF menu dining / event",
     menuPdfHelp: "Gabungkan PDF menjadi satu file. Maks. 10 MB.",
     bookingScreenshotLabel: "Screenshot halaman pemesanan akhir",
-    bookingScreenshotHelp: "Untuk penawaran dining / event dengan URL pemesanan. Gambar maks. 1 MB.",
+    bookingScreenshotHelp: "Wajib untuk penawaran dining, event, dan partner. Gambar maks. 1 MB.",
     departmentConfirmationText: "Semua departemen hotel terkait dapat mengonfirmasi bahwa pemuatan tarif sudah benar agar anggota dapat memesan.",
     masterImageTitle: "Gunakan satu gambar untuk semua penempatan",
     masterImageHelp: "Unggah satu gambar berkualitas tinggi dan aplikasi akan mengubah ukurannya menjadi banner, listing tile, dan sosial.",
@@ -707,6 +722,7 @@ const formCopyTranslations = {
   },
   ja: {
     formTitle: "Explorerオファーを作成",
+    requiredFieldsNote: "* 印の項目は必須です。",
     submitButton: "パッケージを作成して送信",
     emailLabel: "メール",
     contactNameLabel: "担当者名",
@@ -732,7 +748,7 @@ const formCopyTranslations = {
     menuPdfLabel: "ダイニング / イベント メニューPDF",
     menuPdfHelp: "PDFは1つのファイルにまとめてください。最大10 MBです。",
     bookingScreenshotLabel: "最終予約ページのスクリーンショット",
-    bookingScreenshotHelp: "予約URLがあるダイニング / イベントオファー用です。画像は最大1 MBです。",
+    bookingScreenshotHelp: "ダイニング、イベント、パートナーオファーでは必須です。画像は最大1 MBです。",
     departmentConfirmationText: "関連するホテル部門は、会員が予約できるよう料金ロードが正しく設定されていることを確認できます。",
     masterImageTitle: "1枚の画像をすべての配置に使用",
     masterImageHelp: "高品質な画像を1枚アップロードすると、バナー、一覧タイル、ソーシャル用にリサイズされます。",
@@ -754,6 +770,7 @@ const formCopyTranslations = {
   },
   ar: {
     formTitle: "أنشئ عرض Explorer الخاص بك",
+    requiredFieldsNote: "الحقول المميزة بعلامة * إلزامية.",
     submitButton: "إرسال العرض",
     emailLabel: "البريد الإلكتروني",
     contactNameLabel: "اسم الشخص المسؤول",
@@ -779,7 +796,7 @@ const formCopyTranslations = {
     menuPdfLabel: "قائمة المطعم / الفعالية بصيغة PDF",
     menuPdfHelp: "يرجى دمج ملفات PDF في ملف واحد. الحد الأقصى 10 ميغابايت.",
     bookingScreenshotLabel: "لقطة شاشة لصفحة الحجز النهائية",
-    bookingScreenshotHelp: "لعروض المطاعم / الفعاليات التي تتضمن رابط حجز. الحد الأقصى للصورة 1 ميغابايت.",
+    bookingScreenshotHelp: "مطلوبة لعروض المطاعم والفعاليات والشركاء. الحد الأقصى للصورة 1 ميغابايت.",
     masterImageTitle: "استخدم صورة واحدة لجميع المواضع",
     masterImageHelp: "حمّل صورة واحدة عالية الجودة وسيغيّر التطبيق حجمها لإصدارات اللافتة وبطاقة القائمة ووسائل التواصل.",
     bannerImageTitle: "صورة اللافتة",
@@ -1122,6 +1139,36 @@ function isPartnerOffer() {
   return offerType.value === "partners";
 }
 
+function requiresBookingScreenshot() {
+  return Boolean(uploadRequirementsByOfferType[offerType.value]?.bookingScreenshot);
+}
+
+function updateProofUploadFields(clearInactive = false) {
+  const requirements = uploadRequirementsByOfferType[offerType.value] || {};
+  const needsRateScreenshot = Boolean(requirements.rateScreenshot);
+  const needsMenuPdf = Boolean(requirements.menuPdf);
+  const needsBookingScreenshot = Boolean(requirements.bookingScreenshot);
+  const rateScreenshotInput = form.elements.rate_screenshot;
+  const menuPdfInput = form.elements.menu_pdf;
+  const bookingScreenshotInput = form.elements.booking_screenshot;
+
+  rateScreenshotCard.classList.toggle("is-hidden", !needsRateScreenshot);
+  menuPdfCard.classList.toggle("is-hidden", !needsMenuPdf);
+  bookingScreenshotCard.classList.toggle("is-hidden", !needsBookingScreenshot);
+  rateScreenshotInput.required = needsRateScreenshot;
+  menuPdfInput.required = needsMenuPdf;
+  bookingScreenshotInput.required = needsBookingScreenshot;
+
+  [
+    [rateScreenshotInput, needsRateScreenshot],
+    [menuPdfInput, needsMenuPdf],
+    [bookingScreenshotInput, needsBookingScreenshot],
+  ].forEach(([input, required]) => {
+    if (clearInactive && !required) input.value = "";
+    if (!required) updateFileName(input);
+  });
+}
+
 function selectedBookingMethod() {
   return form.elements.booking_method?.value || "";
 }
@@ -1132,21 +1179,15 @@ function updateBookingMethodFields(clearInactive = false) {
   const usesEmailRsvp = method === "email_rsvp";
   const bookingLinkInput = form.elements.booking_link;
   const bookingEmailInput = form.elements.booking_email;
-  const bookingScreenshotInput = form.elements.booking_screenshot;
-  const needsBookingScreenshot = usesBookingLink && isDiningOrEventOffer();
 
   bookingLinkFields.classList.toggle("is-hidden", !usesBookingLink);
   bookingEmailFields.classList.toggle("is-hidden", !usesEmailRsvp);
-  bookingScreenshotCard.classList.toggle("is-hidden", !needsBookingScreenshot);
   bookingLinkInput.required = usesBookingLink;
   bookingEmailInput.required = usesEmailRsvp;
 
   if (clearInactive && !usesBookingLink) bookingLinkInput.value = "";
   if (clearInactive && !usesEmailRsvp) bookingEmailInput.value = "";
-  if (!needsBookingScreenshot) {
-    bookingScreenshotInput.value = "";
-    updateFileName(bookingScreenshotInput);
-  }
+  updateProofUploadFields(clearInactive);
 }
 
 function renderTypeSpecificFields() {
@@ -1171,7 +1212,10 @@ function renderTypeSpecificFields() {
   fields.forEach((field) => {
     const label = document.createElement("label");
     if (field.name === "member_benefits") label.classList.add("full-width-field");
-    label.textContent = dynamicFieldLabels[language]?.[field.name] || field.label;
+    if (field.required) label.classList.add("required-field");
+    const labelText = document.createElement("span");
+    labelText.textContent = dynamicFieldLabels[language]?.[field.name] || field.label;
+    label.append(labelText);
     const input = document.createElement(field.type === "textarea" ? "textarea" : "input");
     input.name = field.name;
     input.dataset.dynamicField = "true";
@@ -1215,7 +1259,7 @@ function validateRequiredUploads() {
   if (isDiningOrEventOffer() && !form.elements.menu_pdf.files.length) {
     missing.push("menu PDF");
   }
-  if (selectedBookingMethod() === "booking_link" && isDiningOrEventOffer() && !form.elements.booking_screenshot.files.length) {
+  if (requiresBookingScreenshot() && !form.elements.booking_screenshot.files.length) {
     missing.push("final booking-page screenshot");
   }
   if (!resizedBannerFile) {
@@ -1469,7 +1513,7 @@ confirmationNewOfferButton.addEventListener("click", () => {
 
 offerType.addEventListener("change", () => {
   renderTypeSpecificFields();
-  updateBookingMethodFields();
+  updateBookingMethodFields(true);
 });
 form.querySelectorAll('input[name="booking_method"]').forEach((input) => {
   input.addEventListener("change", () => updateBookingMethodFields(true));
