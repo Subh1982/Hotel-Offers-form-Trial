@@ -6,6 +6,9 @@ const vm = require("node:vm");
 
 const authPath = path.join(__dirname, "..", "auth.js");
 const source = fs.readFileSync(authPath, "utf8");
+const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
+const indexHtml = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+const confirmationHtml = fs.readFileSync(path.join(__dirname, "..", "confirmation.html"), "utf8");
 const helpers = source.slice(0, source.indexOf("async function authenticatedFetch"));
 const context = {};
 
@@ -30,4 +33,21 @@ test("checks the email domain before starting Clerk sign-in", () => {
   assert.ok(handlerStart >= 0, "email form handler should exist");
   assert.ok(domainCheck > handlerStart, "domain validation should run in the email handler");
   assert.ok(clerkCreate > domainCheck, "Clerk should only be called after domain validation");
+});
+
+test("keeps authentication views hidden until Clerk resolves the session", () => {
+  assert.match(indexHtml, /<body class="auth-loading">/);
+  assert.match(confirmationHtml, /<body class="auth-loading">/);
+  assert.match(styles, /body\.auth-loading > #authGate,[\s\S]*body\.auth-loading > #appShell[\s\S]*visibility: hidden;/);
+
+  const authenticatedApp = source.slice(
+    source.indexOf("function showAuthenticatedApp"),
+    source.indexOf("function showSignIn")
+  );
+  const signIn = source.slice(
+    source.indexOf("function showSignIn"),
+    source.indexOf("function showCodeStep")
+  );
+  assert.match(authenticatedApp, /document\.body\.classList\.remove\("auth-loading"\)/);
+  assert.match(signIn, /document\.body\.classList\.remove\("auth-loading"\)/);
 });

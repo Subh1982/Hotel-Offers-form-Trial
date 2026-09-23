@@ -7,9 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=design-audit-1">
+    <link rel="stylesheet" href="styles.css?v=auth-transition-1">
   </head>
-  <body>
+  <body class="auth-loading">
     <section id="authGate" class="auth-gate" aria-labelledby="authTitle">
       <div class="auth-shell">
         <img class="auth-logo" src="assets/all-accor-plus-logo.png" alt="ALL Accor Plus">
@@ -280,7 +280,7 @@
               </label>
               <p class="muted translation-edit-help" data-i18n="translationEditHelp">Review and edit this draft before saving it with the offer.</p>
               <div class="actions compact-actions">
-                <button type="button" id="saveTranslationPreviewButton" data-i18n="savePreviewButton">Save preview to package</button>
+                <button type="button" id="saveTranslationPreviewButton" data-i18n="savePreviewButton">Save translation</button>
               </div>
             </div>
           </section>
@@ -302,52 +302,6 @@
         </form>
       </section>
 
-      <section id="confirmationScreen" class="confirmation-screen is-hidden" aria-labelledby="confirmationTitle">
-        <div class="confirmation-card">
-          <div class="success-mark" aria-hidden="true">✓</div>
-          <p class="eyebrow" data-i18n="confirmationEyebrow">Submission complete</p>
-          <h2 id="confirmationTitle" data-i18n="confirmationTitle">Offer submitted successfully</h2>
-          <p data-i18n="confirmationText">Your offer package has been created and the submission has been recorded.</p>
-
-          <div class="offer-id-box">
-            <span data-i18n="offerIdLabel">Offer ID</span>
-            <strong id="confirmationOfferId">EXP-2026-000000</strong>
-          </div>
-
-          <dl class="confirmation-details">
-            <div>
-              <dt data-i18n="hotelNameLabel">Hotel name</dt>
-              <dd id="confirmationHotelName"></dd>
-            </div>
-            <div>
-              <dt data-i18n="retrieveHotelCodeLabel">Hotel code</dt>
-              <dd id="confirmationHotelCode"></dd>
-            </div>
-            <div>
-              <dt data-i18n="offerTitleLabel">Offer title</dt>
-              <dd id="confirmationOfferTitle"></dd>
-            </div>
-            <div>
-              <dt data-i18n="retrieveEmailLabel">Submitter email</dt>
-              <dd id="confirmationEmail"></dd>
-            </div>
-            <div>
-              <dt data-i18n="bookingLinkLabel">Booking link</dt>
-              <dd id="confirmationBookingLink"></dd>
-            </div>
-            <div>
-              <dt data-i18n="submissionDateRangeLabel">Submission date range</dt>
-              <dd id="confirmationDateRange"></dd>
-            </div>
-          </dl>
-          <p id="confirmationAsanaStatus" class="email-status" aria-live="polite"></p>
-          <p id="confirmationEmailStatus" class="email-status" aria-live="polite"></p>
-
-          <div class="actions compact-actions">
-            <button type="button" id="confirmationNewOfferButton" data-i18n="createAnotherButton">Create another offer</button>
-          </div>
-        </div>
-      </section>
     </main>
 
     <dialog id="bookingDialog">
@@ -363,7 +317,7 @@
     </dialog>
 
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
-    <script src="auth.js?v=clerk-auth-4"></script>
-    <script src="app.js?v=design-audit-1"></script>
+    <script src="auth.js?v=auth-transition-1"></script>
+    <script src="app.js?v=asana-only-2"></script>
   </body>
 </html>

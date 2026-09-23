@@ -1,7 +1,4 @@
 const form = document.querySelector("#offerForm");
-const offerWorkspace = document.querySelector("#offerWorkspace");
-const confirmationScreen = document.querySelector("#confirmationScreen");
-const confirmationNewOfferButton = document.querySelector("#confirmationNewOfferButton");
 const offerType = document.querySelector("#offerType");
 const typeSpecificFields = document.querySelector("#typeSpecificFields");
 const masterImageInput = document.querySelector("#masterImageInput");
@@ -34,15 +31,6 @@ const saveTranslationPreviewButton = document.querySelector("#saveTranslationPre
 const translationPreview = document.querySelector("#translationPreview");
 const translationStatus = document.querySelector("#translationStatus");
 const translationPreviewPanel = document.querySelector("#translationPreviewPanel");
-const confirmationOfferId = document.querySelector("#confirmationOfferId");
-const confirmationHotelName = document.querySelector("#confirmationHotelName");
-const confirmationHotelCode = document.querySelector("#confirmationHotelCode");
-const confirmationOfferTitle = document.querySelector("#confirmationOfferTitle");
-const confirmationEmail = document.querySelector("#confirmationEmail");
-const confirmationBookingLink = document.querySelector("#confirmationBookingLink");
-const confirmationDateRange = document.querySelector("#confirmationDateRange");
-const confirmationAsanaStatus = document.querySelector("#confirmationAsanaStatus");
-const confirmationEmailStatus = document.querySelector("#confirmationEmailStatus");
 const offerDescription = document.querySelector("#offerDescription");
 const alignBrandToneButton = document.querySelector("#alignBrandToneButton");
 const brandToneStatus = document.querySelector("#brandToneStatus");
@@ -156,8 +144,6 @@ const uiTranslations = {
     stepProof: "Proof and forms",
     stepImages: "Images and review",
     stepTranslations: "Translations",
-    modeTitle: "Asana workflow",
-    modeText: "Submitting creates an Asana task and attaches the selected images for review.",
     formEyebrow: "Stay and dining offers",
     formTitle: "Create your Explorer offer",
     offerTypeQuestion: "What type of offer are you submitting?",
@@ -244,8 +230,6 @@ const uiTranslations = {
     stepProof: "หลักฐานและแบบฟอร์ม",
     stepImages: "รูปภาพและตรวจทาน",
     stepTranslations: "การแปล",
-    modeTitle: "โหมดไม่มีแบ็กเอนด์",
-    modeText: "ข้อมูลจะถูกจัดเป็นไฟล์ ZIP ในเบราว์เซอร์ และไม่มีการจัดเก็บบนหน้านี้",
     formEyebrow: "ข้อเสนอห้องพักและห้องอาหาร",
     formTitle: "Submit a complete offer in one pass",
     statusPill: "แพ็กเกจแบบสแตติก",
@@ -256,7 +240,7 @@ const uiTranslations = {
     imagesTitle: "รูปภาพ",
     finalAcknowledgement: "การรับทราบขั้นสุดท้าย",
     clearButton: "ล้างข้อมูล",
-    submitButton: "Create Package and Submit",
+    submitButton: "ส่งข้อเสนอ",
     dialogTitle: "ตรวจสอบลิงก์จองอีกครั้ง",
     dialogText: "แขกจะถูกส่งไปยัง URL นี้ โปรดยืนยันว่าเป็นหน้าจองที่ถูกต้องสำหรับข้อเสนอนี้",
     goBackButton: "กลับไปแก้ไข",
@@ -318,8 +302,6 @@ const uiTranslations = {
     stepProof: "Bằng chứng và biểu mẫu",
     stepImages: "Hình ảnh và rà soát",
     stepTranslations: "Bản dịch",
-    modeTitle: "Chế độ không backend",
-    modeText: "Bài gửi được đóng gói thành tệp ZIP trong trình duyệt. Trang này không lưu trữ dữ liệu.",
     formEyebrow: "Ưu đãi lưu trú và ẩm thực",
     formTitle: "Submit a complete offer in one pass",
     statusPill: "Gói tĩnh",
@@ -330,7 +312,7 @@ const uiTranslations = {
     imagesTitle: "Hình ảnh",
     finalAcknowledgement: "Xác nhận cuối cùng",
     clearButton: "Xóa",
-    submitButton: "Create Package and Submit",
+    submitButton: "Gửi ưu đãi",
     dialogTitle: "Kiểm tra lại liên kết đặt chỗ",
     dialogText: "Khách sẽ được chuyển đến chính URL này. Vui lòng xác nhận đây là trang đặt chỗ đúng cho ưu đãi.",
     goBackButton: "Quay lại",
@@ -392,8 +374,6 @@ const uiTranslations = {
     stepProof: "Bukti dan formulir",
     stepImages: "Gambar dan tinjauan",
     stepTranslations: "Terjemahan",
-    modeTitle: "Mode tanpa backend",
-    modeText: "Pengiriman dikemas di browser sebagai file ZIP. Tidak ada data yang disimpan di halaman ini.",
     formEyebrow: "Penawaran menginap dan dining",
     formTitle: "Submit a complete offer in one pass",
     statusPill: "Paket statis",
@@ -404,7 +384,7 @@ const uiTranslations = {
     imagesTitle: "Gambar",
     finalAcknowledgement: "Persetujuan akhir",
     clearButton: "Hapus",
-    submitButton: "Create Package and Submit",
+    submitButton: "Kirim Penawaran",
     dialogTitle: "Periksa kembali tautan pemesanan",
     dialogText: "Tamu akan diarahkan ke URL ini. Pastikan tautan membuka halaman pemesanan yang benar untuk penawaran ini.",
     goBackButton: "Kembali",
@@ -466,8 +446,6 @@ const uiTranslations = {
     stepProof: "証明資料とフォーム",
     stepImages: "画像と確認",
     stepTranslations: "翻訳",
-    modeTitle: "バックエンドなしモード",
-    modeText: "提出内容はブラウザ内でZIPファイル化されます。このページには保存されません。",
     formEyebrow: "宿泊・ダイニングオファー",
     formTitle: "Submit a complete offer in one pass",
     statusPill: "静的パッケージ",
@@ -478,7 +456,7 @@ const uiTranslations = {
     imagesTitle: "画像",
     finalAcknowledgement: "最終確認",
     clearButton: "クリア",
-    submitButton: "Create Package and Submit",
+    submitButton: "オファーを送信",
     dialogTitle: "予約リンクを再確認",
     dialogText: "ゲストはこのURLに移動します。このオファーの正しい予約ページであることを確認してください。",
     goBackButton: "戻る",
@@ -573,7 +551,7 @@ const formCopyTranslations = {
     translationSourceSuffix: "based on the language selected in the top-right corner.",
     previewInLabel: "Preview in",
     previewTranslatedButton: "Preview translated content",
-    savePreviewButton: "Save preview to package",
+    savePreviewButton: "Save translation",
     translatedPreviewLabel: "Translated preview",
     translationEditHelp: "Review and edit this draft before saving it with the offer.",
     acknowledgementText: "I understand incomplete or inaccurate submissions may delay promotion, and assets are due 6 weeks in advance.",
@@ -1484,9 +1462,9 @@ translateContentButton.addEventListener("click", async () => {
   try {
     translationPreview.value = await translateText(content, sourceLanguage, targetLanguage);
     translationPreviewPanel.classList.remove("is-hidden");
-    setTranslationStatus(`Draft ${contentLanguageLabels[targetLanguage]} translation generated. Review or edit it, then save the preview to the package.`);
+    setTranslationStatus(`Draft ${contentLanguageLabels[targetLanguage]} translation generated. Review or edit it, then save the translation.`);
   } catch (error) {
-    setTranslationStatus(`${error.message} You can still paste a translation into the preview and save it to the package.`);
+    setTranslationStatus(`${error.message} You can still paste a translation into the preview and save it with the offer.`);
   } finally {
     translateContentButton.disabled = false;
     translateContentButton.textContent = (uiTranslations[languageSelect.value] || uiTranslations.en).previewTranslatedButton;
@@ -1499,7 +1477,7 @@ saveTranslationPreviewButton.addEventListener("click", () => {
   const text = translationPreview.value.trim();
 
   if (!text) {
-    setTranslationStatus("Add or generate preview text before saving it to the package.");
+    setTranslationStatus("Add or generate preview text before saving the translation.");
     return;
   }
 
@@ -1512,13 +1490,7 @@ saveTranslationPreviewButton.addEventListener("click", () => {
     saved_at: new Date().toISOString(),
     text,
   };
-  setTranslationStatus(`${contentLanguageLabels[targetLanguage]} preview saved into the package.`);
-});
-
-confirmationNewOfferButton.addEventListener("click", () => {
-  form.reset();
-  confirmationScreen.classList.add("is-hidden");
-  offerWorkspace.scrollIntoView({ behavior: "smooth", block: "start" });
+  setTranslationStatus(`${contentLanguageLabels[targetLanguage]} translation saved. It will be included in the Asana task.`);
 });
 
 offerType.addEventListener("change", () => {
@@ -1617,15 +1589,6 @@ function collectDynamicFields() {
   }, {});
 }
 
-function collectTranslations() {
-  return {
-    zh_hans: fieldValue("translation_zh"),
-    vi: fieldValue("translation_vi"),
-    th: fieldValue("translation_th"),
-    id: fieldValue("translation_id"),
-  };
-}
-
 function readableFieldName(name) {
   return name
     .replace(/_/g, " ")
@@ -1686,16 +1649,6 @@ function setTranslationStatus(message, type = "") {
   translationStatus.className = `muted ${type}`.trim();
 }
 
-function fileInfo(name, replacementFile = null) {
-  const file = replacementFile || form.elements[name]?.files?.[0];
-  if (!file) return null;
-  return {
-    file_name: file.name,
-    file_type: file.type || "application/octet-stream",
-    file_size_kb: Math.round(file.size / 1024),
-  };
-}
-
 function buildSubmissionRecord() {
   return {
     id: null,
@@ -1711,7 +1664,6 @@ function buildSubmissionRecord() {
     offer_banner_title: fieldValue("offer_banner_title"),
     offer_subtitle: fieldValue("offer_subtitle"),
     offer_description: fieldValue("offer_description"),
-    translations: collectTranslations(),
     auto_translations: generatedContentTranslations,
     meta_description: fieldValue("meta_description"),
     offer_details: {
@@ -1722,23 +1674,7 @@ function buildSubmissionRecord() {
     booking_link: fieldValue("booking_link"),
     terms: fieldValue("terms"),
     acknowledgement: fieldValue("acknowledgement"),
-    files: {
-      rate_screenshot: fileInfo("rate_screenshot"),
-      menu_pdf: fileInfo("menu_pdf"),
-      booking_screenshot: fileInfo("booking_screenshot"),
-      banner_image: fileInfo("banner_image", resizedBannerFile),
-      listing_tile_image: fileInfo("listing_tile_image", resizedListingTileFile),
-      social_image: fileInfo("social_image", resizedSocialFile),
-    },
   };
-}
-
-function formatOfferId(databaseId) {
-  const numericId = Number(databaseId);
-  if (Number.isFinite(numericId) && numericId > 0) {
-    return `EXP-${new Date().getFullYear()}-${String(numericId).padStart(6, "0")}`;
-  }
-  return `EXP-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`;
 }
 
 function formatDateForDisplay(value) {
@@ -1768,245 +1704,6 @@ function buildDateRangeSummary(record) {
   return lines.join("\n") || "Not provided";
 }
 
-function showConfirmation(record) {
-  confirmationOfferId.textContent = record.offer_id;
-  confirmationHotelName.textContent = record.hotel_name || record.offer_details.partner_name || "Not provided";
-  confirmationHotelCode.textContent = record.hotel_rid_code || "Not provided";
-  confirmationOfferTitle.textContent = record.offer_tile_title || "Not provided";
-  confirmationEmail.textContent = record.email || "Not provided";
-  confirmationBookingLink.textContent = record.booking_link || "Not provided";
-  confirmationDateRange.textContent = buildDateRangeSummary(record);
-  confirmationAsanaStatus.replaceChildren();
-  if (record.asana?.ok) {
-    confirmationAsanaStatus.append("Asana task created successfully.");
-    if (record.asana.permalink_url) {
-      const taskLink = document.createElement("a");
-      taskLink.href = record.asana.permalink_url;
-      taskLink.target = "_blank";
-      taskLink.rel = "noreferrer";
-      taskLink.textContent = " Open task in Asana";
-      confirmationAsanaStatus.append(taskLink);
-    }
-    confirmationAsanaStatus.className = "email-status success";
-  } else {
-    confirmationAsanaStatus.textContent = record.asana?.error || "The Asana task could not be created.";
-    confirmationAsanaStatus.className = "email-status error";
-  }
-  confirmationEmailStatus.textContent = "Preparing email package...";
-  confirmationEmailStatus.className = "email-status";
-
-  confirmationScreen.classList.remove("is-hidden");
-  confirmationScreen.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-function buildSummaryText(record) {
-  const detailLines = Object.entries(record.offer_details)
-    .filter(([, value]) => value)
-    .map(([key, value]) => `${key.replace(/_/g, " ")}: ${value}`);
-  const translationLines = Object.entries(record.translations)
-    .filter(([, value]) => value)
-    .map(([key, value]) => `${key.replace("_", "-")}: ${value}`);
-  const autoTranslationLines = Object.entries(record.auto_translations || {})
-    .map(([, item]) => `${item.language} from ${item.source_language}:\n${item.text}`);
-
-  return [
-    "Explorer Offer Submission",
-    "",
-    `Offer ID: ${record.offer_id || "Pending"}`,
-    `Generated: ${record.generated_at}`,
-    `Type: ${record.offer_type}`,
-    `Hotel / Partner: ${record.hotel_name || record.offer_details.partner_name || "Not provided"}`,
-    `RID: ${record.hotel_rid_code || "Not provided"}`,
-    `City - Country: ${record.city_country || "Not provided"}`,
-    `Offer tile title: ${record.offer_tile_title}`,
-    `Offer banner title: ${record.offer_banner_title}`,
-    `Subtitle: ${record.offer_subtitle}`,
-    `Contact: ${record.person_in_charge_name} <${record.email}>`,
-    `Booking method: ${record.offer_details.booking_method || "Not provided"}`,
-    `Booking details: ${record.booking_link || record.offer_details.booking_email || "Not provided"}`,
-    "",
-    "Core content",
-    record.offer_description,
-    "",
-    "Translations",
-    translationLines.length ? translationLines.join("\n\n") : "No translations provided",
-    "",
-    "Prototype auto-translation previews",
-    autoTranslationLines.length ? autoTranslationLines.join("\n\n") : "No auto-translation preview saved",
-    "",
-    "Offer type details",
-    detailLines.length ? detailLines.join("\n") : "No additional details provided",
-    "",
-    "Terms",
-    record.terms || "Not provided",
-    "",
-    "Confirmations",
-    `Acknowledgement: ${record.acknowledgement}`,
-  ].join("\n");
-}
-
-function safeName(value) {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-    .slice(0, 70) || "explorer-offer";
-}
-
-function uint16(value) {
-  return [value & 255, (value >> 8) & 255];
-}
-
-function uint32(value) {
-  return [value & 255, (value >> 8) & 255, (value >> 16) & 255, (value >> 24) & 255];
-}
-
-const crcTable = Array.from({ length: 256 }, (_, index) => {
-  let crc = index;
-  for (let bit = 0; bit < 8; bit += 1) {
-    crc = crc & 1 ? 0xedb88320 ^ (crc >>> 1) : crc >>> 1;
-  }
-  return crc >>> 0;
-});
-
-function crc32(bytes) {
-  let crc = 0xffffffff;
-  bytes.forEach((byte) => {
-    crc = crcTable[(crc ^ byte) & 0xff] ^ (crc >>> 8);
-  });
-  return (crc ^ 0xffffffff) >>> 0;
-}
-
-function datePartsForZip(date) {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const seconds = Math.floor(date.getSeconds() / 2);
-  return {
-    time: (hours << 11) | (minutes << 5) | seconds,
-    date: ((year - 1980) << 9) | (month << 5) | day,
-  };
-}
-
-async function createZip(files) {
-  const encoder = new TextEncoder();
-  const localParts = [];
-  const centralParts = [];
-  let offset = 0;
-  const now = datePartsForZip(new Date());
-
-  for (const file of files) {
-    const nameBytes = encoder.encode(file.name);
-    const dataBytes = new Uint8Array(await file.blob.arrayBuffer());
-    const checksum = crc32(dataBytes);
-
-    const localHeader = new Uint8Array([
-      ...uint32(0x04034b50),
-      ...uint16(20),
-      ...uint16(0),
-      ...uint16(0),
-      ...uint16(now.time),
-      ...uint16(now.date),
-      ...uint32(checksum),
-      ...uint32(dataBytes.length),
-      ...uint32(dataBytes.length),
-      ...uint16(nameBytes.length),
-      ...uint16(0),
-    ]);
-
-    localParts.push(localHeader, nameBytes, dataBytes);
-
-    const centralHeader = new Uint8Array([
-      ...uint32(0x02014b50),
-      ...uint16(20),
-      ...uint16(20),
-      ...uint16(0),
-      ...uint16(0),
-      ...uint16(now.time),
-      ...uint16(now.date),
-      ...uint32(checksum),
-      ...uint32(dataBytes.length),
-      ...uint32(dataBytes.length),
-      ...uint16(nameBytes.length),
-      ...uint16(0),
-      ...uint16(0),
-      ...uint16(0),
-      ...uint16(0),
-      ...uint32(0),
-      ...uint32(offset),
-    ]);
-
-    centralParts.push(centralHeader, nameBytes);
-    offset += localHeader.length + nameBytes.length + dataBytes.length;
-  }
-
-  const centralSize = centralParts.reduce((total, part) => total + part.length, 0);
-  const endRecord = new Uint8Array([
-    ...uint32(0x06054b50),
-    ...uint16(0),
-    ...uint16(0),
-    ...uint16(files.length),
-    ...uint16(files.length),
-    ...uint32(centralSize),
-    ...uint32(offset),
-    ...uint16(0),
-  ]);
-
-  return new Blob([...localParts, ...centralParts, endRecord], { type: "application/zip" });
-}
-
-function selectedFile(name) {
-  return form.elements[name]?.files?.[0] || null;
-}
-
-function addFile(files, folder, file) {
-  if (!file) return;
-  const extension = file.name.split(".").pop() || "bin";
-  const baseName = file.name.replace(/\.[^.]+$/, "");
-  files.push({ name: `${folder}/${safeName(baseName) || "file"}.${extension}`, blob: file });
-}
-
-function getPackageFiles(record) {
-  const files = [
-    {
-      name: "submission.json",
-      blob: new Blob([JSON.stringify(record, null, 2)], { type: "application/json" }),
-    },
-    {
-      name: "submission-summary.txt",
-      blob: new Blob([buildSummaryText(record)], { type: "text/plain" }),
-    },
-  ];
-
-  addFile(files, "uploads", selectedFile("rate_screenshot"));
-  addFile(files, "uploads", selectedFile("menu_pdf"));
-  addFile(files, "uploads", selectedFile("booking_screenshot"));
-  addFile(files, "uploads", resizedBannerFile);
-  addFile(files, "uploads", resizedListingTileFile);
-  addFile(files, "uploads", resizedSocialFile);
-  return files;
-}
-
-function downloadBlob(blob, filename) {
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  document.body.append(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
-}
-
-async function createSubmissionPackage() {
-  const record = buildSubmissionRecord();
-  const packageName = safeName(`${record.hotel_name || record.offer_details.partner_name}-${record.offer_tile_title}`);
-  const zip = await createZip(getPackageFiles(record));
-  downloadBlob(zip, `${packageName}-explorer-offer-submission.zip`);
-}
-
 async function fileToBase64(file) {
   const dataUrl = await new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -2018,8 +1715,10 @@ async function fileToBase64(file) {
   return String(dataUrl).split(",")[1] || "";
 }
 
-async function buildStorageUploads() {
+async function buildAsanaImageAttachments() {
   const uploadMap = {
+    rate_screenshot: form.elements.rate_screenshot?.files?.[0] || null,
+    booking_screenshot: form.elements.booking_screenshot?.files?.[0] || null,
     banner_image: resizedBannerFile,
     listing_tile_image: resizedListingTileFile,
     social_image: resizedSocialFile,
@@ -2040,16 +1739,16 @@ async function buildStorageUploads() {
   return uploads;
 }
 
-async function buildRecordForSave(record) {
+async function buildAsanaSubmission(record) {
   return {
     ...record,
-    asset_uploads: await buildStorageUploads(),
+    asset_uploads: await buildAsanaImageAttachments(),
   };
 }
 
-async function storeSubmission(record, turnstileToken = "") {
+async function createAsanaTask(record, turnstileToken = "") {
   const payload = {
-    ...await buildRecordForSave(record),
+    ...await buildAsanaSubmission(record),
     turnstile_token: turnstileToken,
   };
   const response = await window.authenticatedFetch("/.netlify/functions/submit-offer", {
@@ -2077,68 +1776,6 @@ async function storeSubmission(record, turnstileToken = "") {
         .filter(Boolean)
         .join(" ")
     );
-  }
-  return result;
-}
-
-async function createPackageUpload(record, filename) {
-  const response = await window.authenticatedFetch("/.netlify/functions/create-package-upload", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ offer_id: record.offer_id, file_name: filename }),
-  });
-
-  const result = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(result.error || "Package upload link could not be created.");
-  }
-  return result;
-}
-
-async function uploadPackageZip(record, zip, filename) {
-  const upload = await createPackageUpload(record, filename);
-  const response = await fetch(upload.signed_url, {
-    method: "PUT",
-    headers: { "content-type": "application/zip" },
-    body: zip,
-  });
-
-  if (!response.ok) {
-    const details = await response.text().catch(() => "");
-    throw new Error(details || "Package could not be uploaded to storage.");
-  }
-
-  return {
-    file_name: filename,
-    file_size_kb: Math.round(zip.size / 1024),
-    storage_bucket: upload.bucket,
-    storage_path: upload.path,
-    public_url: upload.public_url,
-  };
-}
-
-async function sendPackageEmail(record, packageFile) {
-  const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), 15000);
-  let response;
-  try {
-    response = await window.authenticatedFetch("/.netlify/functions/email-package", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      signal: controller.signal,
-      body: JSON.stringify({
-        id: record.id,
-        offer_id: record.offer_id,
-        package_file: packageFile,
-      }),
-    });
-  } finally {
-    window.clearTimeout(timeout);
-  }
-
-  const result = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(result.error || "Package email link could not be sent.");
   }
   return result;
 }
@@ -2200,7 +1837,7 @@ form.addEventListener("submit", async (event) => {
 
   if (!form.reportValidity() || !validateDates() || !validateRequiredDetails()) {
     if (!formMessage.textContent) {
-      setMessage("Please fix the highlighted fields before creating the package.", "error");
+      setMessage("Please fix the highlighted fields before submitting the offer.", "error");
     }
     return;
   }
@@ -2227,65 +1864,22 @@ form.addEventListener("submit", async (event) => {
     const record = buildSubmissionRecord();
     const turnstileToken = await requestTurnstileToken();
     submitButton.textContent = "Creating Asana task...";
-    const savedSubmission = await storeSubmission(record, turnstileToken);
-    record.id = savedSubmission.id || record.id;
-    record.offer_id = savedSubmission.offer_id || formatOfferId(savedSubmission.id);
-    record.asana = savedSubmission.asana || null;
-    record.storage = savedSubmission.storage || null;
-    record.sheets = savedSubmission.sheets || null;
-    if (savedSubmission.offer?.files) {
-      record.files = savedSubmission.offer.files;
-    }
-    if (savedSubmission.mode === "asana_only") {
-      const confirmation = {
-        offer_id: record.offer_id,
-        hotel_name: record.hotel_name || record.offer_details.partner_name || "Not provided",
-        hotel_rid_code: record.hotel_rid_code || "Not provided",
-        offer_tile_title: record.offer_tile_title || "Not provided",
-        email: record.email || "Not provided",
-        booking_link: record.booking_link || "Not provided",
-        booking_details: record.booking_link || record.offer_details.booking_email || "Not provided",
-        date_range: buildDateRangeSummary(record),
-        asana: record.asana,
-        attachments: savedSubmission.attachments || { attempted: 0, attached: 0, failed: 0 },
-      };
-      sessionStorage.setItem("offerSubmissionConfirmation", JSON.stringify(confirmation));
-      window.location.assign("/confirmation.html");
-      return;
-    }
-    const packageName = safeName(`${record.hotel_name || record.offer_details.partner_name}-${record.offer_tile_title}`);
-    const packageFilename = `${packageName}-explorer-offer-submission.zip`;
-    const zip = await createZip(getPackageFiles(record));
-    downloadBlob(zip, packageFilename);
-    const integrationWarnings = [
-      record.storage?.ok === false ? record.storage.error : "",
-      record.sheets?.ok === false ? record.sheets.error : "",
-    ].filter(Boolean);
-    setMessage(
-      integrationWarnings.length
-        ? `Submission stored and package created. Warning: ${integrationWarnings.join(" ")}`
-        : "Submission stored and package created.",
-      integrationWarnings.length ? "error" : "success",
-    );
-    showConfirmation(record);
-    confirmationEmailStatus.textContent = "Uploading ZIP package for email link...";
-    uploadPackageZip(record, zip, packageFilename)
-      .then((packageFile) => {
-        record.files = { ...(record.files || {}), package_zip: packageFile };
-        confirmationEmailStatus.textContent = "Sending ZIP package link by email...";
-        return sendPackageEmail(record, packageFile);
-      })
-      .then((emailResult) => {
-        record.email_delivery = emailResult.email || { ok: true };
-        confirmationEmailStatus.textContent = "ZIP package link emailed to subh.bhatt22@gmail.com.";
-        confirmationEmailStatus.className = "email-status success";
-      })
-      .catch((error) => {
-        record.email_delivery = { ok: false, error: error.message };
-        confirmationEmailStatus.textContent = `ZIP package was downloaded, but the email link step failed: ${error.message}`;
-        confirmationEmailStatus.className = "email-status error";
-        console.warn("Package email link could not be sent.", error);
-      });
+    const result = await createAsanaTask(record, turnstileToken);
+    const confirmation = {
+      offer_id: result.offer_id,
+      hotel_name: record.hotel_name || record.offer_details.partner_name || "Not provided",
+      hotel_rid_code: record.hotel_rid_code || "Not provided",
+      offer_tile_title: record.offer_tile_title || "Not provided",
+      offer_type: record.offer_type || "Not provided",
+      email: record.email || "Not provided",
+      booking_link: record.booking_link || "Not provided",
+      booking_details: record.booking_link || record.offer_details.booking_email || "Not provided",
+      date_range: buildDateRangeSummary(record),
+      asana: result.asana,
+      attachments: result.attachments || { attempted: 0, attached: 0, failed: 0 },
+    };
+    sessionStorage.setItem("offerSubmissionConfirmation", JSON.stringify(confirmation));
+    window.location.assign("/confirmation.html");
   } catch (error) {
     const isTurnstileError = /turnstile/i.test(error.message || "");
     setMessage(isTurnstileError ? copy.turnstileUnavailable : (error.message || "The submission could not be completed."), "error");

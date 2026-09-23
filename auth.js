@@ -62,6 +62,7 @@ function showAuthenticatedApp(user) {
     emailInput.readOnly = true;
     emailInput.setAttribute("aria-readonly", "true");
   }
+  document.body.classList.remove("auth-loading");
 }
 
 function showSignIn(message = "") {
@@ -69,6 +70,7 @@ function showSignIn(message = "") {
   if (shell) shell.hidden = true;
   document.querySelector("#authGate")?.classList.remove("is-hidden");
   setAuthMessage(message, Boolean(message));
+  document.body.classList.remove("auth-loading");
 }
 
 function showCodeStep(email) {

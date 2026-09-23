@@ -25,6 +25,11 @@ body {
   color: var(--ink);
 }
 
+body.auth-loading > #authGate,
+body.auth-loading > #appShell {
+  visibility: hidden;
+}
+
 [hidden] {
   display: none !important;
 }
@@ -1283,9 +1288,9 @@ dialog::backdrop {
 }
 
 .confirmation-card {
-  max-width: 860px;
+  max-width: 920px;
   margin: 0 auto;
-  padding: 28px;
+  padding: 40px;
 }
 
 .confirmation-masthead {
@@ -1293,8 +1298,38 @@ dialog::backdrop {
 }
 
 .confirmation-hero {
-  min-height: 180px;
-  background: linear-gradient(rgba(5, 0, 51, 0.62), rgba(5, 0, 51, 0.62)), url("assets/explorer-resort-hero.jpg") center 58% / cover no-repeat;
+  margin: 0;
+  border: 1px solid var(--line);
+  background: var(--accent);
+}
+
+.confirmation-hero img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.confirmation-heading {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.confirmation-heading h1 {
+  max-width: 760px;
+  margin: 2px 0 10px;
+  color: var(--accent);
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.confirmation-heading p:last-child {
+  margin: 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.4;
 }
 
 .success-mark {
@@ -1302,7 +1337,7 @@ dialog::backdrop {
   place-items: center;
   width: 54px;
   height: 54px;
-  margin-bottom: 18px;
+  margin: 0;
   border-radius: 0;
   background: #fff4f8;
   color: var(--offer);
@@ -1310,32 +1345,177 @@ dialog::backdrop {
   font-weight: 700;
 }
 
-.confirmation-card > p:not(.eyebrow) {
-  color: var(--muted);
-  line-height: 1.55;
-}
-
-.offer-id-box {
+.offer-ticket {
+  position: relative;
   display: grid;
-  gap: 6px;
-  margin: 22px 0;
-  padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: 0;
-  background: #f4f2fd;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: center;
+  margin: 32px 0;
+  padding: 24px 28px;
+  border: 2px dashed var(--offer);
+  background: #fff4f8;
 }
 
-.offer-id-box span {
-  color: var(--accent-dark);
-  font-size: 13px;
+.offer-ticket::before,
+.offer-ticket::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 36px;
+  border: 1px solid var(--offer);
+  background: var(--surface);
+  transform: translateY(-50%);
+}
+
+.offer-ticket::before {
+  left: -11px;
+  border-left: 0;
+  border-radius: 0 20px 20px 0;
+}
+
+.offer-ticket::after {
+  right: -11px;
+  border-right: 0;
+  border-radius: 20px 0 0 20px;
+}
+
+.confirmation-offer-icon,
+.detail-offer-icon {
+  display: grid;
+  place-items: center;
+  color: var(--offer);
   font-weight: 700;
+  line-height: 1;
+}
+
+.confirmation-offer-icon {
+  width: 64px;
+  height: 64px;
+  border: 1px solid var(--offer);
+  background: var(--surface);
+  font-size: 32px;
+}
+
+.confirmation-offer-icon.is-badge {
+  font-size: 17px;
+  letter-spacing: 0.05em;
+}
+
+.confirmation-offer-icon svg,
+.detail-offer-icon svg {
+  width: 66%;
+  height: 66%;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.offer-ticket-reference {
+  display: grid;
+  gap: 5px;
+}
+
+.offer-ticket-reference span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.offer-id-box strong {
+.offer-ticket-reference strong {
   font-size: clamp(26px, 4vw, 36px);
   color: var(--offer);
-  letter-spacing: 0;
+  letter-spacing: 0.02em;
+  overflow-wrap: anywhere;
+}
+
+.copy-offer-id {
+  min-width: 112px;
+}
+
+.copy-offer-id.is-copied {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: var(--surface);
+}
+
+.copy-status {
+  grid-column: 2 / -1;
+  min-height: 16px;
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: right;
+}
+
+html[dir="rtl"] .copy-status {
+  text-align: left;
+}
+
+.next-steps {
+  margin: 0 0 30px;
+  padding: 24px;
+  background: var(--panel);
+}
+
+.next-steps h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.status-tracker {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.status-tracker li {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 9px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.status-tracker li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 16px;
+  left: calc(50% + 20px);
+  width: calc(100% - 40px);
+  height: 2px;
+  background: rgba(5, 0, 51, 0.18);
+}
+
+.status-tracker li > span {
+  display: grid;
+  z-index: 1;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.status-tracker li.complete {
+  color: var(--teal);
+}
+
+.status-tracker li.complete > span {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: var(--surface);
 }
 
 .confirmation-details {
@@ -1363,6 +1543,65 @@ dialog::backdrop {
   font-size: 14px;
   font-weight: 700;
   white-space: pre-line;
+}
+
+.confirmation-type-value {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.detail-offer-icon {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--offer);
+  font-size: 17px;
+}
+
+.detail-offer-icon.is-badge {
+  width: 42px;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+
+.confirmation-status-panel {
+  margin-top: 24px;
+  padding: 20px;
+  border-left: 4px solid var(--teal);
+  background: var(--panel);
+}
+
+.confirmation-status-panel .email-status:first-child {
+  margin-top: 0;
+}
+
+.asana-task-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  margin-top: 18px;
+  padding: 0 18px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.asana-task-button:hover,
+.asana-task-button:focus-visible {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: var(--surface);
+}
+
+.confirmation-actions {
+  justify-content: flex-end;
+  padding-top: 24px;
 }
 
 .email-status {
@@ -1396,6 +1635,31 @@ dialog::backdrop {
   text-decoration: none;
 }
 
+@keyframes confirmation-mark-in {
+  from { opacity: 0; transform: scale(0.72); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes confirmation-ticket-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.confirmation-reveal .success-mark {
+  animation: confirmation-mark-in 420ms cubic-bezier(0.2, 0.85, 0.35, 1.25) both;
+}
+
+.confirmation-ticket-reveal {
+  animation: confirmation-ticket-in 520ms 140ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confirmation-reveal .success-mark,
+  .confirmation-ticket-reveal {
+    animation: none;
+  }
+}
+
 @media (max-width: 900px) {
   .auth-gate {
     padding: 20px 16px;
@@ -1411,6 +1675,33 @@ dialog::backdrop {
 
   .shell {
     padding: 16px;
+  }
+
+  .confirmation-card {
+    padding: 24px 20px;
+  }
+
+  .confirmation-heading {
+    grid-template-columns: 1fr;
+  }
+
+  .confirmation-heading h1 {
+    font-size: 30px;
+  }
+
+  .offer-ticket {
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 22px 20px;
+  }
+
+  .copy-offer-id {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .copy-status {
+    grid-column: 1 / -1;
+    text-align: center;
   }
 
   .topbar,
@@ -1463,6 +1754,10 @@ dialog::backdrop {
   .upload-grid,
   .confirmation-details div {
     grid-template-columns: 1fr;
+  }
+
+  .status-tracker li strong {
+    font-size: 11px;
   }
 
   .file-card,

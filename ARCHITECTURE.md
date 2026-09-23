@@ -1,157 +1,62 @@
-# Explorer Offers Collection Platform Architecture
-
-> Current test mode: submissions create an Asana task and attach the selected images directly to it, then open a dedicated confirmation page. Supabase persistence, Google Sheets sync, ZIP generation, and package email are temporarily skipped.
+# Explorer Offer Submission architecture
 
 ## Overview
 
-The application is a browser-first offer collection system for Pacific hotels. The primary deployment uses a static frontend hosted on Netlify, Netlify Functions for privileged server-side operations, Supabase for structured data and file storage, Google Apps Script for spreadsheet synchronisation and email delivery, and Asana for operational follow-up tasks.
+The application is an Asana-first offer intake workflow. It does not persist submissions in an application database, generate ZIP files, synchronise Google Sheets, or send package emails.
 
-```mermaid
-flowchart LR
-    Hotel["Hotel user"] --> Clerk["Clerk passwordless sign-in"]
-    Clerk --> UI["Static web application on Netlify"]
-    UI --> Images["Browser-side image processing"]
-    UI --> Translation["Gemini translation Netlify Function"]
-    UI --> API["Netlify Functions"]
-    API --> Database["Supabase Postgres"]
-    API --> Storage["Supabase Storage"]
-    API --> AppsScript["Google Apps Script webhook"]
-    API --> Asana["Asana task"]
-    AppsScript --> Sheet["Google Sheet"]
-    AppsScript --> Email["Package-link email"]
-    UI --> Package["Browser-generated ZIP package"]
-    Package --> Storage
+```text
+Hotel user
+  -> Clerk passwordless authentication
+  -> Static single-page form on Netlify
+  -> Gemini-assisted brand tone and translations (on request)
+  -> Cloudflare Turnstile verification
+  -> Netlify submit-offer function
+  -> Asana task plus direct image attachments
+  -> Dedicated confirmation page
 ```
 
-## Primary deployment
+## Browser application
 
-The deployable application is contained in `deploy-github/`.
+`index.html`, `styles.css`, and `app.js` provide the branded form, conditional offer fields, browser-side image resizing, Gemini translation preview, and submission flow.
 
-### Frontend
+`auth.js` validates exact `accor.com` and `accorplus.com` domains before contacting Clerk, manages the passwordless email-code session, and adds a Clerk bearer token to protected requests.
 
-The frontend consists of `deploy-github/index.html`, `deploy-github/styles.css`, and `deploy-github/app.js`. Netlify publishes this directory as a static website.
+A generated translation remains editable in the preview. It is added to `auto_translations` only when the user clicks **Save translation**. Multiple target languages can be saved before submission.
 
-The browser is responsible for:
-
-- rendering the multilingual offer form;
-- showing fields appropriate to each offer type;
-- validating required content, dates, acknowledgements, and booking links;
-- resizing uploaded marketing images;
-- requesting and presenting draft translations;
-- assembling submission data and file metadata;
-- generating the final ZIP package; and
-- downloading the ZIP locally and uploading it to Supabase Storage.
-
-The supported offer types include Red Hot Rooms, More Escapes, hotel stays, dining, events, and partner offers. Offer-specific fields are stored together as a flexible JSON object.
-
-### Authentication and authorization
-
-`auth.js` displays a custom passwordless email-code flow, validates that an address belongs exactly to `accor.com` or `accorplus.com` before contacting Clerk, manages the browser session, and adds a short-lived Clerk bearer token to every sensitive function request. First-time users are verified and receive an internal Clerk user record automatically; returning users enter the same flow, with no password or separate registration screen. The signed-in email is shown in the header, written into the read-only submitter-email field, and a logout control ends the session.
-
-The browser check is for user experience only. Every sensitive Netlify Function calls the shared `_auth.js` guard, which verifies the Clerk session token, retrieves the verified primary email from Clerk, and repeats the exact-domain check. `submit-offer.js` replaces the email sent by the browser with this server-verified address. The public `auth-config.js` endpoint returns only Clerk's publishable key.
-
-### Netlify Functions
-
-The serverless functions in `deploy-github/netlify/functions/` keep privileged credentials out of the browser and expose the application operations.
+## Netlify Functions
 
 | Function | Responsibility |
 | --- | --- |
-| `auth-config.js` | Returns Clerk's browser-safe publishable key. |
-| `_auth.js` | Shared server-side session verification and Accor-domain authorization. |
-| `submit-offer.js` | Creates a submission in Supabase, uploads supplied marketing assets, appends the offer to Google Sheets, and creates an Asana task. |
-| `create-package-upload.js` | Creates a time-limited signed URL that lets the browser upload the generated ZIP directly to Supabase Storage. |
-| `email-package.js` | Saves the ZIP metadata against the offer, updates the spreadsheet, and asks Apps Script to email the download link. |
+| `_auth.js` | Verifies Clerk session tokens and repeats the allowed-domain check. |
+| `auth-config.js` | Returns the browser-safe Clerk publishable key. |
+| `align-brand-tone.js` | Rewrites offer descriptions through Gemini using the supplied brand prompt. |
+| `translate-content.js` | Produces glossary-aware Gemini translation drafts. |
+| `submit-offer.js` | Verifies authentication and Turnstile, creates the Asana task, and attaches images. |
 
-Public offer IDs are derived from the Supabase numeric ID and formatted as `EXP-<year>-<six-digit ID>`, for example `EXP-2026-000123`.
+## Asana task creation
 
-### Supabase Postgres
+`submit-offer.js` generates a timestamp-based Explorer Offer ID and builds the task title and description. The description contains the source offer, offer-specific details, terms, and a **Saved translations** section. Each saved translation is labelled with its target and source language.
 
-The `offer_submissions` table is defined in `deploy-github/supabase-schema.sql`. It stores:
+After task creation, the function uploads the selected marketing images and applicable screenshots directly to the task through the Asana attachments API. Attachment failures are returned separately so the confirmation page can distinguish task creation from image-upload results.
 
-- submitter and hotel information;
-- common offer content;
-- offer-specific details as JSON;
-- translations as JSON;
-- file metadata and public URLs as JSON;
-- confirmation and acknowledgement values;
-- submission status; and
-- creation and update timestamps.
+## Security boundaries
 
-Netlify Functions access Supabase with the service-role key. The browser does not receive that key.
+- Clerk authenticates users; the browser and server both enforce the exact corporate-domain allowlist.
+- Turnstile verification is mandatory for every submission.
+- Clerk, Gemini, Turnstile, and Asana secrets exist only in Netlify environment variables.
+- The browser receives only Clerk's publishable key and the public Turnstile site key.
+- The submitter email used in Asana comes from the verified Clerk account, not editable request data.
 
-### Supabase Storage
-
-The default public bucket is `offer-assets`, configured by `deploy-github/supabase-storage-setup.sql`. Assets are grouped beneath the public offer ID.
-
-Stored assets include:
-
-- banner images;
-- listing-tile images;
-- social images; and
-- generated ZIP packages.
-
-Rate screenshots, menu PDFs, and booking screenshots are currently included in the downloaded ZIP but are not uploaded as separate storage objects.
-
-### Google Sheets and email
-
-`deploy-github/google-sheets-apps-script.js` is deployed as a Google Apps Script Web App. Netlify Functions call its webhook to:
-
-- append a spreadsheet row when an offer is created;
-- update the matching row by `offer_id` when an offer changes; and
-- send an email containing the stored ZIP package link.
-
-The ZIP is sent as a link instead of an attachment to avoid Netlify and Apps Script request-size limits.
-
-### Asana
-
-Immediately after Supabase creates the core record and assigns the public offer ID, `submit-offer.js` creates a task in the configured Asana project. This happens before image storage and spreadsheet synchronisation. The task title contains the offer ID and offer title. Its description contains the hotel or partner, submitter, booking link, offer content, offer-specific details, and terms. Image files and image links are intentionally excluded from the Asana task in the first iteration.
-
-Asana task creation uses the official REST API from the Netlify Function, so the access token is never exposed to the browser. An optional assignee can be configured. If Asana is unavailable, the offer remains submitted and the confirmation panel displays a warning; this prevents a retry from creating a duplicate offer.
-
-### Translation
-
-The browser calls a Netlify Function backed by Gemini only when the user requests a translation preview. The chosen interface language is treated as the source language. Users can review and edit generated text before saving it into the submission package.
-
-The translation integration should be privacy-reviewed before handling sensitive content.
-
-## Submission flow
-
-1. A hotel user signs in through Clerk with a verified `accor.com` or `accorplus.com` email.
-2. The user completes the offer form and uploads the required assets.
-3. The browser validates the form, resizes marketing images, and sends a Clerk session token.
-4. The Netlify Function verifies the session and authorized email domain before processing the request.
-5. `submit-offer` creates the database record and uploads selected marketing assets.
-6. The function assigns the formatted public offer ID.
-7. The function creates an Asana task for operational follow-up, without image links.
-8. The function stores resized marketing images and synchronises the offer to Google Sheets.
-9. The browser generates and downloads the ZIP package.
-10. The browser requests a signed upload URL and uploads the ZIP directly to Supabase Storage.
-11. `email-package` records the ZIP URL, refreshes the spreadsheet row, and triggers the package-link email.
-
-## Configuration
-
-The Netlify deployment uses these environment variables:
+## Required environment variables
 
 | Variable | Purpose |
 | --- | --- |
-| `CLERK_PUBLISHABLE_KEY` | Browser-safe Clerk application key used to initialize passwordless sign-in. |
-| `CLERK_SECRET_KEY` | Server-only Clerk key used to verify sessions and retrieve the verified primary email. |
-| `SUPABASE_URL` | Supabase project URL. |
-| `SUPABASE_SERVICE_ROLE_KEY` | Privileged database and storage access used only by serverless functions. |
-| `SUPABASE_STORAGE_BUCKET` | Optional storage bucket override; defaults to `offer-assets`. |
-| `GOOGLE_SHEETS_WEBHOOK_URL` | Apps Script endpoint used for spreadsheet synchronisation and package email. |
-| `ASANA_ACCESS_TOKEN` | Secret Asana personal access token or OAuth access token with task-write access. |
-| `ASANA_PROJECT_GID` | Asana project in which new offer tasks are created. |
-| `ASANA_ASSIGNEE_GID` | Optional Asana user to assign to every new offer task. |
-| `GEMINI_API_KEY` | Gemini API key used server-side to align offer descriptions with the Explorer brand tone. |
-| `GEMINI_MODEL` | Optional Gemini model override; defaults to `gemini-3.5-flash-lite`. |
-| `TURNSTILE_SECRET_KEY` | Cloudflare Turnstile secret used by the submission function. |
-| `TURNSTILE_ALLOWED_HOSTNAMES` | Optional comma-separated hostname allowlist; defaults to `hotelsoffer.netlify.app`. |
-
-## Local and legacy implementation
-
-The project root contains a lightweight Python server in `app.py`, a static application in `static/`, a SQLite database at `data/offers.db`, and local uploads under `data/uploads/`.
-
-The Python server can serve the application locally and contains an older `/api/offers` SQLite backend. The current browser application and root `README.md` describe a no-backend/local packaging mode, while the more complete production architecture is the Netlify and Supabase implementation under `deploy-github/`.
-
-The local Python/SQLite path should therefore be treated as a preview or legacy implementation, not the primary hosted architecture.
+| `CLERK_PUBLISHABLE_KEY` | Initializes Clerk in the browser. |
+| `CLERK_SECRET_KEY` | Verifies sessions and retrieves the verified email. |
+| `ASANA_ACCESS_TOKEN` | Creates tasks and uploads attachments. |
+| `ASANA_PROJECT_GID` | Selects the destination project. |
+| `ASANA_ASSIGNEE_GID` | Optionally assigns every task. |
+| `TURNSTILE_SECRET_KEY` | Verifies submission tokens. |
+| `TURNSTILE_ALLOWED_HOSTNAMES` | Optionally overrides the production hostname allowlist. |
+| `GEMINI_API_KEY` | Powers brand-tone alignment and translations. |
+| `GEMINI_MODEL` | Optionally overrides `gemini-3.5-flash-lite`. |
