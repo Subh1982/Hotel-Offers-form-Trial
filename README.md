@@ -8,7 +8,7 @@ Offer collection form for Pacific hotel offer submissions.
 
 The form and every sensitive Netlify Function are protected by Clerk. The public `auth-config` function exposes only Clerk's publishable key, which is designed for browser use. Only authenticated users whose verified primary email ends exactly in `@accor.com` or `@accorplus.com` can use the application. The submitter email stored with an offer always comes from the verified Clerk account rather than editable browser data.
 
-Create a Clerk application, enable email-link or email-code authentication, then add these environment variables in Netlify and redeploy:
+Create a Clerk application, set its access mode to Open, enable email-code authentication for both sign-in and sign-up, and enable strict user-enumeration protection. The embedded Clerk component uses a unified passwordless sign-in-or-up flow: first-time users are verified by email and receive an internal Clerk user record without seeing a separate registration or password screen. Then add these environment variables in Netlify and redeploy:
 
 - `CLERK_PUBLISHABLE_KEY`: the Clerk publishable key (`pk_...`);
 - `CLERK_SECRET_KEY`: the Clerk secret key (`sk_...`). Never expose this value in browser code.

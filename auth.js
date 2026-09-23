@@ -67,6 +67,7 @@ function showSignIn(message = "") {
     window.Clerk.mountSignIn(target, {
       fallbackRedirectUrl: window.location.origin,
       signUpFallbackRedirectUrl: window.location.origin,
+      withSignUp: true,
     });
     signInMounted = true;
   }
