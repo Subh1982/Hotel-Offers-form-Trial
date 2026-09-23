@@ -3,6 +3,7 @@ function json(statusCode, body) {
 }
 
 const { requireAuth } = require("./_auth");
+const { GeminiError, generateText } = require("./_gemini");
 
 const glossary = require("./translation-glossary.json");
 
@@ -56,9 +57,6 @@ exports.handler = async (event) => {
   if (event.httpMethod !== "POST") return json(405, { error: "Method not allowed." });
   const auth = await requireAuth(event);
   if (!auth.ok) return auth.response;
-
-  const apiKey = String(process.env.GEMINI_API_KEY || "").trim().replace(/^(['"])(.*)\1$/, "$2");
-  if (!apiKey) return json(500, { error: "Gemini is not configured. Add GEMINI_API_KEY in Netlify." });
 
   let body;
   try {
@@ -120,35 +118,17 @@ Application output requirements:
 - Do not introduce new ideas or remove key benefits.
 - Glossary compliance is mandatory. When an approved term is supplied below, use it exactly and do not paraphrase it.${glossaryInstructions}`;
 
-  const model = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 25000);
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
-      method: "POST",
-      headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
-      signal: controller.signal,
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: instructions }] },
-        contents: [{ role: "user", parts: [{ text }] }],
-        generationConfig: { temperature: 0.1, maxOutputTokens: 4000 },
-      }),
+    const translation = await generateText({
+      systemInstruction: instructions,
+      prompt: text,
+      maxOutputTokens: 4000,
     });
-
-    const responseText = await response.text();
-    if (!response.ok) {
-      console.error("Gemini translation failed", response.status, responseText);
-      return json(response.status, { error: `Translation failed (${response.status}).` });
-    }
-
-    const result = JSON.parse(responseText || "{}");
-    const translation = (result.candidates?.[0]?.content?.parts || []).map((part) => part.text || "").join("").trim();
-    if (!translation) return json(502, { error: "Gemini returned no translation." });
     return json(200, { ok: true, translation });
   } catch (error) {
     console.error("Gemini translation request failed", error);
-    return json(502, { error: error.name === "AbortError" ? "Translation timed out." : "Translation could not be completed." });
-  } finally {
-    clearTimeout(timeout);
+    return json(error instanceof GeminiError ? error.statusCode : 502, {
+      error: error instanceof GeminiError ? error.message : "Translation could not be completed.",
+    });
   }
 };

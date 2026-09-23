@@ -3,6 +3,7 @@ function json(statusCode, body) {
 }
 
 const { requireAuth } = require("./_auth");
+const { GeminiError, generateText } = require("./_gemini");
 
 const BRAND_INSTRUCTIONS = `Rewrite the supplied offer description in the ALL Accor+ Explorer brand voice.
 
@@ -23,9 +24,6 @@ exports.handler = async (event) => {
   const auth = await requireAuth(event);
   if (!auth.ok) return auth.response;
 
-  const apiKey = String(process.env.GEMINI_API_KEY || "").trim().replace(/^(['"])(.*)\1$/, "$2");
-  if (!apiKey) return json(500, { error: "Gemini is not configured. Add GEMINI_API_KEY in Netlify." });
-
   let body;
   try {
     body = JSON.parse(event.body || "{}");
@@ -37,36 +35,17 @@ exports.handler = async (event) => {
   if (!description) return json(400, { error: "Enter an offer description first." });
   if (description.length > 6000) return json(400, { error: "Offer description must be 6,000 characters or fewer." });
 
-  const model = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 20000);
-
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
-      method: "POST",
-      headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
-      signal: controller.signal,
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: BRAND_INSTRUCTIONS }] },
-        contents: [{ role: "user", parts: [{ text: description }] }],
-        generationConfig: { temperature: 0.45, maxOutputTokens: 1200 },
-      }),
+    const alignedDescription = await generateText({
+      systemInstruction: BRAND_INSTRUCTIONS,
+      prompt: description,
+      maxOutputTokens: 1200,
     });
-
-    const responseText = await response.text();
-    if (!response.ok) {
-      console.error("Gemini brand alignment failed", response.status, responseText);
-      return json(response.status, { error: `Brand tone alignment failed (${response.status}).` });
-    }
-
-    const result = JSON.parse(responseText || "{}");
-    const alignedDescription = (result.candidates?.[0]?.content?.parts || []).map((part) => part.text || "").join("").trim();
-    if (!alignedDescription) return json(502, { error: "Gemini returned no rewritten description." });
     return json(200, { ok: true, description: alignedDescription });
   } catch (error) {
     console.error("Gemini brand alignment request failed", error);
-    return json(502, { error: error.name === "AbortError" ? "Brand tone alignment timed out." : "Brand tone alignment could not be completed." });
-  } finally {
-    clearTimeout(timeout);
+    return json(error instanceof GeminiError ? error.statusCode : 502, {
+      error: error instanceof GeminiError ? error.message : "Brand tone alignment could not be completed.",
+    });
   }
 };
