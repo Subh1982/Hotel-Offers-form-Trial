@@ -6,6 +6,8 @@ function json(statusCode, body) {
   };
 }
 
+const { requireAuth } = require("./_auth");
+
 function cleanEnvironmentValue(value) {
   return String(value || "").trim().replace(/^(['"])(.*)\1$/, "$2").trim();
 }
@@ -330,6 +332,9 @@ exports.handler = async (event) => {
     return json(405, { error: "Method not allowed" });
   }
 
+  const auth = await requireAuth(event);
+  if (!auth.ok) return auth.response;
+
   let submission;
   try {
     submission = JSON.parse(event.body || "{}");
@@ -349,7 +354,7 @@ exports.handler = async (event) => {
     id: null,
     offer_id: `ASANA-TEST-${Date.now()}`,
     generated_at: submission.generated_at,
-    email: submission.email,
+    email: auth.email,
     person_in_charge_name: submission.person_in_charge_name,
     hotel_rid_code: submission.hotel_rid_code,
     hotel_name: submission.hotel_name,

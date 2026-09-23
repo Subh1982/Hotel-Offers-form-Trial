@@ -2,6 +2,8 @@ function json(statusCode, body) {
   return { statusCode, headers: { "content-type": "application/json" }, body: JSON.stringify(body) };
 }
 
+const { requireAuth } = require("./_auth");
+
 const glossary = require("./translation-glossary.json");
 
 const LANGUAGE_NAMES = {
@@ -52,6 +54,8 @@ function glossaryEntriesFor(text, sourceLanguage, targetLanguage) {
 
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") return json(405, { error: "Method not allowed." });
+  const auth = await requireAuth(event);
+  if (!auth.ok) return auth.response;
 
   const apiKey = String(process.env.GEMINI_API_KEY || "").trim().replace(/^(['"])(.*)\1$/, "$2");
   if (!apiKey) return json(500, { error: "Gemini is not configured. Add GEMINI_API_KEY in Netlify." });

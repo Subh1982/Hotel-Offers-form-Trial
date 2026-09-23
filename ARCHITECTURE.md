@@ -8,7 +8,8 @@ The application is a browser-first offer collection system for Pacific hotels. T
 
 ```mermaid
 flowchart LR
-    Hotel["Hotel user"] --> UI["Static web application on Netlify"]
+    Hotel["Hotel user"] --> Clerk["Clerk passwordless sign-in"]
+    Clerk --> UI["Static web application on Netlify"]
     UI --> Images["Browser-side image processing"]
     UI --> Translation["Gemini translation Netlify Function"]
     UI --> API["Netlify Functions"]
@@ -43,12 +44,20 @@ The browser is responsible for:
 
 The supported offer types include Red Hot Rooms, More Escapes, hotel stays, dining, events, and partner offers. Offer-specific fields are stored together as a flexible JSON object.
 
+### Authentication and authorization
+
+`auth.js` loads Clerk, displays the passwordless sign-in screen, manages the browser session, and adds a short-lived Clerk bearer token to every sensitive function request. Only accounts with a verified primary email at exactly `accor.com` or `accorplus.com` are allowed into the form. The signed-in email is shown in the header, written into the read-only submitter-email field, and a logout control ends the session.
+
+The browser check is for user experience only. Every sensitive Netlify Function calls the shared `_auth.js` guard, which verifies the Clerk session token, retrieves the verified primary email from Clerk, and repeats the exact-domain check. `submit-offer.js` replaces the email sent by the browser with this server-verified address. The public `auth-config.js` endpoint returns only Clerk's publishable key.
+
 ### Netlify Functions
 
 The serverless functions in `deploy-github/netlify/functions/` keep privileged credentials out of the browser and expose the application operations.
 
 | Function | Responsibility |
 | --- | --- |
+| `auth-config.js` | Returns Clerk's browser-safe publishable key. |
+| `_auth.js` | Shared server-side session verification and Accor-domain authorization. |
 | `submit-offer.js` | Creates a submission in Supabase, uploads supplied marketing assets, appends the offer to Google Sheets, and creates an Asana task. |
 | `create-package-upload.js` | Creates a time-limited signed URL that lets the browser upload the generated ZIP directly to Supabase Storage. |
 | `email-package.js` | Saves the ZIP metadata against the offer, updates the spreadsheet, and asks Apps Script to email the download link. |
@@ -107,15 +116,17 @@ The translation integration should be privacy-reviewed before handling sensitive
 
 ## Submission flow
 
-1. A hotel user completes the offer form and uploads the required assets.
-2. The browser validates the form and resizes marketing images.
-3. `submit-offer` creates the database record and uploads selected marketing assets.
-4. The function assigns the formatted public offer ID.
-5. The function creates an Asana task for operational follow-up, without image links.
-6. The function stores resized marketing images and synchronises the offer to Google Sheets.
-7. The browser generates and downloads the ZIP package.
-8. The browser requests a signed upload URL and uploads the ZIP directly to Supabase Storage.
-9. `email-package` records the ZIP URL, refreshes the spreadsheet row, and triggers the package-link email.
+1. A hotel user signs in through Clerk with a verified `accor.com` or `accorplus.com` email.
+2. The user completes the offer form and uploads the required assets.
+3. The browser validates the form, resizes marketing images, and sends a Clerk session token.
+4. The Netlify Function verifies the session and authorized email domain before processing the request.
+5. `submit-offer` creates the database record and uploads selected marketing assets.
+6. The function assigns the formatted public offer ID.
+7. The function creates an Asana task for operational follow-up, without image links.
+8. The function stores resized marketing images and synchronises the offer to Google Sheets.
+9. The browser generates and downloads the ZIP package.
+10. The browser requests a signed upload URL and uploads the ZIP directly to Supabase Storage.
+11. `email-package` records the ZIP URL, refreshes the spreadsheet row, and triggers the package-link email.
 
 ## Configuration
 
@@ -123,6 +134,8 @@ The Netlify deployment uses these environment variables:
 
 | Variable | Purpose |
 | --- | --- |
+| `CLERK_PUBLISHABLE_KEY` | Browser-safe Clerk application key used to initialize passwordless sign-in. |
+| `CLERK_SECRET_KEY` | Server-only Clerk key used to verify sessions and retrieve the verified primary email. |
 | `SUPABASE_URL` | Supabase project URL. |
 | `SUPABASE_SERVICE_ROLE_KEY` | Privileged database and storage access used only by serverless functions. |
 | `SUPABASE_STORAGE_BUCKET` | Optional storage bucket override; defaults to `offer-assets`. |

@@ -6,6 +6,8 @@ function json(statusCode, body) {
   };
 }
 
+const { requireAuth } = require("./_auth");
+
 function parseOfferId(value) {
   const text = String(value || "").trim();
   if (!text) return "";
@@ -29,6 +31,8 @@ exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
   }
+  const auth = await requireAuth(event);
+  if (!auth.ok) return auth.response;
 
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;

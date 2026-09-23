@@ -10,11 +10,23 @@
     <link rel="stylesheet" href="styles.css?v=arabic-rtl-1">
   </head>
   <body>
-    <main class="shell">
+    <section id="authGate" class="auth-gate" aria-labelledby="authTitle">
+      <div class="auth-shell">
+        <img class="auth-logo" src="assets/all-accor-plus-logo.png" alt="ALL Accor Plus">
+        <div class="auth-card">
+          <p class="eyebrow">Offer Submission</p>
+          <h1 id="authTitle">Sign in to continue</h1>
+          <p>Use your Accor or Accor Plus work email.</p>
+          <p id="authMessage" class="auth-message" role="alert" aria-live="polite"></p>
+          <div id="clerkSignIn" class="clerk-sign-in"></div>
+        </div>
+      </div>
+    </section>
+    <main id="appShell" class="shell" hidden>
       <header class="masthead">
         <nav class="topbar" aria-label="Platform header">
           <img class="brand-logo" src="assets/all-accor-plus-logo.png" alt="ALL Accor Plus">
-          <span class="market-label">Pacific marketing platform</span>
+          <div class="authenticated-user"><span id="authenticatedUserEmail"></span><button id="logoutButton" type="button" class="text-button">Log out</button></div>
         </nav>
       </header>
       <section class="confirmation-screen" aria-labelledby="confirmationTitle">
@@ -46,6 +58,7 @@
         </div>
       </section>
     </main>
-    <script src="confirmation.js?v=arabic-rtl-1"></script>
+    <script src="auth.js?v=clerk-auth-1"></script>
+    <script src="confirmation.js?v=clerk-auth-1"></script>
   </body>
 </html>

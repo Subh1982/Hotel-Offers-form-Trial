@@ -1435,7 +1435,7 @@ alignBrandToneButton.addEventListener("click", async () => {
   brandToneStatus.className = "muted";
 
   try {
-    const response = await fetch("/.netlify/functions/align-brand-tone", {
+    const response = await window.authenticatedFetch("/.netlify/functions/align-brand-tone", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ description }),
@@ -1645,7 +1645,7 @@ function buildContentForTranslation() {
 
 async function translateText(text, sourceLanguage, targetLanguage) {
   if (sourceLanguage === targetLanguage) return text;
-  const response = await fetch("/.netlify/functions/translate-content", {
+  const response = await window.authenticatedFetch("/.netlify/functions/translate-content", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ text, source_language: sourceLanguage, target_language: targetLanguage }),
@@ -2026,7 +2026,7 @@ async function storeSubmission(record, turnstileToken = "") {
     ...await buildRecordForSave(record),
     turnstile_token: turnstileToken,
   };
-  const response = await fetch("/.netlify/functions/submit-offer", {
+  const response = await window.authenticatedFetch("/.netlify/functions/submit-offer", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(payload),
@@ -2056,7 +2056,7 @@ async function storeSubmission(record, turnstileToken = "") {
 }
 
 async function createPackageUpload(record, filename) {
-  const response = await fetch("/.netlify/functions/create-package-upload", {
+  const response = await window.authenticatedFetch("/.netlify/functions/create-package-upload", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ offer_id: record.offer_id, file_name: filename }),
@@ -2096,7 +2096,7 @@ async function sendPackageEmail(record, packageFile) {
   const timeout = window.setTimeout(() => controller.abort(), 15000);
   let response;
   try {
-    response = await fetch("/.netlify/functions/email-package", {
+    response = await window.authenticatedFetch("/.netlify/functions/email-package", {
       method: "POST",
       headers: { "content-type": "application/json" },
       signal: controller.signal,

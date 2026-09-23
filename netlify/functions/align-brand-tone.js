@@ -2,6 +2,8 @@ function json(statusCode, body) {
   return { statusCode, headers: { "content-type": "application/json" }, body: JSON.stringify(body) };
 }
 
+const { requireAuth } = require("./_auth");
+
 const BRAND_INSTRUCTIONS = `Rewrite the supplied offer description in the ALL Accor+ Explorer brand voice.
 
 Follow these rules in priority order:
@@ -18,6 +20,8 @@ Follow these rules in priority order:
 
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") return json(405, { error: "Method not allowed." });
+  const auth = await requireAuth(event);
+  if (!auth.ok) return auth.response;
 
   const apiKey = String(process.env.GEMINI_API_KEY || "").trim().replace(/^(['"])(.*)\1$/, "$2");
   if (!apiKey) return json(500, { error: "Gemini is not configured. Add GEMINI_API_KEY in Netlify." });

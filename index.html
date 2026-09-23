@@ -10,11 +10,24 @@
     <link rel="stylesheet" href="styles.css?v=required-fields-1">
   </head>
   <body>
-    <main class="shell">
+    <section id="authGate" class="auth-gate" aria-labelledby="authTitle">
+      <div class="auth-shell">
+        <img class="auth-logo" src="assets/all-accor-plus-logo.png" alt="ALL Accor Plus">
+        <div class="auth-card">
+          <p class="eyebrow">Offer Submission</p>
+          <h1 id="authTitle">Sign in to continue</h1>
+          <p>Use your Accor or Accor Plus work email. We’ll send you a secure sign-in link or verification code.</p>
+          <p id="authMessage" class="auth-message" role="alert" aria-live="polite"></p>
+          <div id="clerkSignIn" class="clerk-sign-in"></div>
+        </div>
+      </div>
+    </section>
+    <main id="appShell" class="shell" hidden>
       <header class="masthead">
         <nav class="topbar" aria-label="Platform header">
           <img class="brand-logo" src="assets/all-accor-plus-logo.png" alt="ALL Accor Plus">
           <div class="topbar-actions">
+            <div class="authenticated-user"><span id="authenticatedUserEmail"></span><button id="logoutButton" type="button" class="text-button">Log out</button></div>
             <label class="language-control"><span data-i18n="languageLabel">Language</span>
               <select id="languageSelect" aria-label="Language">
                 <option value="en">English</option>
@@ -319,6 +332,7 @@
     </dialog>
 
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
-    <script src="app.js?v=required-fields-1"></script>
+    <script src="auth.js?v=clerk-auth-1"></script>
+    <script src="app.js?v=clerk-auth-1"></script>
   </body>
 </html>
