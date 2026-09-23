@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=clerk-auth-4">
+    <link rel="stylesheet" href="styles.css?v=design-audit-1">
   </head>
   <body>
     <section id="authGate" class="auth-gate" aria-labelledby="authTitle">
@@ -43,11 +43,12 @@
       </div>
     </section>
     <main id="appShell" class="shell" hidden>
-      <header class="masthead">
+      <header class="masthead confirmation-masthead">
         <nav class="topbar" aria-label="Platform header">
           <img class="brand-logo" src="assets/all-accor-plus-logo.png" alt="ALL Accor Plus">
           <div class="authenticated-user"><span id="authenticatedUserEmail"></span><button id="logoutButton" type="button" class="text-button">Log out</button></div>
         </nav>
+        <div class="confirmation-hero" aria-hidden="true"></div>
       </header>
       <section class="confirmation-screen" aria-labelledby="confirmationTitle">
         <div class="confirmation-card">
@@ -79,6 +80,6 @@
       </section>
     </main>
     <script src="auth.js?v=clerk-auth-4"></script>
-    <script src="confirmation.js?v=clerk-auth-4"></script>
+    <script src="confirmation.js?v=design-audit-1"></script>
   </body>
 </html>

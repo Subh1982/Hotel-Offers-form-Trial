@@ -25,6 +25,8 @@ const bookingPreview = document.querySelector("#bookingPreview");
 const languageSelect = document.querySelector("#languageSelect");
 const heroText = document.querySelector("[data-i18n='heroText']");
 const sectionNavigationButtons = Array.from(document.querySelectorAll("[data-scroll-target]"));
+const formProgressBar = document.querySelector("#formProgressBar");
+const offerTypeTiles = Array.from(document.querySelectorAll("[data-offer-type]"));
 const translationSourceDisplay = document.querySelector("#translationSourceDisplay");
 const translationTargetLanguage = document.querySelector("#translationTargetLanguage");
 const translateContentButton = document.querySelector("#translateContentButton");
@@ -1309,6 +1311,7 @@ async function handleImageUpload(input, preview, message, setFile, options) {
   const file = input.files[0];
   setFile(null);
   preview.style.display = "none";
+  preview.closest(".upload-zone")?.classList.remove("has-preview");
   message.textContent = "";
 
   if (!file) return;
@@ -1329,6 +1332,7 @@ async function handleImageUpload(input, preview, message, setFile, options) {
   setFile(finalFile);
   preview.src = URL.createObjectURL(finalFile);
   preview.style.display = "block";
+  preview.closest(".upload-zone")?.classList.add("has-preview");
 
   const before = Math.round(file.size / 1024);
   const after = Math.round(finalFile.size / 1024);
@@ -1338,10 +1342,15 @@ async function handleImageUpload(input, preview, message, setFile, options) {
 function showPreview(preview, file) {
   preview.src = URL.createObjectURL(file);
   preview.style.display = "block";
+  preview.closest(".upload-zone")?.classList.add("has-preview");
 }
 
 async function handleMasterImageUpload() {
   const file = masterImageInput.files[0];
+  masterImageInput.closest(".upload-zone")?.classList.remove("has-preview");
+  bannerInput.closest(".upload-zone")?.classList.remove("has-preview");
+  listingTileInput.closest(".upload-zone")?.classList.remove("has-preview");
+  socialInput.closest(".upload-zone")?.classList.remove("has-preview");
   masterBannerPreview.style.display = "none";
   masterListingPreview.style.display = "none";
   masterSocialPreview.style.display = "none";
@@ -1413,6 +1422,7 @@ socialInput.addEventListener("change", () => handleImageUpload(
 function updateFileName(input) {
   const filename = document.querySelector(`[data-file-name-for="${input.name}"]`);
   if (filename) filename.textContent = input.files[0]?.name || ((uiTranslations[languageSelect.value] || uiTranslations.en).noFileSelected || "No file selected");
+  input.closest(".file-card")?.classList.toggle("has-file", Boolean(input.files[0]));
 }
 
 document.querySelectorAll('input[type="file"]').forEach((input) => {
@@ -1512,8 +1522,19 @@ confirmationNewOfferButton.addEventListener("click", () => {
 });
 
 offerType.addEventListener("change", () => {
+  offerTypeTiles.forEach((tile) => {
+    const selected = tile.dataset.offerType === offerType.value;
+    tile.classList.toggle("is-selected", selected);
+    tile.setAttribute("aria-pressed", String(selected));
+  });
   renderTypeSpecificFields();
   updateBookingMethodFields(true);
+});
+offerTypeTiles.forEach((tile) => {
+  tile.addEventListener("click", () => {
+    offerType.value = tile.dataset.offerType;
+    offerType.dispatchEvent(new Event("change", { bubbles: true }));
+  });
 });
 form.querySelectorAll('input[name="booking_method"]').forEach((input) => {
   input.addEventListener("change", () => updateBookingMethodFields(true));
@@ -1530,9 +1551,14 @@ translationTargetLanguage.addEventListener("change", () => {
 });
 
 function setActiveFormSection(sectionId) {
-  sectionNavigationButtons.forEach((button) => {
-    button.parentElement.classList.toggle("active", button.dataset.scrollTarget === sectionId);
+  const activeIndex = sectionNavigationButtons.findIndex((button) => button.dataset.scrollTarget === sectionId);
+  sectionNavigationButtons.forEach((button, index) => {
+    button.parentElement.classList.toggle("active", index === activeIndex);
+    button.parentElement.classList.toggle("completed", index < activeIndex);
   });
+  if (formProgressBar && activeIndex >= 0) {
+    formProgressBar.style.width = `${((activeIndex + 1) / sectionNavigationButtons.length) * 100}%`;
+  }
 }
 
 function updateActiveFormSection() {
@@ -2281,6 +2307,8 @@ form.addEventListener("reset", () => {
     bannerPreview.style.display = "none";
     listingTilePreview.style.display = "none";
     socialPreview.style.display = "none";
+    document.querySelectorAll(".upload-zone.has-preview").forEach((zone) => zone.classList.remove("has-preview"));
+    document.querySelectorAll(".file-card.has-file").forEach((card) => card.classList.remove("has-file"));
     masterImageMessage.textContent = "";
     bannerMessage.textContent = "";
     listingTileMessage.textContent = "";
@@ -2293,6 +2321,7 @@ form.addEventListener("reset", () => {
     setTranslationStatus("");
     dateMessage.textContent = "";
     renderTypeSpecificFields();
+    offerType.dispatchEvent(new Event("change", { bubbles: true }));
     updateBookingMethodFields();
     setMessage("");
   });

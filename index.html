@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=clerk-auth-4">
+    <link rel="stylesheet" href="styles.css?v=design-audit-1">
   </head>
   <body>
     <section id="authGate" class="auth-gate" aria-labelledby="authTitle">
@@ -85,6 +85,9 @@
             <li><button type="button" data-scroll-target="imagesSection" data-i18n="stepImages">Images and review</button></li>
             <li><button type="button" data-scroll-target="translationsSection" data-i18n="stepTranslations">Translations</button></li>
           </ol>
+          <div class="form-progress" aria-label="Form progress">
+            <span id="formProgressBar"></span>
+          </div>
         </aside>
 
         <form id="offerForm" class="form-surface" novalidate>
@@ -96,10 +99,10 @@
             </div>
           </div>
 
-          <section id="offerTypeSection" class="form-section offer-type-first">
-            <h3 class="required-label" data-i18n="offerTypeQuestion">What type of offer are you submitting?</h3>
+          <section id="offerTypeSection" class="form-section offer-type-first" data-section-number="01">
+            <h3 id="offerTypeQuestion" class="required-label" data-i18n="offerTypeQuestion">What type of offer are you submitting?</h3>
             <p data-i18n="offerTypeHelp">Your choice determines the dates, pricing, and supporting information requested below.</p>
-            <label class="select-only">
+            <label class="select-only visually-hidden">
               <select id="offerType" name="offer_type" required aria-label="Offer type" data-i18n-aria-label="offerTypeLabel">
                 <option value="" data-i18n="selectOne">Select one</option>
                 <option value="red_hot_rooms">Red Hot Rooms</option>
@@ -110,9 +113,17 @@
                 <option value="partners" data-i18n="offerTypePartners">Partners</option>
               </select>
             </label>
+            <div class="offer-type-tiles" role="group" aria-labelledby="offerTypeQuestion">
+              <button type="button" class="offer-type-tile" data-offer-type="red_hot_rooms" aria-pressed="false"><span class="offer-type-icon offer-type-badge">RHR</span><span>Red Hot Rooms</span></button>
+              <button type="button" class="offer-type-tile" data-offer-type="more_escapes" aria-pressed="false"><span class="offer-type-icon offer-type-badge">%</span><span>More Escapes</span></button>
+              <button type="button" class="offer-type-tile" data-offer-type="hotel_stay" aria-pressed="false"><span class="offer-type-icon" aria-hidden="true">⌂</span><span data-i18n="offerTypeHotelStay">Hotel stay</span></button>
+              <button type="button" class="offer-type-tile" data-offer-type="dining" aria-pressed="false"><span class="offer-type-icon" aria-hidden="true">◇</span><span data-i18n="offerTypeDining">Dining</span></button>
+              <button type="button" class="offer-type-tile" data-offer-type="events" aria-pressed="false"><span class="offer-type-icon" aria-hidden="true">✦</span><span data-i18n="offerTypeEvents">Events</span></button>
+              <button type="button" class="offer-type-tile" data-offer-type="partners" aria-pressed="false"><span class="offer-type-icon" aria-hidden="true">∞</span><span data-i18n="offerTypePartners">Partners</span></button>
+            </div>
           </section>
 
-          <section id="hotelDetailsSection" class="form-section">
+          <section id="hotelDetailsSection" class="form-section" data-section-number="02">
             <h3 data-i18n="hotelDetails">Hotel details</h3>
             <div class="grid two">
               <label><span data-i18n="emailLabel">Email</span>
@@ -133,7 +144,7 @@
             </div>
           </section>
 
-          <section id="offerContentSection" class="form-section">
+          <section id="offerContentSection" class="form-section" data-section-number="03">
             <h3 data-i18n="coreContent">Core offer content</h3>
             <div class="grid two">
               <label><span data-i18n="offerTileTitleLabel">Offer tile title</span>
@@ -154,7 +165,7 @@
             </label>
             <div class="brand-tone-actions">
               <p id="brandToneStatus" class="muted" aria-live="polite"></p>
-              <button type="button" id="alignBrandToneButton" class="secondary" data-i18n="alignBrandToneButton">Align with Brand tone</button>
+              <button type="button" id="alignBrandToneButton" class="secondary ai-action" data-i18n="alignBrandToneButton">Align with Brand tone</button>
             </div>
           </section>
 
@@ -184,7 +195,7 @@
             </label>
           </section>
 
-          <section id="proofFormsSection" class="form-section">
+          <section id="proofFormsSection" class="form-section" data-section-number="04">
             <h3 data-i18n="proofForms">Proof and required forms</h3>
             <div class="upload-grid">
               <div id="rateScreenshotCard" class="file-card upload-row conditional-stay is-hidden">
@@ -202,7 +213,7 @@
             </div>
           </section>
 
-          <section id="imagesSection" class="form-section">
+          <section id="imagesSection" class="form-section" data-section-number="05">
             <h3 data-i18n="imagesTitle">Images</h3>
             <div class="upload-zone upload-row">
               <div class="upload-copy">
@@ -246,7 +257,7 @@
             <p id="socialMessage" class="muted"></p>
           </section>
 
-          <section id="translationsSection" class="form-section translation-review-section">
+          <section id="translationsSection" class="form-section translation-review-section" data-section-number="06">
             <h3 data-i18n="translationPreviewTitle">Preview translated content</h3>
             <p class="muted"><span data-i18n="translationSourcePrefix">The offer content entered above is treated as</span> <strong id="translationSourceDisplay">English</strong>, <span data-i18n="translationSourceSuffix">based on the language selected in the top-right corner.</span></p>
             <div class="translation-controls">
@@ -260,7 +271,7 @@
                   <option value="ar">Arabic</option>
                 </select>
               </label>
-              <button type="button" id="translateContentButton" data-i18n="previewTranslatedButton">Preview translated content</button>
+              <button type="button" id="translateContentButton" class="ai-action" data-i18n="previewTranslatedButton">Preview translated content</button>
             </div>
             <p id="translationStatus" class="muted" aria-live="polite"></p>
             <div id="translationPreviewPanel" class="translation-preview-panel is-hidden">
@@ -285,7 +296,7 @@
           <div id="formMessage" class="form-message" role="status"></div>
           <div id="turnstileContainer" class="turnstile-container" aria-live="polite"></div>
           <div class="actions">
-            <button type="reset" class="secondary" data-i18n="clearButton">Clear</button>
+            <button type="reset" class="tertiary" data-i18n="clearButton">Clear</button>
             <button type="submit" data-i18n="submitButton">Submit Offer</button>
           </div>
         </form>
@@ -353,6 +364,6 @@
 
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
     <script src="auth.js?v=clerk-auth-4"></script>
-    <script src="app.js?v=clerk-auth-4"></script>
+    <script src="app.js?v=design-audit-1"></script>
   </body>
 </html>
