@@ -1,4 +1,5 @@
 const ALLOWED_AUTH_DOMAINS = new Set(["accor.com", "accorplus.com"]);
+let signInMounted = false;
 
 function loadAuthScript(src, attributes = {}) {
   return new Promise((resolve, reject) => {
@@ -62,12 +63,12 @@ function showSignIn(message = "") {
   setAuthMessage(message, Boolean(message));
 
   const target = document.querySelector("#clerkSignIn");
-  if (target && window.Clerk) {
-    target.replaceChildren();
+  if (target && window.Clerk && !signInMounted) {
     window.Clerk.mountSignIn(target, {
-      fallbackRedirectUrl: window.location.href,
-      signUpFallbackRedirectUrl: window.location.href,
+      fallbackRedirectUrl: window.location.origin,
+      signUpFallbackRedirectUrl: window.location.origin,
     });
+    signInMounted = true;
   }
 }
 
