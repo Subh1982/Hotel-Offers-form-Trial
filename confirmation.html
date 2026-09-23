@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=login-refine-1">
+    <link rel="stylesheet" href="styles.css?v=confirmation-elevated-1">
   </head>
   <body class="auth-loading">
     <section id="authGate" class="auth-gate" aria-labelledby="authTitle">
@@ -63,7 +63,10 @@
 
           <div class="offer-ticket confirmation-ticket-reveal">
             <div class="offer-ticket-reference">
-              <span data-confirmation-i18n="reference">Offer reference</span>
+              <div class="offer-ticket-labels">
+                <span data-confirmation-i18n="reference">Offer reference</span>
+                <span class="offer-ticket-collection">Explorer Offers Collection</span>
+              </div>
               <strong id="confirmationOfferId"></strong>
             </div>
             <button id="copyOfferIdButton" type="button" class="tertiary copy-offer-id" data-confirmation-i18n="copyId">Copy ID</button>
@@ -87,7 +90,7 @@
             <a id="openAsanaButton" class="asana-task-button is-hidden" target="_blank" rel="noreferrer"><span data-confirmation-i18n="openAsana">See task in Asana</span> <span aria-hidden="true">→</span></a>
           </div>
           <div class="actions confirmation-actions">
-            <a class="button-link" href="/" data-confirmation-i18n="createAnother">Create another offer</a>
+            <a class="button-link" href="/"><span data-confirmation-i18n="createAnother">Create another offer</span><span aria-hidden="true">→</span></a>
           </div>
         </div>
       </section>

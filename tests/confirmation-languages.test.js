@@ -38,6 +38,7 @@ test("confirmation page keeps only the essential completion content", () => {
   assert.match(html, /class="next-steps"/);
   assert.match(html, /id="openAsanaButton"/);
   assert.match(html, /data-confirmation-i18n="createAnother"/);
+  assert.match(html, /class="offer-ticket-collection">Explorer Offers Collection/);
   assert.doesNotMatch(html, /class="confirmation-details"/);
   assert.doesNotMatch(html, /id="confirmationAttachmentStatus"/);
 });
