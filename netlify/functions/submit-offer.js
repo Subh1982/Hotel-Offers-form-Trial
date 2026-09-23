@@ -191,6 +191,14 @@ exports.handler = async (event) => {
     return json(400, { error: "Invalid JSON payload." });
   }
 
+  if (submission.action === "attach_image") {
+    const taskGid = String(submission.task_gid || "").trim();
+    if (!/^\d+$/.test(taskGid)) return json(400, { error: "A valid Asana task ID is required." });
+    const attachments = await attachImagesToAsanaTask(taskGid, [submission.asset]);
+    const attachment = attachments.results[0] || { file_name: submission.asset?.file_name, ok: false, error: "No image was supplied." };
+    return json(attachment.ok ? 200 : 502, { ok: attachment.ok, attachment, error: attachment.ok ? undefined : attachment.error });
+  }
+
   const forwardedFor = String(event.headers?.["x-forwarded-for"] || event.headers?.["X-Forwarded-For"] || "").split(",")[0].trim();
   const verification = await verifyTurnstileToken(submission.turnstile_token, forwardedFor);
   if (!verification.ok) return json(verification.status, { error: verification.error, service: "turnstile" });
@@ -220,8 +228,7 @@ exports.handler = async (event) => {
 
   const asana = await createAsanaTask(offer);
   if (!asana.ok) return json(asana.skipped ? 500 : 502, { error: asana.error, details: asana.details, service: "asana" });
-  const attachments = await attachImagesToAsanaTask(asana.gid, submission.asset_uploads);
-  return json(200, { ok: true, offer_id: offer.offer_id, asana, attachments });
+  return json(200, { ok: true, offer_id: offer.offer_id, asana });
 };
 
 exports._test = { asanaTaskNotes, savedTranslationSections };

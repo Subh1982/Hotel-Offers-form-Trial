@@ -56,6 +56,11 @@ test("submission and attachment uploads cannot leave the form waiting indefinite
   assert.match(app, /Preparing \$\{file\.name\} took too long/);
   assert.match(app, /verificationTimeout = window\.setTimeout\(fail, 15000\)/);
   assert.match(app, /task may already have been created/);
+  assert.match(app, /submitButton\.textContent = "Attaching images\.\.\."/);
+  assert.match(app, /action: "attach_image"/);
+  assert.doesNotMatch(app, /\.\.\.await buildAsanaSubmission\(record\)/);
+  assert.match(submit, /submission\.action === "attach_image"/);
+  assert.match(submit, /return json\(200, \{ ok: true, offer_id: offer\.offer_id, asana \}\)/);
   assert.match(submit, /Promise\.all\(images\.map/);
   assert.match(submit, /signal: controller\.signal/);
   assert.match(submit, /Asana attachment upload timed out/);

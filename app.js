@@ -1733,27 +1733,13 @@ async function buildAsanaImageAttachments() {
     listing_tile_image: resizedListingTileFile,
     social_image: resizedSocialFile,
   };
-  const uploads = [];
-
-  for (const [field, file] of Object.entries(uploadMap)) {
-    if (!file) continue;
-    uploads.push({
+  return Promise.all(Object.entries(uploadMap).filter(([, file]) => Boolean(file)).map(async ([field, file]) => ({
       field,
       file_name: file.name,
       file_type: file.type || "image/jpeg",
       file_size_kb: Math.round(file.size / 1024),
       data_base64: await fileToBase64(file),
-    });
-  }
-
-  return uploads;
-}
-
-async function buildAsanaSubmission(record) {
-  return {
-    ...record,
-    asset_uploads: await buildAsanaImageAttachments(),
-  };
+    })));
 }
 
 async function createAsanaTask(record, turnstileToken = "") {
@@ -1771,7 +1757,7 @@ async function createAsanaTask(record, turnstileToken = "") {
   try {
     const submission = (async () => {
       const payload = {
-        ...await buildAsanaSubmission(record),
+        ...record,
         turnstile_token: turnstileToken,
       };
       return window.authenticatedFetch("/.netlify/functions/submit-offer", {
@@ -1812,6 +1798,55 @@ async function createAsanaTask(record, turnstileToken = "") {
     );
   }
   return result;
+}
+
+async function attachImageToAsana(taskGid, asset) {
+  const controller = new AbortController();
+  let timeout;
+  const deadline = new Promise((resolve, reject) => {
+    timeout = window.setTimeout(() => {
+      controller.abort();
+      reject(new Error("Image attachment timed out."));
+    }, 12000);
+  });
+  try {
+    const request = window.authenticatedFetch("/.netlify/functions/submit-offer", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ action: "attach_image", task_gid: taskGid, asset }),
+      signal: controller.signal,
+    });
+    const response = await Promise.race([request, deadline]);
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.error || `Image attachment failed (${response.status}).`);
+    return result.attachment;
+  } finally {
+    window.clearTimeout(timeout);
+  }
+}
+
+async function attachImagesToAsana(taskGid) {
+  let uploads;
+  try {
+    uploads = await buildAsanaImageAttachments();
+  } catch (error) {
+    console.error("Could not prepare Asana images", error);
+    return { attempted: 1, attached: 0, failed: 1 };
+  }
+  const results = await Promise.all(uploads.map(async (asset) => {
+    try {
+      return await attachImageToAsana(taskGid, asset);
+    } catch (error) {
+      console.error("Could not attach image to Asana", asset.file_name, error);
+      return { file_name: asset.file_name, ok: false, error: error.message };
+    }
+  }));
+  return {
+    attempted: results.length,
+    attached: results.filter((result) => result?.ok).length,
+    failed: results.filter((result) => !result?.ok).length,
+    results,
+  };
 }
 
 async function waitForTurnstile() {
@@ -1908,6 +1943,8 @@ form.addEventListener("submit", async (event) => {
     const turnstileToken = await requestTurnstileToken();
     submitButton.textContent = "Creating Asana task...";
     const result = await createAsanaTask(record, turnstileToken);
+    submitButton.textContent = "Attaching images...";
+    const attachments = await attachImagesToAsana(result.asana.gid);
     const confirmation = {
       offer_id: result.offer_id,
       hotel_name: record.hotel_name || record.offer_details.partner_name || "Not provided",
@@ -1919,7 +1956,7 @@ form.addEventListener("submit", async (event) => {
       booking_details: record.booking_link || record.offer_details.booking_email || "Not provided",
       date_range: buildDateRangeSummary(record),
       asana: result.asana,
-      attachments: result.attachments || { attempted: 0, attached: 0, failed: 0 },
+      attachments,
     };
     sessionStorage.setItem("offerSubmissionConfirmation", JSON.stringify(confirmation));
     window.location.assign("/confirmation.html");
