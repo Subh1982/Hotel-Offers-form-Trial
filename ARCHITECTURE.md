@@ -46,7 +46,7 @@ The supported offer types include Red Hot Rooms, More Escapes, hotel stays, dini
 
 ### Authentication and authorization
 
-`auth.js` loads Clerk, displays a unified passwordless email-code flow, manages the browser session, and adds a short-lived Clerk bearer token to every sensitive function request. First-time users are verified and receive an internal Clerk user record automatically; returning users enter the same flow, with no password or separate registration screen. Only accounts with a verified primary email at exactly `accor.com` or `accorplus.com` are allowed into the form. The signed-in email is shown in the header, written into the read-only submitter-email field, and a logout control ends the session.
+`auth.js` displays a custom passwordless email-code flow, validates that an address belongs exactly to `accor.com` or `accorplus.com` before contacting Clerk, manages the browser session, and adds a short-lived Clerk bearer token to every sensitive function request. First-time users are verified and receive an internal Clerk user record automatically; returning users enter the same flow, with no password or separate registration screen. The signed-in email is shown in the header, written into the read-only submitter-email field, and a logout control ends the session.
 
 The browser check is for user experience only. Every sensitive Netlify Function calls the shared `_auth.js` guard, which verifies the Clerk session token, retrieves the verified primary email from Clerk, and repeats the exact-domain check. `submit-offer.js` replaces the email sent by the browser with this server-verified address. The public `auth-config.js` endpoint returns only Clerk's publishable key.
 

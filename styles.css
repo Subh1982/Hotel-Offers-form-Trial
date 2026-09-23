@@ -56,11 +56,123 @@ body {
 .auth-card h1 {
   margin: 4px 0 12px;
   font-size: clamp(28px, 5vw, 38px);
+  font-weight: 600;
+  line-height: 1.15;
 }
 
 .auth-card > p:not(.eyebrow) {
+  margin: 0;
   color: var(--muted);
   line-height: 1.6;
+}
+
+.auth-rule {
+  width: 48px;
+  height: 3px;
+  margin: 24px 0;
+  background: var(--teal);
+}
+
+.auth-step {
+  margin-top: 4px;
+}
+
+.auth-form {
+  display: grid;
+  gap: 12px;
+}
+
+.auth-form label {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.auth-form input {
+  width: 100%;
+  min-height: 54px;
+  padding: 13px 15px;
+  border: 1px solid #9fa2aa;
+  border-radius: 0;
+  background: var(--surface);
+  color: var(--ink);
+  font: 400 16px/1.4 "Montserrat", Arial, sans-serif;
+}
+
+.auth-form input:focus {
+  border-color: var(--teal);
+  outline: 2px solid rgba(39, 102, 110, 0.24);
+  outline-offset: 1px;
+}
+
+.auth-form button[type="submit"] {
+  min-height: 52px;
+  margin-top: 4px;
+  padding: 12px 18px;
+  border: 1px solid var(--accent);
+  border-radius: 0;
+  background: var(--accent);
+  color: #ffffff;
+  font: 600 13px/1.2 "Montserrat", Arial, sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.auth-form button[type="submit"]:hover,
+.auth-form button[type="submit"]:focus-visible {
+  border-color: var(--teal);
+  background: var(--teal);
+}
+
+.auth-form button[type="submit"]:disabled,
+.auth-link-button:disabled {
+  border-color: var(--line);
+  background: #efeff2;
+  color: #73717d;
+  cursor: wait;
+}
+
+.auth-code-intro {
+  margin: 0 0 20px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+#authCode {
+  letter-spacing: 0.28em;
+}
+
+.auth-secondary-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.auth-link-button {
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 0;
+  background: transparent;
+  color: var(--accent);
+  font: 600 12px/1.3 "Montserrat", Arial, sans-serif;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.auth-link-button:hover,
+.auth-link-button:focus-visible {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: #ffffff;
+}
+
+#clerk-captcha:not(:empty) {
+  margin-top: 16px;
 }
 
 .auth-message {
@@ -78,10 +190,8 @@ body {
   color: var(--danger);
 }
 
-.clerk-sign-in {
-  display: flex;
-  justify-content: center;
-  margin-top: 18px;
+.auth-message.success {
+  color: var(--ok);
 }
 
 .authenticated-user {
@@ -1328,6 +1438,18 @@ dialog::backdrop {
 }
 
 @media (max-width: 900px) {
+  .auth-gate {
+    padding: 20px 16px;
+  }
+
+  .auth-card {
+    padding: 26px 22px;
+  }
+
+  .auth-secondary-actions {
+    grid-template-columns: 1fr;
+  }
+
   .shell {
     padding: 16px;
   }

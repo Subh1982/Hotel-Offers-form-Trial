@@ -1,5 +1,4 @@
 const ALLOWED_AUTH_DOMAINS = new Set(["accor.com", "accorplus.com"]);
-let signInMounted = false;
 
 function loadAuthScript(src, attributes = {}) {
   return new Promise((resolve, reject) => {
@@ -27,8 +26,16 @@ function primaryEmail(user) {
 }
 
 function isAllowedEmail(email) {
-  const parts = String(email).split("@");
-  return parts.length === 2 && ALLOWED_AUTH_DOMAINS.has(parts[1].toLowerCase());
+  const parts = String(email).trim().toLowerCase().split("@");
+  return parts.length === 2 && Boolean(parts[0]) && ALLOWED_AUTH_DOMAINS.has(parts[1]);
+}
+
+function clerkErrorMessage(error, fallback) {
+  return error?.errors?.[0]?.longMessage || error?.errors?.[0]?.message || error?.message || fallback;
+}
+
+function clerkErrorCode(error) {
+  return error?.errors?.[0]?.code || error?.code || "";
 }
 
 function setAuthMessage(message, isError = false) {
@@ -36,6 +43,7 @@ function setAuthMessage(message, isError = false) {
   if (!element) return;
   element.textContent = message;
   element.classList.toggle("error", isError);
+  element.classList.toggle("success", Boolean(message) && !isError);
 }
 
 function showAuthenticatedApp(user) {
@@ -61,16 +69,23 @@ function showSignIn(message = "") {
   if (shell) shell.hidden = true;
   document.querySelector("#authGate")?.classList.remove("is-hidden");
   setAuthMessage(message, Boolean(message));
+}
 
-  const target = document.querySelector("#clerkSignIn");
-  if (target && window.Clerk && !signInMounted) {
-    window.Clerk.mountSignIn(target, {
-      fallbackRedirectUrl: window.location.origin,
-      signUpFallbackRedirectUrl: window.location.origin,
-      withSignUp: true,
-    });
-    signInMounted = true;
-  }
+function showCodeStep(email) {
+  document.querySelector("#authEmailStep")?.classList.add("is-hidden");
+  document.querySelector("#authCodeStep")?.classList.remove("is-hidden");
+  const destination = document.querySelector("#authCodeDestination");
+  if (destination) destination.textContent = email;
+  document.querySelector("#authCode")?.focus();
+}
+
+function showEmailStep() {
+  document.querySelector("#authCodeStep")?.classList.add("is-hidden");
+  document.querySelector("#authEmailStep")?.classList.remove("is-hidden");
+  const code = document.querySelector("#authCode");
+  if (code) code.value = "";
+  setAuthMessage("");
+  document.querySelector("#authEmail")?.focus();
 }
 
 async function authenticatedFetch(input, init = {}) {
@@ -96,11 +111,117 @@ window.explorerAuthReady = (async () => {
     if (!response.ok || !config.publishableKey) throw new Error(config.error || "Authentication is not configured.");
 
     const frontendApi = frontendApiFromKey(config.publishableKey);
-    await loadAuthScript(`https://${frontendApi}/npm/@clerk/ui@1/dist/ui.browser.js`);
-    await loadAuthScript(`https://${frontendApi}/npm/@clerk/clerk-js@6/dist/clerk.browser.js`, {
+    await loadAuthScript(`https://${frontendApi}/npm/@clerk/clerk-js@6.32.1/dist/clerk.browser.js`, {
       "data-clerk-publishable-key": config.publishableKey,
     });
-    await window.Clerk.load({ ui: { ClerkUI: window.__internal_ClerkUICtor } });
+    await window.Clerk.load();
+
+    const signIn = window.Clerk.client.signIn.__internal_future;
+    const signUp = window.Clerk.client.signUp.__internal_future;
+    let pendingEmail = "";
+
+    async function completeAuth(resource) {
+      const sessionId = resource.createdSessionId;
+      if (!sessionId) throw new Error("Clerk did not create a session. Please try again.");
+      await window.Clerk.setActive({ session: sessionId });
+    }
+
+    async function sendCode() {
+      const { error: createError } = await signIn.create({ identifier: pendingEmail, signUpIfMissing: true });
+      if (createError) throw createError;
+      const { error: sendError } = await signIn.emailCode.sendCode();
+      if (sendError) throw sendError;
+    }
+
+    document.querySelector("#authEmailForm")?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const input = document.querySelector("#authEmail");
+      const button = event.currentTarget.querySelector('button[type="submit"]');
+      const email = String(input?.value || "").trim().toLowerCase();
+
+      if (!isAllowedEmail(email)) {
+        setAuthMessage("Use an @accor.com or @accorplus.com work email address.", true);
+        input?.focus();
+        return;
+      }
+
+      pendingEmail = email;
+      button.disabled = true;
+      button.textContent = "SENDING CODE...";
+      setAuthMessage("");
+      try {
+        await sendCode();
+        showCodeStep(email);
+        setAuthMessage("Verification code sent. It will expire in 10 minutes.");
+      } catch (error) {
+        console.error("Could not start Clerk email-code flow", error);
+        setAuthMessage(clerkErrorMessage(error, "We could not send a verification code. Please try again."), true);
+      } finally {
+        button.disabled = false;
+        button.textContent = "SEND VERIFICATION CODE";
+      }
+    });
+
+    document.querySelector("#authCodeForm")?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const input = document.querySelector("#authCode");
+      const button = event.currentTarget.querySelector('button[type="submit"]');
+      const code = String(input?.value || "").replace(/\s/g, "");
+      if (!/^\d{6}$/.test(code)) {
+        setAuthMessage("Enter the six-digit verification code.", true);
+        input?.focus();
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = "VERIFYING...";
+      setAuthMessage("");
+      try {
+        const { error } = await signIn.emailCode.verifyCode({ code });
+        if (error && clerkErrorCode(error) !== "sign_up_if_missing_transfer") throw error;
+
+        if (clerkErrorCode(error) === "sign_up_if_missing_transfer") {
+          const { error: transferError } = await signUp.create({ transfer: true });
+          if (transferError) throw transferError;
+          if (signUp.status !== "complete") {
+            throw new Error("Your email was verified, but Clerk requires additional account information. Check the Clerk user settings and try again.");
+          }
+          await completeAuth(signUp);
+        } else if (signIn.status === "complete") {
+          await completeAuth(signIn);
+        } else {
+          throw new Error("Verification could not be completed. Please request a new code.");
+        }
+      } catch (error) {
+        console.error("Could not verify Clerk email code", error);
+        setAuthMessage(clerkErrorMessage(error, "That code could not be verified. Please try again."), true);
+      } finally {
+        button.disabled = false;
+        button.textContent = "VERIFY AND CONTINUE";
+      }
+    });
+
+    document.querySelector("#authResendButton")?.addEventListener("click", async (event) => {
+      const button = event.currentTarget;
+      button.disabled = true;
+      setAuthMessage("");
+      try {
+        const { error } = await signIn.emailCode.sendCode();
+        if (error) throw error;
+        setAuthMessage("A new verification code has been sent.");
+      } catch (error) {
+        setAuthMessage(clerkErrorMessage(error, "We could not resend the code. Please try again."), true);
+      } finally {
+        window.setTimeout(() => { button.disabled = false; }, 30000);
+      }
+    });
+
+    document.querySelector("#authChangeEmailButton")?.addEventListener("click", async () => {
+      await signIn.reset();
+      await signUp.reset();
+      pendingEmail = "";
+      showEmailStep();
+    });
 
     const applyAuthState = async (user) => {
       if (!user) {
@@ -110,7 +231,7 @@ window.explorerAuthReady = (async () => {
       const email = primaryEmail(user);
       if (!isAllowedEmail(email)) {
         await window.Clerk.signOut();
-        showSignIn("Please use an @accor.com or @accorplus.com email address.");
+        showSignIn("Use an @accor.com or @accorplus.com work email address.");
         return;
       }
       showAuthenticatedApp(user);
