@@ -3,7 +3,7 @@ const confirmationLanguage = localStorage.getItem("explorer-offer-language") || 
 
 const confirmationCopy = {
   en: {
-    eyebrow: "Submission complete", headline: (title) => `${title} is on its way to review`, intro: "Your offer has been received and sent to the team for review.", reference: "Offer reference", copyId: "Copy ID", copied: "Copied", copyFailed: "Select and copy the ID manually.", whatNext: "What happens next?", received: "Received", inReview: "In review", live: "Live", hotelName: "Hotel name", hotelCode: "Hotel code", offerType: "Offer type", offerTitle: "Offer title", submitterEmail: "Submitter email", bookingMethod: "Booking method", dateRange: "Submission date range", createAnother: "Create another offer", notProvided: "Not provided", asanaCreated: "The Asana review task is ready.", openAsana: "See task in Asana", noImages: "No images were selected for attachment.", imagesAttached: (count) => `${count} image${count === 1 ? "" : "s"} attached to the review task.`, imagesFailed: (attached, attempted, failed) => `${attached} of ${attempted} images attached. ${failed} failed.`,
+    eyebrow: "Submission complete", headline: "Offer created successfully", intro: "Your offer has been received and sent to the team for review.", reference: "Offer ID", copyId: "Copy ID", copied: "Copied", copyFailed: "Select and copy the ID manually.", whatNext: "Next steps", received: "Received", inReview: "In review", live: "Live", createAnother: "Create another offer", notProvided: "Not provided", asanaLabel: "Review workspace", asanaCreated: "Your Asana task is ready to view.", openAsana: "View task in Asana",
   },
   th: {
     eyebrow: "ส่งข้อมูลเรียบร้อย", headline: (title) => `${title} กำลังเข้าสู่การตรวจสอบ`, intro: "เราได้รับข้อเสนอของคุณและส่งให้ทีมตรวจสอบแล้ว", reference: "หมายเลขอ้างอิงข้อเสนอ", copyId: "คัดลอก ID", copied: "คัดลอกแล้ว", copyFailed: "โปรดเลือกและคัดลอก ID ด้วยตนเอง", whatNext: "ขั้นตอนต่อไป", received: "ได้รับแล้ว", inReview: "กำลังตรวจสอบ", live: "เผยแพร่", hotelName: "ชื่อโรงแรม", hotelCode: "รหัสโรงแรม", offerType: "ประเภทข้อเสนอ", offerTitle: "ชื่อข้อเสนอ", submitterEmail: "อีเมลผู้ส่ง", bookingMethod: "วิธีการจอง", dateRange: "ช่วงวันที่ส่งข้อมูล", createAnother: "สร้างข้อเสนออื่น", notProvided: "ไม่ได้ระบุ", asanaCreated: "งานตรวจสอบใน Asana พร้อมแล้ว", openAsana: "ดูงานใน Asana", noImages: "ไม่ได้เลือกภาพสำหรับแนบ", imagesAttached: (count) => `แนบภาพ ${count} ภาพกับงานตรวจสอบแล้ว`, imagesFailed: (attached, attempted, failed) => `แนบภาพสำเร็จ ${attached} จาก ${attempted} ภาพ และไม่สำเร็จ ${failed} ภาพ`,
@@ -22,31 +22,24 @@ const confirmationCopy = {
   },
 };
 
-const copy = confirmationCopy[confirmationLanguage] || confirmationCopy.en;
+const simplifiedConfirmationCopy = {
+  th: { headline: "สร้างข้อเสนอสำเร็จ", asanaLabel: "พื้นที่ตรวจสอบ" },
+  vi: { headline: "Đã tạo ưu đãi thành công", asanaLabel: "Không gian xét duyệt" },
+  id: { headline: "Penawaran berhasil dibuat", asanaLabel: "Ruang peninjauan" },
+  ja: { headline: "オファーを作成しました", asanaLabel: "レビューワークスペース" },
+  ar: { headline: "تم إنشاء العرض بنجاح", asanaLabel: "مساحة عمل المراجعة" },
+};
+const copy = {
+  ...(confirmationCopy[confirmationLanguage] || confirmationCopy.en),
+  ...(simplifiedConfirmationCopy[confirmationLanguage] || {}),
+};
 document.documentElement.lang = confirmationLanguage;
 document.documentElement.dir = confirmationLanguage === "ar" ? "rtl" : "ltr";
 
 document.querySelectorAll("[data-confirmation-i18n]").forEach((element) => {
-  const value = copy[element.dataset.confirmationI18n];
+  const value = copy[element.dataset.confirmationI18n] || confirmationCopy.en[element.dataset.confirmationI18n];
   if (typeof value === "string") element.textContent = value;
 });
-
-const offerTypePresentation = {
-  "red hot rooms": { icon: "RHR", className: "badge" },
-  "more escapes": { icon: "%", className: "badge" },
-  "hotel stay": { icon: '<svg viewBox="0 0 32 32" focusable="false"><path d="M4 23V10m0 9h24v7m-24 0v-7m6 0v-6h7c3 0 5 2 5 5v1M4 13h6v6"/></svg>', className: "svg" },
-  dining: { icon: '<svg viewBox="0 0 32 32" focusable="false"><path d="M9 4v10m-4-10v7c0 3 2 5 4 5s4-2 4-5V4M9 16v12M22 28V4c4 3 5 8 3 13h-3"/></svg>', className: "svg" },
-  events: { icon: '<svg viewBox="0 0 32 32" focusable="false"><path d="m5 11 6 5 5-10 5 10 6-5-3 14H8L5 11Zm4 14h14"/></svg>', className: "svg" },
-  partners: { icon: '<svg viewBox="0 0 32 32" focusable="false"><path d="m12 11 3-3c2-2 5-2 7 0l7 7-7 7m-2-12-8 8m-2-8-7 7 7 7 3-3m-6-7 7 7m-3-11 8 8"/></svg>', className: "svg" },
-};
-
-function applyOfferTypeIcon(element, offerType) {
-  const presentation = offerTypePresentation[String(offerType || "").toLowerCase()] || { icon: "✦", className: "" };
-  if (presentation.className === "svg") element.innerHTML = presentation.icon;
-  else element.textContent = presentation.icon;
-  element.classList.toggle("is-badge", presentation.className === "badge");
-  element.classList.toggle("has-svg", presentation.className === "svg");
-}
 
 if (!rawConfirmation) {
   window.location.replace("/");
@@ -58,17 +51,8 @@ if (!rawConfirmation) {
 
   const offerTitle = confirmation.offer_tile_title || copy.notProvided;
   document.title = `${offerTitle} | Explorer Offers Collection`;
-  document.getElementById("confirmationTitle").textContent = copy.headline(offerTitle);
+  document.getElementById("confirmationTitle").textContent = copy.headline;
   setText("confirmationOfferId", confirmation.offer_id);
-  setText("confirmationHotelName", confirmation.hotel_name);
-  setText("confirmationHotelCode", confirmation.hotel_rid_code);
-  setText("confirmationOfferType", confirmation.offer_type);
-  setText("confirmationOfferTitle", offerTitle);
-  setText("confirmationEmail", confirmation.email);
-  setText("confirmationBookingLink", confirmation.booking_details || confirmation.booking_link);
-  setText("confirmationDateRange", confirmation.date_range);
-  applyOfferTypeIcon(document.getElementById("ticketOfferTypeIcon"), confirmation.offer_type);
-  applyOfferTypeIcon(document.getElementById("detailOfferTypeIcon"), confirmation.offer_type);
 
   const copyButton = document.getElementById("copyOfferIdButton");
   const copyStatus = document.getElementById("copyOfferIdStatus");
@@ -93,15 +77,4 @@ if (!rawConfirmation) {
     asanaButton.classList.remove("is-hidden");
   }
 
-  const attachments = confirmation.attachments || {};
-  const attachmentStatus = document.getElementById("confirmationAttachmentStatus");
-  if (!attachments.attempted) {
-    attachmentStatus.textContent = copy.noImages;
-  } else if (!attachments.failed) {
-    attachmentStatus.textContent = copy.imagesAttached(attachments.attached);
-    attachmentStatus.classList.add("success");
-  } else {
-    attachmentStatus.textContent = copy.imagesFailed(attachments.attached, attachments.attempted, attachments.failed);
-    attachmentStatus.classList.add("error");
-  }
 }

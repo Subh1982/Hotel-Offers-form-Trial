@@ -14,7 +14,7 @@ async function verifyTurnstileToken(token, remoteIp = "") {
   if (!token) return { ok: false, status: 403, error: "Submission verification is required." };
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 10000);
+  const timeout = setTimeout(() => controller.abort(), 6000);
   try {
     const body = new URLSearchParams({ secret, response: String(token) });
     if (remoteIp) body.set("remoteip", remoteIp);
@@ -117,7 +117,7 @@ async function createAsanaTask(offer) {
   if (assigneeGid) taskData.assignee = assigneeGid;
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 12000);
+  const timeout = setTimeout(() => controller.abort(), 8000);
   try {
     const response = await fetch("https://app.asana.com/api/1.0/tasks?opt_fields=gid,name,permalink_url", {
       method: "POST",
@@ -139,8 +139,9 @@ async function createAsanaTask(offer) {
 async function attachImagesToAsanaTask(taskGid, assets) {
   const accessToken = cleanEnvironmentValue(process.env.ASANA_ACCESS_TOKEN);
   const images = (assets || []).filter((asset) => asset?.data_base64 && String(asset.file_type || "").startsWith("image/"));
-  const results = [];
-  for (const asset of images) {
+  const results = await Promise.all(images.map(async (asset) => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
     try {
       const bytes = Buffer.from(asset.data_base64, "base64");
       const form = new FormData();
@@ -150,20 +151,26 @@ async function attachImagesToAsanaTask(taskGid, assets) {
         method: "POST",
         headers: { authorization: `Bearer ${accessToken}` },
         body: form,
+        signal: controller.signal,
       });
       const responseText = await response.text();
       if (!response.ok) {
-        results.push({ file_name: asset.file_name, ok: false, error: `Asana attachment failed (${response.status}).` });
         console.error("Asana attachment upload failed", responseText);
-        continue;
+        return { file_name: asset.file_name, ok: false, error: `Asana attachment failed (${response.status}).` };
       }
       const result = JSON.parse(responseText || "{}");
-      results.push({ file_name: asset.file_name, ok: true, gid: result.data?.gid || "" });
+      return { file_name: asset.file_name, ok: true, gid: result.data?.gid || "" };
     } catch (error) {
       console.error("Asana attachment request failed", error);
-      results.push({ file_name: asset.file_name, ok: false, error: error.message || "Asana attachment upload failed." });
+      return {
+        file_name: asset.file_name,
+        ok: false,
+        error: error.name === "AbortError" ? "Asana attachment upload timed out." : error.message || "Asana attachment upload failed.",
+      };
+    } finally {
+      clearTimeout(timeout);
     }
-  }
+  }));
   return {
     attempted: images.length,
     attached: results.filter((result) => result.ok).length,

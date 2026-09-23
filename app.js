@@ -1751,11 +1751,24 @@ async function createAsanaTask(record, turnstileToken = "") {
     ...await buildAsanaSubmission(record),
     turnstile_token: turnstileToken,
   };
-  const response = await window.authenticatedFetch("/.netlify/functions/submit-offer", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 28000);
+  let response;
+  try {
+    response = await window.authenticatedFetch("/.netlify/functions/submit-offer", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (error.name === "AbortError") {
+      throw new Error("Asana is taking too long to respond. Check Asana before submitting again, as the task may already have been created.");
+    }
+    throw error;
+  } finally {
+    window.clearTimeout(timeout);
+  }
 
   const responseText = await response.text();
   let result = {};
@@ -1800,13 +1813,22 @@ async function requestTurnstileToken() {
   turnstileContainer.replaceChildren();
 
   return new Promise((resolve, reject) => {
+    let settled = false;
+    let verificationTimeout;
+    const finish = (callback, value) => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(verificationTimeout);
+      callback(value);
+    };
     const fail = () => {
       if (activeTurnstileWidgetId !== null) {
         turnstile.remove(activeTurnstileWidgetId);
         activeTurnstileWidgetId = null;
       }
-      reject(new Error("Turnstile verification failed."));
+      finish(reject, new Error("Turnstile verification failed."));
     };
+    verificationTimeout = window.setTimeout(fail, 15000);
 
     activeTurnstileWidgetId = turnstile.render(turnstileContainer, {
       sitekey: TURNSTILE_SITE_KEY,
@@ -1814,7 +1836,7 @@ async function requestTurnstileToken() {
       execution: "execute",
       appearance: "always",
       size: "flexible",
-      callback: (token) => resolve(token),
+      callback: (token) => finish(resolve, token),
       "error-callback": fail,
       "expired-callback": fail,
       "timeout-callback": fail,

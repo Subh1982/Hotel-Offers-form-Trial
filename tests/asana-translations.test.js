@@ -45,3 +45,16 @@ test("removed persistence and package services are absent", () => {
   assert.equal(fs.existsSync(path.join(root, "netlify/functions/create-package-upload.js")), false);
   assert.equal(fs.existsSync(path.join(root, "netlify/functions/email-package.js")), false);
 });
+
+test("submission and attachment uploads cannot leave the form waiting indefinitely", () => {
+  const root = path.join(__dirname, "..");
+  const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
+  const submit = fs.readFileSync(path.join(root, "netlify/functions/submit-offer.js"), "utf8");
+
+  assert.match(app, /controller\.abort\(\), 28000/);
+  assert.match(app, /verificationTimeout = window\.setTimeout\(fail, 15000\)/);
+  assert.match(app, /task may already have been created/);
+  assert.match(submit, /Promise\.all\(images\.map/);
+  assert.match(submit, /signal: controller\.signal/);
+  assert.match(submit, /Asana attachment upload timed out/);
+});

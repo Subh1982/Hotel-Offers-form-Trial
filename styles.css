@@ -1288,9 +1288,9 @@ dialog::backdrop {
 }
 
 .confirmation-card {
-  max-width: 920px;
+  max-width: 780px;
   margin: 0 auto;
-  padding: 40px;
+  padding: 44px 40px 48px;
 }
 
 .confirmation-masthead {
@@ -1306,7 +1306,9 @@ dialog::backdrop {
 .confirmation-hero img {
   display: block;
   width: 100%;
-  height: auto;
+  height: clamp(150px, 19vw, 230px);
+  object-fit: cover;
+  object-position: center 62%;
 }
 
 .confirmation-heading {
@@ -1348,13 +1350,13 @@ dialog::backdrop {
 .offer-ticket {
   position: relative;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 20px;
   align-items: center;
-  margin: 32px 0;
-  padding: 24px 28px;
-  border: 2px dashed var(--offer);
-  background: #fff4f8;
+  margin: 30px 0 36px;
+  padding: 22px 26px;
+  border: 1px dashed var(--offer);
+  background: linear-gradient(90deg, #fff4f8, #fff 72%);
 }
 
 .offer-ticket::before,
@@ -1428,7 +1430,7 @@ dialog::backdrop {
 }
 
 .offer-ticket-reference strong {
-  font-size: clamp(26px, 4vw, 36px);
+  font-size: clamp(23px, 3.5vw, 32px);
   color: var(--offer);
   letter-spacing: 0.02em;
   overflow-wrap: anywhere;
@@ -1458,9 +1460,10 @@ html[dir="rtl"] .copy-status {
 }
 
 .next-steps {
-  margin: 0 0 30px;
-  padding: 24px;
-  background: var(--panel);
+  margin: 0 0 28px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  background: var(--surface);
 }
 
 .next-steps h2 {
@@ -1565,10 +1568,18 @@ html[dir="rtl"] .copy-status {
 }
 
 .confirmation-status-panel {
-  margin-top: 24px;
-  padding: 20px;
-  border-left: 4px solid var(--teal);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 0;
+  padding: 22px 24px;
+  border-left: 3px solid var(--teal);
   background: var(--panel);
+}
+
+.confirmation-status-panel .eyebrow {
+  margin: 0 0 5px;
 }
 
 .confirmation-status-panel .email-status:first-child {
@@ -1581,7 +1592,7 @@ html[dir="rtl"] .copy-status {
   justify-content: center;
   gap: 8px;
   min-height: 48px;
-  margin-top: 18px;
+  margin-top: 0;
   padding: 0 18px;
   border: 1px solid var(--accent);
   color: var(--accent);
@@ -1601,7 +1612,8 @@ html[dir="rtl"] .copy-status {
 
 .confirmation-actions {
   justify-content: flex-end;
-  padding-top: 24px;
+  padding-top: 28px;
+  border-top: 0;
 }
 
 .email-status {
@@ -1690,8 +1702,18 @@ html[dir="rtl"] .copy-status {
   }
 
   .offer-ticket {
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: 1fr;
     padding: 22px 20px;
+  }
+
+  .confirmation-status-panel {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .confirmation-status-panel .asana-task-button {
+    width: 100%;
   }
 
   .copy-offer-id {
