@@ -248,7 +248,7 @@ window.explorerAuthReady = (async () => {
     });
   } catch (error) {
     console.error("Authentication initialization failed", error);
-    showSignIn();
-    setAuthMessage(error.message || "Authentication could not be loaded. Please refresh and try again.", true);
+    const message = error.message || "Authentication could not be loaded. Please refresh and try again.";
+    showSignIn(message === "Authentication is not configured." ? "" : message);
   }
 })();

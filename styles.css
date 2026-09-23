@@ -60,10 +60,11 @@ body.auth-loading > #appShell {
 }
 
 .auth-card h1 {
-  margin: 4px 0 12px;
+  margin: 4px 0 20px;
   font-size: clamp(28px, 5vw, 38px);
   font-weight: 600;
   line-height: 1.15;
+  text-align: center;
 }
 
 .auth-card > p:not(.eyebrow) {
@@ -72,15 +73,8 @@ body.auth-loading > #appShell {
   line-height: 1.6;
 }
 
-.auth-rule {
-  width: 48px;
-  height: 3px;
-  margin: 24px 0;
-  background: var(--teal);
-}
-
 .auth-step {
-  margin-top: 4px;
+  margin-top: 24px;
 }
 
 .auth-form {

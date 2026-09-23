@@ -51,3 +51,16 @@ test("keeps authentication views hidden until Clerk resolves the session", () =>
   assert.match(authenticatedApp, /document\.body\.classList\.remove\("auth-loading"\)/);
   assert.match(signIn, /document\.body\.classList\.remove\("auth-loading"\)/);
 });
+
+test("uses the streamlined Explorer sign-in heading", () => {
+  [indexHtml, confirmationHtml].forEach((html) => {
+    assert.match(html, /<h1 id="authTitle">Explorer Offer Submission<\/h1>/);
+    assert.doesNotMatch(html, />Continue with your work email</);
+    assert.doesNotMatch(html, /class="auth-rule"/);
+    assert.doesNotMatch(html, /<p class="eyebrow">Offer Submission<\/p>/);
+  });
+});
+
+test("does not display the missing-auth configuration warning on the static preview", () => {
+  assert.match(source, /message === "Authentication is not configured\." \? "" : message/);
+});
