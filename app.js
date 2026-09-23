@@ -1707,8 +1707,18 @@ function buildDateRangeSummary(record) {
 async function fileToBase64(file) {
   const dataUrl = await new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.addEventListener("load", () => resolve(reader.result));
-    reader.addEventListener("error", () => reject(reader.error));
+    const timeout = window.setTimeout(() => {
+      reader.abort();
+      reject(new Error(`Preparing ${file.name} took too long. Please use a smaller image and try again.`));
+    }, 8000);
+    reader.addEventListener("load", () => {
+      window.clearTimeout(timeout);
+      resolve(reader.result);
+    }, { once: true });
+    reader.addEventListener("error", () => {
+      window.clearTimeout(timeout);
+      reject(reader.error || new Error(`Could not read ${file.name}.`));
+    }, { once: true });
     reader.readAsDataURL(file);
   });
 
@@ -1747,22 +1757,33 @@ async function buildAsanaSubmission(record) {
 }
 
 async function createAsanaTask(record, turnstileToken = "") {
-  const payload = {
-    ...await buildAsanaSubmission(record),
-    turnstile_token: turnstileToken,
-  };
   const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), 28000);
+  let timeout;
+  const deadline = new Promise((resolve, reject) => {
+    timeout = window.setTimeout(() => {
+      controller.abort();
+      const error = new Error("Asana is taking too long to respond. Check Asana before submitting again, as the task may already have been created.");
+      error.name = "SubmissionTimeoutError";
+      reject(error);
+    }, 28000);
+  });
   let response;
   try {
-    response = await window.authenticatedFetch("/.netlify/functions/submit-offer", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(payload),
-      signal: controller.signal,
-    });
+    const submission = (async () => {
+      const payload = {
+        ...await buildAsanaSubmission(record),
+        turnstile_token: turnstileToken,
+      };
+      return window.authenticatedFetch("/.netlify/functions/submit-offer", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+    })();
+    response = await Promise.race([submission, deadline]);
   } catch (error) {
-    if (error.name === "AbortError") {
+    if (error.name === "AbortError" || error.name === "SubmissionTimeoutError") {
       throw new Error("Asana is taking too long to respond. Check Asana before submitting again, as the task may already have been created.");
     }
     throw error;

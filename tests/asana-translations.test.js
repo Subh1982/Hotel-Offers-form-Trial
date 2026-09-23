@@ -51,7 +51,9 @@ test("submission and attachment uploads cannot leave the form waiting indefinite
   const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
   const submit = fs.readFileSync(path.join(root, "netlify/functions/submit-offer.js"), "utf8");
 
-  assert.match(app, /controller\.abort\(\), 28000/);
+  assert.match(app, /Promise\.race\(\[submission, deadline\]\)/);
+  assert.match(app, /error\.name = "SubmissionTimeoutError"/);
+  assert.match(app, /Preparing \$\{file\.name\} took too long/);
   assert.match(app, /verificationTimeout = window\.setTimeout\(fail, 15000\)/);
   assert.match(app, /task may already have been created/);
   assert.match(submit, /Promise\.all\(images\.map/);
