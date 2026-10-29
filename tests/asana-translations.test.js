@@ -86,6 +86,8 @@ test("Drive storage uses the protected Apps Script webhook without OAuth credent
   assert.doesNotMatch(drive, /GOOGLE_DRIVE_CLIENT_ID|GOOGLE_DRIVE_REFRESH_TOKEN|GOOGLE_SERVICE_ACCOUNT_JSON/);
   assert.match(script, /createFolder\('images'\)/);
   assert.match(script, /createFolder\('documents'\)/);
+  assert.match(script, /Utilities\.formatDate\(createdAt, 'UTC', 'yyyyMMdd_HHmmss'\)/);
+  assert.match(script, /replace\(\/_test\$\/i, ''\)/);
   assert.match(script, /submissionFolder\.createFile\(blob\)/);
   assert.match(script, /sheet\.appendRow/);
   assert.match(script, /WEBHOOK_SECRET/);

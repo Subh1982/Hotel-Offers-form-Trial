@@ -37,6 +37,7 @@ const copy = {
   ...(confirmationCopy[confirmationLanguage] || confirmationCopy.en),
   ...(simplifiedConfirmationCopy[confirmationLanguage] || {}),
 };
+if (confirmationLanguage === "en") copy.whatNext = "What happens next";
 document.documentElement.lang = confirmationLanguage;
 document.documentElement.dir = confirmationLanguage === "ar" ? "rtl" : "ltr";
 
@@ -50,6 +51,46 @@ if (!rawConfirmation) {
 } else {
   const confirmation = JSON.parse(rawConfirmation);
   const offerTitle = confirmation.offer_tile_title || copy.notProvided;
+  const hotelName = confirmation.hotel_name || copy.notProvided;
+  const offerTypes = {
+    red_hot_rooms: { label: "Red Hot Rooms", icon: "RHR", badge: true },
+    more_escapes: { label: "More Escapes", icon: "%", badge: true },
+    hotel_stay: { label: "Hotel stay", icon: "⌂" },
+    dining: { label: "Dining", icon: "◇" },
+    events: { label: "Events", icon: "✦" },
+    partners: { label: "Partners", icon: "∞" },
+  };
+  const offerType = offerTypes[confirmation.offer_type] || { label: confirmation.offer_type || "Offer", icon: "◇" };
   document.title = `${offerTitle} | Explorer Offers Collection`;
-  document.getElementById("confirmationTitle").textContent = confirmationLanguage === "en" ? "Offer successfully submitted" : copy.headline;
+  document.getElementById("confirmationTitle").textContent = confirmationLanguage === "en"
+    ? `Your ${offerType.label} offer is submitted`
+    : copy.headline;
+  document.getElementById("confirmationOfferTitle").textContent = offerTitle;
+  document.getElementById("confirmationHotelName").textContent = hotelName;
+  document.getElementById("confirmationOfferId").textContent = confirmation.offer_id;
+  const typeIcon = document.getElementById("confirmationOfferTypeIcon");
+  typeIcon.textContent = offerType.icon;
+  typeIcon.classList.toggle("is-badge", Boolean(offerType.badge));
+
+  const copyStatus = document.getElementById("copyOfferIdStatus");
+  document.getElementById("copyOfferIdButton").addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(confirmation.offer_id);
+      copyStatus.textContent = copy.copied;
+    } catch (error) {
+      copyStatus.textContent = copy.copyFailed;
+    }
+  });
+
+  const createAnotherLabel = document.getElementById("createAnotherOfferLabel");
+  if (confirmationLanguage === "en" && hotelName !== copy.notProvided) {
+    createAnotherLabel.textContent = `Create another offer for ${hotelName}`;
+  }
+  document.getElementById("createAnotherOfferButton").addEventListener("click", () => {
+    sessionStorage.setItem("offerHotelPrefill", JSON.stringify({
+      hotel_name: confirmation.hotel_name || "",
+      hotel_rid_code: confirmation.hotel_rid_code || "",
+      city_country: confirmation.city_country || "",
+    }));
+  });
 }

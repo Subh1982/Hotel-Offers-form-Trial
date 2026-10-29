@@ -565,7 +565,7 @@ const formCopyTranslations = {
     listingTileImageHelp: "Upload any image size. The app will auto-resize it to 400 x 250px JPG. Source file must not exceed 200 MB.",
     socialImageTitle: "Social image",
     socialImageHelp: "Upload any image size. The app will auto-resize it to 1080 x 1080px JPG. Source file must not exceed 200 MB.",
-    translationPreviewTitle: "Preview translated content",
+    translationPreviewTitle: "Translate content",
     translationSourcePrefix: "The offer content entered above is treated as",
     translationSourceSuffix: "based on the language selected in the top-right corner.",
     previewInLabel: "Preview in",
@@ -613,7 +613,7 @@ const formCopyTranslations = {
     listingTileImageHelp: "อัปโหลดภาพขนาดใดก็ได้ ระบบจะปรับเป็น JPG 400 x 250px ไฟล์ต้นฉบับต้องไม่เกิน 200 MB",
     socialImageTitle: "ภาพโซเชียล",
     socialImageHelp: "อัปโหลดภาพขนาดใดก็ได้ ระบบจะปรับเป็น JPG 1080 x 1080px ไฟล์ต้นฉบับต้องไม่เกิน 200 MB",
-    translationPreviewTitle: "ดูตัวอย่างเนื้อหาที่แปล",
+    translationPreviewTitle: "แปลเนื้อหา",
     translationSourcePrefix: "เนื้อหาข้อเสนอที่กรอกด้านบนจะถือว่าเป็นภาษา",
     translationSourceSuffix: "ตามภาษาที่เลือกที่มุมขวาบน",
     previewInLabel: "ดูตัวอย่างเป็น",
@@ -661,7 +661,7 @@ const formCopyTranslations = {
     listingTileImageHelp: "Tải lên ảnh kích thước bất kỳ. Ứng dụng sẽ tự đổi thành JPG 400 x 250px. Tệp gốc không quá 200 MB.",
     socialImageTitle: "Ảnh mạng xã hội",
     socialImageHelp: "Tải lên ảnh kích thước bất kỳ. Ứng dụng sẽ tự đổi thành JPG 1080 x 1080px. Tệp gốc không quá 200 MB.",
-    translationPreviewTitle: "Xem trước nội dung đã dịch",
+    translationPreviewTitle: "Dịch nội dung",
     translationSourcePrefix: "Nội dung ưu đãi bên trên được xem là",
     translationSourceSuffix: "dựa trên ngôn ngữ đã chọn ở góc trên bên phải.",
     previewInLabel: "Xem trước bằng",
@@ -709,7 +709,7 @@ const formCopyTranslations = {
     listingTileImageHelp: "Unggah gambar ukuran apa pun. Aplikasi akan mengubahnya menjadi JPG 400 x 250px. File sumber maks. 200 MB.",
     socialImageTitle: "Gambar sosial",
     socialImageHelp: "Unggah gambar ukuran apa pun. Aplikasi akan mengubahnya menjadi JPG 1080 x 1080px. File sumber maks. 200 MB.",
-    translationPreviewTitle: "Pratinjau konten terjemahan",
+    translationPreviewTitle: "Terjemahkan konten",
     translationSourcePrefix: "Konten penawaran yang diisi di atas dianggap sebagai",
     translationSourceSuffix: "berdasarkan bahasa yang dipilih di kanan atas.",
     previewInLabel: "Pratinjau dalam",
@@ -757,7 +757,7 @@ const formCopyTranslations = {
     listingTileImageHelp: "任意サイズの画像をアップロードできます。アプリが400 x 250px JPGに自動リサイズします。元ファイルは200 MB以下。",
     socialImageTitle: "ソーシャル画像",
     socialImageHelp: "任意サイズの画像をアップロードできます。アプリが1080 x 1080px JPGに自動リサイズします。元ファイルは200 MB以下。",
-    translationPreviewTitle: "翻訳コンテンツをプレビュー",
+    translationPreviewTitle: "コンテンツを翻訳",
     translationSourcePrefix: "上記に入力されたオファー内容は",
     translationSourceSuffix: "右上で選択された言語として扱われます。",
     previewInLabel: "プレビュー言語",
@@ -804,7 +804,7 @@ const formCopyTranslations = {
     listingTileImageHelp: "حمّل صورة بأي حجم. سيغيّر التطبيق حجمها تلقائيًا إلى JPG بمقاس 400 × 250 بكسل. يجب ألا يتجاوز الملف 200 ميغابايت.",
     socialImageTitle: "صورة وسائل التواصل",
     socialImageHelp: "حمّل صورة بأي حجم. سيغيّر التطبيق حجمها تلقائيًا إلى JPG بمقاس 1080 × 1080 بكسل. يجب ألا يتجاوز الملف 200 ميغابايت.",
-    translationPreviewTitle: "معاينة المحتوى المترجم",
+    translationPreviewTitle: "ترجمة المحتوى",
     translationSourcePrefix: "يُعامل محتوى العرض المُدخل أعلاه على أنه باللغة",
     translationSourceSuffix: "بناءً على اللغة المحددة في الزاوية العلوية.",
     previewInLabel: "المعاينة باللغة",
@@ -817,7 +817,7 @@ const formCopyTranslations = {
   tr: {
   emailLabel: "E-posta", requiredFieldsNote: "* ile işaretli alanlar zorunludur.", contactNameLabel: "Sorumlu kişinin adı", hotelRidLabel: "Otel RID kodu", hotelNameLabel: "Otel adı", offerTypeLabel: "Teklif türü", selectOne: "Birini seçin", cityCountryLabel: "Şehir - Ülke", offerTileTitleLabel: "Teklif kutucuğu başlığı", offerBannerTitleLabel: "Teklif banner başlığı", offerSubtitleLabel: "Teklif alt başlığı", metaDescriptionLabel: "Meta açıklaması", offerDescriptionLabel: "Teklif açıklaması", bookingLinkLabel: "Rezervasyon bağlantısı", bookingMethodQuestion: "Üyeler nasıl rezervasyon yapabilir?", bookingMethodLink: "Rezervasyon bağlantısı", bookingMethodEmailRsvp: "E-posta / RSVP formu ile rezervasyon", bookingEmailRsvpLabel: "Rezervasyon e-postası veya RSVP formu", bookingEmailRsvpPlaceholder: "E-posta adresini, e-posta talimatlarını veya RSVP formu URL'sini girin.", termsLabel: "Hüküm ve koşullar",
   rateScreenshotLabel: "Fiyat ekran görüntüsü", rateScreenshotHelp: "Lütfen all.com üzerinde yüklenmiş fiyatı gösterin. Görsel en fazla 1 MB.", menuPdfLabel: "Yeme-içme / etkinlik menüsü PDF", menuPdfHelp: "PDF'leri tek bir dosyada birleştirin. En fazla 10 MB.", bookingScreenshotLabel: "Son rezervasyon sayfası ekran görüntüsü", bookingScreenshotHelp: "Yeme-içme, etkinlik ve iş ortağı teklifleri için gereklidir. Görsel en fazla 1 MB.", departmentConfirmationText: "İlgili tüm otel departmanları, üyelerin rezervasyon yapabilmesi için fiyat yüklemesinin doğru kurulduğunu onaylar.", masterImageTitle: "Tüm yerleşimler için tek görsel kullanın", masterImageHelp: "Yüksek kaliteli tek bir görsel yükleyin; uygulama banner, liste kutucuğu ve sosyal medya sürümlerini oluşturur.", bannerImageTitle: "Banner görseli", bannerImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama görseli otomatik olarak 2048 x 1366px JPG'ye dönüştürür. Kaynak dosya 200 MB'ı aşmamalı; metin ve logo içermemelidir.", listingTileImageTitle: "Liste kutucuğu görseli", listingTileImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama 400 x 250px JPG'ye dönüştürür.", socialImageTitle: "Sosyal medya görseli", socialImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama 1080 x 1080px JPG'ye dönüştürür.",
-  translationPreviewTitle: "Çevrilmiş içeriği önizleyin", translationSourcePrefix: "Yukarıda girilen teklif içeriğinin dili", translationSourceSuffix: "olarak, sağ üstte seçilen dile göre kabul edilir.", previewInLabel: "Çeviri dilleri", previewTranslatedButton: "İçeriği Çevir", savePreviewButton: "Çeviriyi kaydet", translatedPreviewLabel: "Çeviri önizlemesi", translationEditHelp: "Bu isteğe bağlı taslağı inceleyebilir veya düzenleyebilirsiniz. Kutudaki metin teklifle birlikte otomatik olarak kaydedilir.", acknowledgementText: "Eksik veya hatalı gönderimlerin promosyonu geciktirebileceğini ve materyallerin 6 hafta önceden gönderilmesi gerektiğini anlıyorum.",
+  translationPreviewTitle: "İçeriği çevirin", translationSourcePrefix: "Yukarıda girilen teklif içeriğinin dili", translationSourceSuffix: "olarak, sağ üstte seçilen dile göre kabul edilir.", previewInLabel: "Çeviri dilleri", previewTranslatedButton: "İçeriği Çevir", savePreviewButton: "Çeviriyi kaydet", translatedPreviewLabel: "Çeviri önizlemesi", translationEditHelp: "Bu isteğe bağlı taslağı inceleyebilir veya düzenleyebilirsiniz. Kutudaki metin teklifle birlikte otomatik olarak kaydedilir.", acknowledgementText: "Eksik veya hatalı gönderimlerin promosyonu geciktirebileceğini ve materyallerin 6 hafta önceden gönderilmesi gerektiğini anlıyorum.",
   menuPdfHelp: "PDF'leri tek bir dosyada birleştirin. PDF 5 MB'tan küçük olmalıdır.",
   },
 };
@@ -2032,6 +2032,7 @@ form.addEventListener("submit", async (event) => {
       offer_id: result.offer_id,
       hotel_name: record.hotel_name || record.offer_details.partner_name || "Not provided",
       hotel_rid_code: record.hotel_rid_code || "Not provided",
+      city_country: record.city_country || "",
       offer_tile_title: record.offer_tile_title || "Not provided",
       offer_type: record.offer_type || "Not provided",
       email: record.email || "Not provided",
@@ -2089,3 +2090,14 @@ languageSelect.value = savedLanguage;
 applyLanguage(savedLanguage);
 renderTypeSpecificFields();
 updateBookingMethodFields();
+const savedHotelPrefill = sessionStorage.getItem("offerHotelPrefill");
+if (savedHotelPrefill) {
+  try {
+    const hotelPrefill = JSON.parse(savedHotelPrefill);
+    ["hotel_name", "hotel_rid_code", "city_country"].forEach((field) => {
+      if (form.elements[field] && hotelPrefill[field]) form.elements[field].value = hotelPrefill[field];
+    });
+  } finally {
+    sessionStorage.removeItem("offerHotelPrefill");
+  }
+}

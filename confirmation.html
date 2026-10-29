@@ -40,7 +40,7 @@
         </div>
       </div>
     </section>
-    <main id="appShell" class="shell" hidden>
+    <main id="appShell" class="shell confirmation-shell" hidden>
       <header class="masthead confirmation-masthead">
         <nav class="topbar" aria-label="Platform header">
           <img class="brand-logo" src="assets/all-accor-plus-logo.png" alt="ALL Accor Plus">
@@ -60,17 +60,30 @@
             </div>
           </div>
 
+          <div class="confirmation-identity" aria-label="Submitted offer details">
+            <span id="confirmationOfferTypeIcon" class="confirmation-offer-icon" aria-hidden="true"></span>
+            <div class="confirmation-identity-main">
+              <strong id="confirmationOfferTitle"></strong>
+              <span id="confirmationHotelName"></span>
+            </div>
+            <div class="confirmation-id-group">
+              <span data-confirmation-i18n="reference">Offer ID</span>
+              <button id="copyOfferIdButton" type="button" class="offer-id-chip"><span id="confirmationOfferId"></span><span aria-hidden="true">⧉</span></button>
+              <span id="copyOfferIdStatus" class="copy-status" role="status" aria-live="polite"></span>
+            </div>
+          </div>
+
           <section class="next-steps" aria-labelledby="nextStepsTitle">
             <h2 id="nextStepsTitle" data-confirmation-i18n="whatNext">What happens next?</h2>
             <ol class="status-tracker">
-              <li class="complete"><span aria-hidden="true">✓</span><strong data-confirmation-i18n="received">Received</strong></li>
+              <li class="complete" aria-current="step"><span aria-hidden="true">✓</span><strong data-confirmation-i18n="received">Received</strong></li>
               <li><span aria-hidden="true">2</span><strong data-confirmation-i18n="inReview">In review</strong></li>
               <li><span aria-hidden="true">3</span><strong data-confirmation-i18n="live">Live</strong></li>
             </ol>
           </section>
 
           <div class="actions confirmation-actions">
-            <a class="button-link" href="/"><span data-confirmation-i18n="createAnother">Create another offer</span><span aria-hidden="true">→</span></a>
+            <a id="createAnotherOfferButton" class="button-link" href="/"><span id="createAnotherOfferLabel" data-confirmation-i18n="createAnother">Create another offer</span><span aria-hidden="true">→</span></a>
           </div>
         </div>
       </section>

@@ -32,5 +32,16 @@ test("confirmation page keeps only the essential completion content", () => {
   assert.match(html, /Offer successfully submitted/);
   assert.match(html, /class="next-steps"/);
   assert.match(html, /data-confirmation-i18n="createAnother"/);
-  assert.doesNotMatch(html, /id="confirmationOfferId"|id="openDriveButton"|class="confirmation-details"/);
+  assert.match(html, /id="confirmationOfferId"/);
+  assert.match(html, /id="confirmationOfferTitle"/);
+  assert.match(html, /id="confirmationHotelName"/);
+  assert.match(html, /<ol class="status-tracker">/);
+  assert.match(html, /aria-current="step"/);
+  assert.doesNotMatch(html, /id="openDriveButton"|class="confirmation-details"/);
+});
+
+test("confirmation supports copying the ID and prefilling another offer", () => {
+  assert.match(source, /navigator\.clipboard\.writeText\(confirmation\.offer_id\)/);
+  assert.match(source, /sessionStorage\.setItem\("offerHotelPrefill"/);
+  assert.match(source, /Your \$\{offerType\.label\} offer is submitted/);
 });

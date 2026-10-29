@@ -25,7 +25,10 @@ function doPost(event) {
     var rootFolder = DriveApp.getFolderById(folderId);
 
     if (payload.action === 'create_submission') {
-      var folderName = (offer.offer_id || 'offer') + '_' + (offer.hotel_rid_code || 'no-rid');
+      var createdAt = offer.generated_at ? new Date(offer.generated_at) : new Date();
+      if (isNaN(createdAt.getTime())) createdAt = new Date();
+      var timestamp = Utilities.formatDate(createdAt, 'UTC', 'yyyyMMdd_HHmmss');
+      var folderName = [timestamp, offer.offer_id || 'offer', offer.hotel_rid_code || 'no-rid'].join('_').replace(/_test$/i, '');
       var submissionFolder = rootFolder.createFolder(folderName);
       var imagesFolder = submissionFolder.createFolder('images');
       var documentsFolder = submissionFolder.createFolder('documents');

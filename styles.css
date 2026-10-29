@@ -1789,6 +1789,51 @@ html[dir="rtl"] .copy-status {
   animation: confirmation-mark-in 420ms cubic-bezier(0.2, 0.85, 0.35, 1.25) both;
 }
 
+/* Confirmation page alignment and success treatment */
+.confirmation-shell { padding-top: 32px; }
+.confirmation-masthead,
+.confirmation-screen { width: 100%; max-width: 1000px; margin-inline: auto; }
+.confirmation-screen { margin-top: 24px; margin-bottom: 32px; }
+.confirmation-card { padding: 36px 40px 40px; }
+.confirmation-hero img { height: clamp(160px, 18vw, 190px); }
+.confirmation-heading { gap: 20px; align-items: center; }
+.confirmation-heading h1 { margin: 2px 0 0; font-size: clamp(30px, 4vw, 36px); }
+.confirmation-heading h1::after { display: none; }
+.success-mark {
+  width: 56px;
+  height: 56px;
+  border-color: var(--teal);
+  background: rgba(39, 102, 110, 0.1);
+  color: var(--teal);
+}
+.confirmation-identity {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  margin: 28px 0;
+  padding: 16px 18px;
+  border: 1px solid rgba(212, 2, 77, 0.28);
+  background: #fff4f8;
+}
+.confirmation-offer-icon { width: 48px; height: 48px; border-color: var(--offer); color: var(--offer); font-size: 26px; }
+.confirmation-identity-main { display: grid; gap: 4px; min-width: 0; }
+.confirmation-identity-main strong { color: var(--accent); font-size: 17px; overflow-wrap: anywhere; }
+.confirmation-identity-main span { color: var(--muted); font-size: 14px; }
+.confirmation-id-group { display: grid; justify-items: end; gap: 4px; }
+.confirmation-id-group > span:first-child { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.offer-id-chip { display: inline-flex; gap: 8px; align-items: center; min-height: 36px; padding: 7px 11px; border: 1px solid var(--offer); background: var(--surface); color: var(--offer); font-size: 13px; font-weight: 700; }
+.offer-id-chip:hover,
+.offer-id-chip:focus-visible { background: var(--offer); color: var(--surface); }
+.confirmation-id-group .copy-status { grid-column: auto; min-height: 14px; }
+.next-steps { margin-bottom: 24px; padding: 24px 26px; }
+.next-steps h2 { margin: 0 0 22px; font-size: 22px; }
+.status-tracker { gap: 28px; }
+.status-tracker li { justify-items: start; text-align: start; }
+.status-tracker li:not(:last-child)::after { inset-inline-start: 34px; left: auto; width: calc(100% + 28px - 34px); }
+.confirmation-actions { justify-content: flex-start; margin-top: 0; }
+html[dir="rtl"] .confirmation-id-group { justify-items: start; }
+
 .confirmation-ticket-reveal {
   animation: confirmation-ticket-in 520ms 140ms ease-out both;
 }
@@ -1828,6 +1873,11 @@ html[dir="rtl"] .copy-status {
   .confirmation-heading h1 {
     font-size: 30px;
   }
+
+  .confirmation-identity { grid-template-columns: auto 1fr; }
+  .confirmation-id-group { grid-column: 1 / -1; justify-items: start; }
+  .status-tracker { gap: 12px; }
+  .status-tracker li:not(:last-child)::after { width: calc(100% + 12px - 34px); }
 
   .offer-ticket {
     grid-template-columns: 1fr;

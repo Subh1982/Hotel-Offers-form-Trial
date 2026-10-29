@@ -33,6 +33,8 @@ test("translation drafts are saved automatically without a save button", () => {
   assert.match(app, /textarea\.addEventListener\("input", \(\) => persistTranslationPreview/);
   assert.match(html, /id="translationTargetLanguage" multiple/);
   assert.match(html, />Translate Content</);
+  assert.match(html, /data-i18n="translationPreviewTitle">Translate content</);
+  assert.doesNotMatch(html, /data-i18n="translationPreviewTitle">Preview/);
   assert.match(app, /auto_translations: generatedContentTranslations/);
 });
 
