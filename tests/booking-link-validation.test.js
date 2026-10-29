@@ -24,3 +24,23 @@ test("Turkish is available for both the interface and translations", () => {
   assert.match(app, /tr: "Turkish"/);
   assert.match(app, /const formCopyTranslations = [\s\S]*\n  tr: \{/);
 });
+
+test("translation drafts are saved automatically without a save button", () => {
+  const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+  const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
+  assert.doesNotMatch(html, /saveTranslationPreviewButton/);
+  assert.doesNotMatch(app, /saveTranslationPreviewButton/);
+  assert.match(app, /translationPreview\.addEventListener\("input"/);
+  assert.match(app, /function buildSubmissionRecord\(\) \{\s*persistTranslationPreview\(activeTranslationTarget\)/);
+  assert.match(app, /auto_translations: generatedContentTranslations/);
+});
+
+test("booking validation dialog uses branded status and spacing styles", () => {
+  const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+  const css = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
+  assert.match(html, /class="dialog-content booking-validation-dialog"/);
+  assert.match(html, /class="booking-dialog-status-icon"/);
+  assert.match(css, /\.booking-validation-dialog/);
+  assert.match(css, /dialog\[data-status="warning"\]/);
+  assert.match(css, /background: linear-gradient\(145deg/);
+});

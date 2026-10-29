@@ -29,7 +29,6 @@ const offerTypeTiles = Array.from(document.querySelectorAll("[data-offer-type]")
 const translationSourceDisplay = document.querySelector("#translationSourceDisplay");
 const translationTargetLanguage = document.querySelector("#translationTargetLanguage");
 const translateContentButton = document.querySelector("#translateContentButton");
-const saveTranslationPreviewButton = document.querySelector("#saveTranslationPreviewButton");
 const translationPreview = document.querySelector("#translationPreview");
 const translationStatus = document.querySelector("#translationStatus");
 const translationPreviewPanel = document.querySelector("#translationPreviewPanel");
@@ -50,6 +49,7 @@ let resizedListingTileFile = null;
 let resizedSocialFile = null;
 let generatedContentTranslations = {};
 let activeTurnstileWidgetId = null;
+let activeTranslationTarget = translationTargetLanguage.value;
 
 const maxImageUploadSize = 200 * 1024 * 1024;
 
@@ -571,7 +571,7 @@ const formCopyTranslations = {
     previewTranslatedButton: "Preview translated content",
     savePreviewButton: "Save translation",
     translatedPreviewLabel: "Translated preview",
-    translationEditHelp: "Review and edit this draft before saving it with the offer.",
+    translationEditHelp: "Review or edit this optional draft. Any text in this box is included automatically with the offer.",
     acknowledgementText: "I understand incomplete or inaccurate submissions may delay promotion, and assets are due 6 weeks in advance.",
   },
   th: {
@@ -619,7 +619,7 @@ const formCopyTranslations = {
     previewTranslatedButton: "ดูตัวอย่างคำแปล",
     savePreviewButton: "บันทึกตัวอย่างลงแพ็กเกจ",
     translatedPreviewLabel: "ตัวอย่างคำแปล",
-    translationEditHelp: "ตรวจทานและแก้ไขฉบับร่างนี้ก่อนบันทึกไปพร้อมกับข้อเสนอ",
+    translationEditHelp: "ตรวจทานหรือแก้ไขฉบับร่างที่ไม่บังคับนี้ ข้อความในช่องนี้จะรวมไปกับข้อเสนอโดยอัตโนมัติ",
     acknowledgementText: "ฉันเข้าใจว่าการส่งข้อมูลที่ไม่ครบถ้วนหรือไม่ถูกต้องอาจทำให้การโปรโมตล่าช้า และต้องส่งไฟล์ล่วงหน้า 6 สัปดาห์",
   },
   vi: {
@@ -667,7 +667,7 @@ const formCopyTranslations = {
     previewTranslatedButton: "Xem trước bản dịch",
     savePreviewButton: "Lưu bản xem trước vào gói",
     translatedPreviewLabel: "Bản dịch xem trước",
-    translationEditHelp: "Xem lại và chỉnh sửa bản nháp này trước khi lưu cùng ưu đãi.",
+    translationEditHelp: "Xem lại hoặc chỉnh sửa bản nháp không bắt buộc này. Nội dung trong ô sẽ tự động được gửi cùng ưu đãi.",
     acknowledgementText: "Tôi hiểu rằng nội dung gửi không đầy đủ hoặc không chính xác có thể làm chậm chương trình khuyến mãi, và tài sản cần gửi trước 6 tuần.",
   },
   id: {
@@ -715,7 +715,7 @@ const formCopyTranslations = {
     previewTranslatedButton: "Pratinjau terjemahan",
     savePreviewButton: "Simpan pratinjau ke paket",
     translatedPreviewLabel: "Pratinjau terjemahan",
-    translationEditHelp: "Tinjau dan edit draf ini sebelum menyimpannya bersama penawaran.",
+    translationEditHelp: "Tinjau atau edit draf opsional ini. Teks dalam kotak akan otomatis disertakan bersama penawaran.",
     acknowledgementText: "Saya memahami bahwa pengiriman yang tidak lengkap atau tidak akurat dapat menunda promosi, dan aset harus dikirim 6 minggu sebelumnya.",
   },
   ja: {
@@ -763,7 +763,7 @@ const formCopyTranslations = {
     previewTranslatedButton: "翻訳をプレビュー",
     savePreviewButton: "プレビューをパッケージに保存",
     translatedPreviewLabel: "翻訳プレビュー",
-    translationEditHelp: "オファーと一緒に保存する前に、この下書きを確認・編集してください。",
+    translationEditHelp: "この任意の下書きを確認・編集できます。ボックス内のテキストはオファーと一緒に自動保存されます。",
     acknowledgementText: "不完全または不正確な提出はプロモーションの遅延につながる可能性があり、素材は6週間前までに提出する必要があることを理解しています。",
   },
   ar: {
@@ -810,13 +810,13 @@ const formCopyTranslations = {
     previewTranslatedButton: "معاينة المحتوى المترجم",
     savePreviewButton: "حفظ المعاينة في الحزمة",
     translatedPreviewLabel: "معاينة الترجمة",
-    translationEditHelp: "راجع هذه المسودة وعدّلها قبل حفظها مع العرض.",
+    translationEditHelp: "راجع هذه المسودة الاختيارية أو عدّلها. سيُرفق أي نص في هذا المربع تلقائيًا مع العرض.",
     acknowledgementText: "أقر بأن الإرسالات غير المكتملة أو غير الدقيقة قد تؤخر الترويج، وأن المواد مطلوبة قبل 6 أسابيع.",
   },
   tr: {
   emailLabel: "E-posta", requiredFieldsNote: "* ile işaretli alanlar zorunludur.", contactNameLabel: "Sorumlu kişinin adı", hotelRidLabel: "Otel RID kodu", hotelNameLabel: "Otel adı", offerTypeLabel: "Teklif türü", selectOne: "Birini seçin", cityCountryLabel: "Şehir - Ülke", offerTileTitleLabel: "Teklif kutucuğu başlığı", offerBannerTitleLabel: "Teklif banner başlığı", offerSubtitleLabel: "Teklif alt başlığı", metaDescriptionLabel: "Meta açıklaması", offerDescriptionLabel: "Teklif açıklaması", bookingLinkLabel: "Rezervasyon bağlantısı", bookingMethodQuestion: "Üyeler nasıl rezervasyon yapabilir?", bookingMethodLink: "Rezervasyon bağlantısı", bookingMethodEmailRsvp: "E-posta / RSVP formu ile rezervasyon", bookingEmailRsvpLabel: "Rezervasyon e-postası veya RSVP formu", bookingEmailRsvpPlaceholder: "E-posta adresini, e-posta talimatlarını veya RSVP formu URL'sini girin.", termsLabel: "Hüküm ve koşullar",
   rateScreenshotLabel: "Fiyat ekran görüntüsü", rateScreenshotHelp: "Lütfen all.com üzerinde yüklenmiş fiyatı gösterin. Görsel en fazla 1 MB.", menuPdfLabel: "Yeme-içme / etkinlik menüsü PDF", menuPdfHelp: "PDF'leri tek bir dosyada birleştirin. En fazla 10 MB.", bookingScreenshotLabel: "Son rezervasyon sayfası ekran görüntüsü", bookingScreenshotHelp: "Yeme-içme, etkinlik ve iş ortağı teklifleri için gereklidir. Görsel en fazla 1 MB.", departmentConfirmationText: "İlgili tüm otel departmanları, üyelerin rezervasyon yapabilmesi için fiyat yüklemesinin doğru kurulduğunu onaylar.", masterImageTitle: "Tüm yerleşimler için tek görsel kullanın", masterImageHelp: "Yüksek kaliteli tek bir görsel yükleyin; uygulama banner, liste kutucuğu ve sosyal medya sürümlerini oluşturur.", bannerImageTitle: "Banner görseli", bannerImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama görseli otomatik olarak 2048 x 1366px JPG'ye dönüştürür. Kaynak dosya 200 MB'ı aşmamalı; metin ve logo içermemelidir.", listingTileImageTitle: "Liste kutucuğu görseli", listingTileImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama 400 x 250px JPG'ye dönüştürür.", socialImageTitle: "Sosyal medya görseli", socialImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama 1080 x 1080px JPG'ye dönüştürür.",
-  translationPreviewTitle: "Çevrilmiş içeriği önizleyin", translationSourcePrefix: "Yukarıda girilen teklif içeriğinin dili", translationSourceSuffix: "olarak, sağ üstte seçilen dile göre kabul edilir.", previewInLabel: "Önizleme dili", previewTranslatedButton: "Çeviriyi önizle", savePreviewButton: "Çeviriyi kaydet", translatedPreviewLabel: "Çeviri önizlemesi", translationEditHelp: "Teklifle birlikte kaydetmeden önce bu taslağı inceleyip düzenleyin.", acknowledgementText: "Eksik veya hatalı gönderimlerin promosyonu geciktirebileceğini ve materyallerin 6 hafta önceden gönderilmesi gerektiğini anlıyorum.",
+  translationPreviewTitle: "Çevrilmiş içeriği önizleyin", translationSourcePrefix: "Yukarıda girilen teklif içeriğinin dili", translationSourceSuffix: "olarak, sağ üstte seçilen dile göre kabul edilir.", previewInLabel: "Önizleme dili", previewTranslatedButton: "Çeviriyi önizle", savePreviewButton: "Çeviriyi kaydet", translatedPreviewLabel: "Çeviri önizlemesi", translationEditHelp: "Bu isteğe bağlı taslağı inceleyebilir veya düzenleyebilirsiniz. Kutudaki metin teklifle birlikte otomatik olarak kaydedilir.", acknowledgementText: "Eksik veya hatalı gönderimlerin promosyonu geciktirebileceğini ve materyallerin 6 hafta önceden gönderilmesi gerektiğini anlıyorum.",
   },
 };
 
@@ -847,6 +847,12 @@ function applyLanguage(language) {
   if (heroText) heroText.textContent = copy.heroText || uiTranslations.en.heroText;
   translationSourceDisplay.textContent = labels[language] || contentLanguageLabels[language] || contentLanguageLabels.en;
   updateTranslationTargetOptions(language);
+  if (activeTranslationTarget !== translationTargetLanguage.value) {
+    persistTranslationPreview(activeTranslationTarget);
+    activeTranslationTarget = translationTargetLanguage.value;
+    translationPreview.value = generatedContentTranslations[activeTranslationTarget]?.text || "";
+    translationPreviewPanel.classList.toggle("is-hidden", !translationPreview.value);
+  }
   localStorage.setItem("explorer-offer-language", language);
 }
 
@@ -1488,22 +1494,23 @@ translateContentButton.addEventListener("click", async () => {
   try {
     translationPreview.value = await translateText(content, sourceLanguage, targetLanguage);
     translationPreviewPanel.classList.remove("is-hidden");
-    setTranslationStatus(`Draft ${contentLanguageLabels[targetLanguage]} translation generated. Review or edit it, then save the translation.`);
+    persistTranslationPreview(targetLanguage);
+    setTranslationStatus(`Draft ${contentLanguageLabels[targetLanguage]} translation generated. It will be included automatically unless you clear it.`);
   } catch (error) {
-    setTranslationStatus(`${error.message} You can still paste a translation into the preview and save it with the offer.`);
+    translationPreviewPanel.classList.remove("is-hidden");
+    setTranslationStatus(`${error.message} You can still paste an optional translation into the preview; it will be included automatically.`);
   } finally {
     translateContentButton.disabled = false;
     translateContentButton.textContent = (uiTranslations[languageSelect.value] || uiTranslations.en).previewTranslatedButton;
   }
 });
 
-saveTranslationPreviewButton.addEventListener("click", () => {
+function persistTranslationPreview(targetLanguage = activeTranslationTarget) {
   const sourceLanguage = languageSelect.value;
-  const targetLanguage = translationTargetLanguage.value;
   const text = translationPreview.value.trim();
 
   if (!text) {
-    setTranslationStatus("Add or generate preview text before saving the translation.");
+    delete generatedContentTranslations[targetLanguage];
     return;
   }
 
@@ -1516,7 +1523,15 @@ saveTranslationPreviewButton.addEventListener("click", () => {
     saved_at: new Date().toISOString(),
     text,
   };
-  setTranslationStatus(`${contentLanguageLabels[targetLanguage]} translation saved. It will be included in the Asana task.`);
+}
+
+translationPreview.addEventListener("input", () => {
+  persistTranslationPreview();
+  setTranslationStatus(
+    translationPreview.value.trim()
+      ? `${contentLanguageLabels[activeTranslationTarget]} translation will be included automatically.`
+      : "Translation cleared. Translations are optional.",
+  );
 });
 
 offerType.addEventListener("change", () => {
@@ -1543,8 +1558,10 @@ languageSelect.addEventListener("change", () => {
 });
 
 translationTargetLanguage.addEventListener("change", () => {
-  translationPreview.value = "";
-  translationPreviewPanel.classList.add("is-hidden");
+  persistTranslationPreview(activeTranslationTarget);
+  activeTranslationTarget = translationTargetLanguage.value;
+  translationPreview.value = generatedContentTranslations[activeTranslationTarget]?.text || "";
+  translationPreviewPanel.classList.toggle("is-hidden", !translationPreview.value);
   setTranslationStatus("");
 });
 
@@ -1676,6 +1693,7 @@ function setTranslationStatus(message, type = "") {
 }
 
 function buildSubmissionRecord() {
+  persistTranslationPreview(activeTranslationTarget);
   return {
     id: null,
     offer_id: "",
@@ -2032,6 +2050,7 @@ form.addEventListener("reset", () => {
     socialMessage.textContent = "";
     document.querySelectorAll('input[type="file"]').forEach((input) => updateFileName(input));
     generatedContentTranslations = {};
+    activeTranslationTarget = translationTargetLanguage.value;
     form.querySelector('button[type="submit"]').textContent = (uiTranslations[languageSelect.value] || uiTranslations.en).submitButton;
     translationPreview.value = "";
     translationPreviewPanel.classList.add("is-hidden");

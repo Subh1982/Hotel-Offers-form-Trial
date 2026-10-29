@@ -274,12 +274,9 @@
             <p id="translationStatus" class="muted" aria-live="polite"></p>
             <div id="translationPreviewPanel" class="translation-preview-panel is-hidden">
               <label><span data-i18n="translatedPreviewLabel">Translated preview</span>
-                <textarea id="translationPreview" rows="10" placeholder="The translated preview will appear here. You can edit it before saving."></textarea>
+                <textarea id="translationPreview" rows="10" placeholder="The translated preview will appear here. Any text in this box is included automatically with the offer."></textarea>
               </label>
-              <p class="muted translation-edit-help" data-i18n="translationEditHelp">Review and edit this draft before saving it with the offer.</p>
-              <div class="actions compact-actions">
-                <button type="button" id="saveTranslationPreviewButton" data-i18n="savePreviewButton">Save translation</button>
-              </div>
+              <p class="muted translation-edit-help" data-i18n="translationEditHelp">Review or edit this optional draft. Any text in this box is included automatically with the offer.</p>
             </div>
           </section>
 
@@ -303,11 +300,14 @@
     </main>
 
     <dialog id="bookingDialog">
-      <form method="dialog" class="dialog-content">
-        <h2 id="bookingDialogTitle">Booking link validation</h2>
-        <p id="bookingDialogText">The booking link has been checked.</p>
-        <a id="bookingPreview" href="#" target="_blank" rel="noreferrer"></a>
-        <div class="actions">
+      <form method="dialog" class="dialog-content booking-validation-dialog">
+        <div class="booking-dialog-status-icon" aria-hidden="true"></div>
+        <div class="booking-dialog-copy">
+          <h2 id="bookingDialogTitle">Booking link validation</h2>
+          <p id="bookingDialogText">The booking link has been checked.</p>
+        </div>
+        <a id="bookingPreview" class="booking-dialog-link" href="#" target="_blank" rel="noreferrer"></a>
+        <div class="actions booking-dialog-actions">
           <button value="cancel" class="secondary" data-i18n="goBackButton">Go back</button>
           <button value="confirm" data-i18n="continueButton">Continue</button>
         </div>
