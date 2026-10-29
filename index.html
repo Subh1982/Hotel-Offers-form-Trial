@@ -201,7 +201,7 @@
                 <label class="file-action"><input name="rate_screenshot" type="file" accept="image/png,image/jpeg,image/webp"><span class="file-button">Choose image</span><small data-file-name-for="rate_screenshot">No file selected</small></label>
               </div>
               <div id="menuPdfCard" class="file-card upload-row conditional-dining is-hidden">
-                <div class="upload-copy"><strong data-i18n="menuPdfLabel">Dining / event menu PDF</strong><span data-i18n="menuPdfHelp">Please merge PDFs into one file. Max 10 MB.</span></div>
+                <div class="upload-copy"><strong data-i18n="menuPdfLabel">Dining / event menu PDF</strong><span data-i18n="menuPdfHelp">Please merge PDFs into one file. PDF must be less than 5 MB.</span><span id="menuPdfMessage" class="file-validation-message" role="alert"></span></div>
                 <label class="file-action"><input name="menu_pdf" type="file" accept="application/pdf"><span class="file-button">Choose PDF</span><small data-file-name-for="menu_pdf">No file selected</small></label>
               </div>
               <div id="bookingScreenshotCard" class="file-card upload-row conditional-booking-proof is-hidden">
@@ -260,7 +260,7 @@
             <p class="muted"><span data-i18n="translationSourcePrefix">The offer content entered above is treated as</span> <strong id="translationSourceDisplay">English</strong>, <span data-i18n="translationSourceSuffix">based on the language selected in the top-right corner.</span></p>
             <div class="translation-controls">
               <label><span data-i18n="previewInLabel">Preview in</span>
-                <select id="translationTargetLanguage">
+                <select id="translationTargetLanguage" multiple size="6" aria-describedby="translationSelectionHelp">
                   <option value="th">Thai</option>
                   <option value="vi">Vietnamese</option>
                   <option value="id">Bahasa Indonesia</option>
@@ -269,15 +269,11 @@
                   <option value="ar">Arabic</option>
                 </select>
               </label>
-              <button type="button" id="translateContentButton" class="ai-action" data-i18n="previewTranslatedButton">Preview translated content</button>
+              <button type="button" id="translateContentButton" class="ai-action" data-i18n="previewTranslatedButton">Translate Content</button>
             </div>
+            <p id="translationSelectionHelp" class="muted">Select one or more languages. Use Ctrl/Command-click to select multiple options.</p>
             <p id="translationStatus" class="muted" aria-live="polite"></p>
-            <div id="translationPreviewPanel" class="translation-preview-panel is-hidden">
-              <label><span data-i18n="translatedPreviewLabel">Translated preview</span>
-                <textarea id="translationPreview" rows="10" placeholder="The translated preview will appear here. Any text in this box is included automatically with the offer."></textarea>
-              </label>
-              <p class="muted translation-edit-help" data-i18n="translationEditHelp">Review or edit this optional draft. Any text in this box is included automatically with the offer.</p>
-            </div>
+            <div id="translationPreviewList" class="translation-preview-list"></div>
           </section>
 
           <section class="form-section">
@@ -289,6 +285,10 @@
           </section>
 
           <div id="formMessage" class="form-message" role="status"></div>
+          <div id="submissionProgress" class="submission-progress is-hidden" role="status" aria-live="polite">
+            <span class="submission-spinner" aria-hidden="true"></span>
+            <div><strong id="submissionProgressText">Submitting your offer…</strong><div class="submission-progress-track"><span id="submissionProgressBar"></span></div><small>Please keep this page open while files are saved.</small></div>
+          </div>
           <div id="turnstileContainer" class="turnstile-container" aria-live="polite"></div>
           <div class="actions">
             <button type="reset" class="tertiary" data-i18n="clearButton">Clear</button>

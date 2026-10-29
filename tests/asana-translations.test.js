@@ -47,19 +47,16 @@ test("legacy persistence services are absent", () => {
   assert.equal(fs.existsSync(path.join(root, "netlify/functions/email-package.js")), false);
 });
 
-test("submission cannot leave the form waiting indefinitely and Asana defaults to disabled", () => {
+test("submission shows staged progress and Asana defaults to disabled", () => {
   const root = path.join(__dirname, "..");
   const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
   const submit = fs.readFileSync(path.join(root, "netlify/functions/submit-offer.js"), "utf8");
 
-  assert.match(app, /Promise\.race\(\[submission, deadline\]\)/);
-  assert.match(app, /error\.name = "SubmissionTimeoutError"/);
   assert.match(app, /verificationTimeout = window\.setTimeout\(fail, 15000\)/);
-  assert.match(app, /ZIP may already have been uploaded/);
-  assert.match(app, /Creating ZIP and saving to Google Drive/);
-  assert.match(submit, /ENABLE_ASANA_TASK_CREATION/);
-  assert.match(submit, /uploadOfferArchive\(offer\)/);
-  assert.match(submit, /return json\(200, \{ ok: true, offer_id: offer\.offer_id, drive, asana \}\)/);
+  assert.match(app, /updateSubmissionProgress/);
+  assert.match(app, /action: "finalize_submission"/);
+  assert.match(submit, /disabled: true/);
+  assert.match(submit, /uploadOfferArchive\(offer, submission\.folder_id\)/);
 });
 
 test("Drive ZIP uses the required date, offer type, and RID filename", () => {
@@ -87,7 +84,9 @@ test("Drive storage uses the protected Apps Script webhook without OAuth credent
   assert.match(drive, /GOOGLE_APPS_SCRIPT_WEBHOOK_URL/);
   assert.match(drive, /GOOGLE_APPS_SCRIPT_SECRET/);
   assert.doesNotMatch(drive, /GOOGLE_DRIVE_CLIENT_ID|GOOGLE_DRIVE_REFRESH_TOKEN|GOOGLE_SERVICE_ACCOUNT_JSON/);
-  assert.match(script, /DriveApp\.getFolderById\(folderId\)\.createFile\(blob\)/);
+  assert.match(script, /createFolder\('images'\)/);
+  assert.match(script, /createFolder\('documents'\)/);
+  assert.match(script, /submissionFolder\.createFile\(blob\)/);
   assert.match(script, /sheet\.appendRow/);
   assert.match(script, /WEBHOOK_SECRET/);
 });

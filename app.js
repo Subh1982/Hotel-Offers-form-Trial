@@ -29,9 +29,8 @@ const offerTypeTiles = Array.from(document.querySelectorAll("[data-offer-type]")
 const translationSourceDisplay = document.querySelector("#translationSourceDisplay");
 const translationTargetLanguage = document.querySelector("#translationTargetLanguage");
 const translateContentButton = document.querySelector("#translateContentButton");
-const translationPreview = document.querySelector("#translationPreview");
+const translationPreviewList = document.querySelector("#translationPreviewList");
 const translationStatus = document.querySelector("#translationStatus");
-const translationPreviewPanel = document.querySelector("#translationPreviewPanel");
 const offerDescription = document.querySelector("#offerDescription");
 const alignBrandToneButton = document.querySelector("#alignBrandToneButton");
 const brandToneStatus = document.querySelector("#brandToneStatus");
@@ -40,6 +39,10 @@ const bookingLinkFields = document.querySelector("#bookingLinkFields");
 const bookingEmailFields = document.querySelector("#bookingEmailFields");
 const rateScreenshotCard = document.querySelector("#rateScreenshotCard");
 const menuPdfCard = document.querySelector("#menuPdfCard");
+const menuPdfMessage = document.querySelector("#menuPdfMessage");
+const submissionProgress = document.querySelector("#submissionProgress");
+const submissionProgressText = document.querySelector("#submissionProgressText");
+const submissionProgressBar = document.querySelector("#submissionProgressBar");
 const bookingScreenshotCard = document.querySelector("#bookingScreenshotCard");
 
 const TURNSTILE_SITE_KEY = "0x4AAAAAAEx2NTrp7G-EkGjO";
@@ -49,9 +52,9 @@ let resizedListingTileFile = null;
 let resizedSocialFile = null;
 let generatedContentTranslations = {};
 let activeTurnstileWidgetId = null;
-let activeTranslationTarget = translationTargetLanguage.value;
 
 const maxImageUploadSize = 200 * 1024 * 1024;
+const maxPdfUploadSize = 5 * 1024 * 1024;
 
 const uploadRequirementsByOfferType = {
   red_hot_rooms: { rateScreenshot: true, menuPdf: false, bookingScreenshot: false },
@@ -83,7 +86,7 @@ const localizedLanguageLabels = {
 };
 
 function updateTranslationTargetOptions(sourceLanguage) {
-  const currentTarget = translationTargetLanguage.value;
+  const currentTargets = new Set(Array.from(translationTargetLanguage.selectedOptions).map((option) => option.value));
   const pageLanguage = languageSelect.value || "en";
   const labels = localizedLanguageLabels[pageLanguage] || localizedLanguageLabels.en;
   translationTargetLanguage.innerHTML = "";
@@ -93,12 +96,10 @@ function updateTranslationTargetOptions(sourceLanguage) {
     const option = document.createElement("option");
     option.value = code;
     option.textContent = labels[code] || contentLanguageLabels[code];
+    option.selected = currentTargets.has(code);
     translationTargetLanguage.append(option);
   });
-
-  if (currentTarget && currentTarget !== sourceLanguage) {
-    translationTargetLanguage.value = currentTarget;
-  }
+  if (!translationTargetLanguage.selectedOptions.length && translationTargetLanguage.options.length) translationTargetLanguage.options[0].selected = true;
 }
 
 const uiTranslations = {
@@ -552,7 +553,7 @@ const formCopyTranslations = {
     rateScreenshotLabel: "Rate screenshot",
     rateScreenshotHelp: "Please show the loaded rate available at all.com. Max 1 MB image.",
     menuPdfLabel: "Dining / event menu PDF",
-    menuPdfHelp: "Please merge PDFs into one file. Max 10 MB.",
+    menuPdfHelp: "Please merge PDFs into one file. PDF must be less than 5 MB.",
     bookingScreenshotLabel: "Final booking page screenshot",
     bookingScreenshotHelp: "Required for dining, event, and partner offers. Max 1 MB image.",
     departmentConfirmationText: "All relevant hotel departments can confirm the rate loading is set up correctly for members to book.",
@@ -568,7 +569,7 @@ const formCopyTranslations = {
     translationSourcePrefix: "The offer content entered above is treated as",
     translationSourceSuffix: "based on the language selected in the top-right corner.",
     previewInLabel: "Preview in",
-    previewTranslatedButton: "Preview translated content",
+    previewTranslatedButton: "Translate Content",
     savePreviewButton: "Save translation",
     translatedPreviewLabel: "Translated preview",
     translationEditHelp: "Review or edit this optional draft. Any text in this box is included automatically with the offer.",
@@ -600,7 +601,7 @@ const formCopyTranslations = {
     rateScreenshotLabel: "ภาพหน้าจอราคา",
     rateScreenshotHelp: "โปรดแสดงราคาที่โหลดไว้บน all.com ขนาดภาพสูงสุด 1 MB",
     menuPdfLabel: "เมนู PDF สำหรับห้องอาหาร / อีเวนต์",
-    menuPdfHelp: "โปรดรวมไฟล์ PDF เป็นไฟล์เดียว ขนาดสูงสุด 10 MB",
+    menuPdfHelp: "โปรดรวมไฟล์ PDF เป็นไฟล์เดียว และต้องมีขนาดน้อยกว่า 5 MB",
     bookingScreenshotLabel: "ภาพหน้าจอหน้าจองสุดท้าย",
     bookingScreenshotHelp: "จำเป็นสำหรับข้อเสนอห้องอาหาร อีเวนต์ และพาร์ทเนอร์ ขนาดภาพสูงสุด 1 MB",
     departmentConfirmationText: "ทุกแผนกที่เกี่ยวข้องของโรงแรมยืนยันได้ว่าการโหลดราคาได้รับการตั้งค่าอย่างถูกต้องเพื่อให้สมาชิกจองได้",
@@ -648,7 +649,7 @@ const formCopyTranslations = {
     rateScreenshotLabel: "Ảnh chụp màn hình giá",
     rateScreenshotHelp: "Vui lòng hiển thị mức giá đã được tải trên all.com. Ảnh tối đa 1 MB.",
     menuPdfLabel: "PDF menu ẩm thực / sự kiện",
-    menuPdfHelp: "Vui lòng gộp các PDF thành một tệp. Tối đa 10 MB.",
+    menuPdfHelp: "Vui lòng gộp các PDF thành một tệp. PDF phải nhỏ hơn 5 MB.",
     bookingScreenshotLabel: "Ảnh chụp trang đặt chỗ cuối cùng",
     bookingScreenshotHelp: "Bắt buộc đối với ưu đãi ẩm thực, sự kiện và đối tác. Ảnh tối đa 1 MB.",
     departmentConfirmationText: "Tất cả bộ phận liên quan của khách sạn xác nhận việc tải giá đã được thiết lập đúng để thành viên đặt chỗ.",
@@ -696,7 +697,7 @@ const formCopyTranslations = {
     rateScreenshotLabel: "Screenshot tarif",
     rateScreenshotHelp: "Tampilkan tarif yang sudah dimuat di all.com. Gambar maks. 1 MB.",
     menuPdfLabel: "PDF menu dining / event",
-    menuPdfHelp: "Gabungkan PDF menjadi satu file. Maks. 10 MB.",
+    menuPdfHelp: "Gabungkan PDF menjadi satu file. PDF harus kurang dari 5 MB.",
     bookingScreenshotLabel: "Screenshot halaman pemesanan akhir",
     bookingScreenshotHelp: "Wajib untuk penawaran dining, event, dan partner. Gambar maks. 1 MB.",
     departmentConfirmationText: "Semua departemen hotel terkait dapat mengonfirmasi bahwa pemuatan tarif sudah benar agar anggota dapat memesan.",
@@ -744,7 +745,7 @@ const formCopyTranslations = {
     rateScreenshotLabel: "料金スクリーンショット",
     rateScreenshotHelp: "all.comで読み込まれた料金を表示してください。画像は最大1 MBです。",
     menuPdfLabel: "ダイニング / イベント メニューPDF",
-    menuPdfHelp: "PDFは1つのファイルにまとめてください。最大10 MBです。",
+    menuPdfHelp: "PDFは1つのファイルにまとめ、5 MB未満にしてください。",
     bookingScreenshotLabel: "最終予約ページのスクリーンショット",
     bookingScreenshotHelp: "ダイニング、イベント、パートナーオファーでは必須です。画像は最大1 MBです。",
     departmentConfirmationText: "関連するホテル部門は、会員が予約できるよう料金ロードが正しく設定されていることを確認できます。",
@@ -792,7 +793,7 @@ const formCopyTranslations = {
     rateScreenshotLabel: "لقطة شاشة للسعر",
     rateScreenshotHelp: "يرجى إظهار السعر المحمّل والمتاح على all.com. الحد الأقصى للصورة 1 ميغابايت.",
     menuPdfLabel: "قائمة المطعم / الفعالية بصيغة PDF",
-    menuPdfHelp: "يرجى دمج ملفات PDF في ملف واحد. الحد الأقصى 10 ميغابايت.",
+    menuPdfHelp: "يرجى دمج ملفات PDF في ملف واحد ويجب أن يكون حجمه أقل من 5 ميغابايت.",
     bookingScreenshotLabel: "لقطة شاشة لصفحة الحجز النهائية",
     bookingScreenshotHelp: "مطلوبة لعروض المطاعم والفعاليات والشركاء. الحد الأقصى للصورة 1 ميغابايت.",
     masterImageTitle: "استخدم صورة واحدة لجميع المواضع",
@@ -816,7 +817,8 @@ const formCopyTranslations = {
   tr: {
   emailLabel: "E-posta", requiredFieldsNote: "* ile işaretli alanlar zorunludur.", contactNameLabel: "Sorumlu kişinin adı", hotelRidLabel: "Otel RID kodu", hotelNameLabel: "Otel adı", offerTypeLabel: "Teklif türü", selectOne: "Birini seçin", cityCountryLabel: "Şehir - Ülke", offerTileTitleLabel: "Teklif kutucuğu başlığı", offerBannerTitleLabel: "Teklif banner başlığı", offerSubtitleLabel: "Teklif alt başlığı", metaDescriptionLabel: "Meta açıklaması", offerDescriptionLabel: "Teklif açıklaması", bookingLinkLabel: "Rezervasyon bağlantısı", bookingMethodQuestion: "Üyeler nasıl rezervasyon yapabilir?", bookingMethodLink: "Rezervasyon bağlantısı", bookingMethodEmailRsvp: "E-posta / RSVP formu ile rezervasyon", bookingEmailRsvpLabel: "Rezervasyon e-postası veya RSVP formu", bookingEmailRsvpPlaceholder: "E-posta adresini, e-posta talimatlarını veya RSVP formu URL'sini girin.", termsLabel: "Hüküm ve koşullar",
   rateScreenshotLabel: "Fiyat ekran görüntüsü", rateScreenshotHelp: "Lütfen all.com üzerinde yüklenmiş fiyatı gösterin. Görsel en fazla 1 MB.", menuPdfLabel: "Yeme-içme / etkinlik menüsü PDF", menuPdfHelp: "PDF'leri tek bir dosyada birleştirin. En fazla 10 MB.", bookingScreenshotLabel: "Son rezervasyon sayfası ekran görüntüsü", bookingScreenshotHelp: "Yeme-içme, etkinlik ve iş ortağı teklifleri için gereklidir. Görsel en fazla 1 MB.", departmentConfirmationText: "İlgili tüm otel departmanları, üyelerin rezervasyon yapabilmesi için fiyat yüklemesinin doğru kurulduğunu onaylar.", masterImageTitle: "Tüm yerleşimler için tek görsel kullanın", masterImageHelp: "Yüksek kaliteli tek bir görsel yükleyin; uygulama banner, liste kutucuğu ve sosyal medya sürümlerini oluşturur.", bannerImageTitle: "Banner görseli", bannerImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama görseli otomatik olarak 2048 x 1366px JPG'ye dönüştürür. Kaynak dosya 200 MB'ı aşmamalı; metin ve logo içermemelidir.", listingTileImageTitle: "Liste kutucuğu görseli", listingTileImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama 400 x 250px JPG'ye dönüştürür.", socialImageTitle: "Sosyal medya görseli", socialImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama 1080 x 1080px JPG'ye dönüştürür.",
-  translationPreviewTitle: "Çevrilmiş içeriği önizleyin", translationSourcePrefix: "Yukarıda girilen teklif içeriğinin dili", translationSourceSuffix: "olarak, sağ üstte seçilen dile göre kabul edilir.", previewInLabel: "Önizleme dili", previewTranslatedButton: "Çeviriyi önizle", savePreviewButton: "Çeviriyi kaydet", translatedPreviewLabel: "Çeviri önizlemesi", translationEditHelp: "Bu isteğe bağlı taslağı inceleyebilir veya düzenleyebilirsiniz. Kutudaki metin teklifle birlikte otomatik olarak kaydedilir.", acknowledgementText: "Eksik veya hatalı gönderimlerin promosyonu geciktirebileceğini ve materyallerin 6 hafta önceden gönderilmesi gerektiğini anlıyorum.",
+  translationPreviewTitle: "Çevrilmiş içeriği önizleyin", translationSourcePrefix: "Yukarıda girilen teklif içeriğinin dili", translationSourceSuffix: "olarak, sağ üstte seçilen dile göre kabul edilir.", previewInLabel: "Çeviri dilleri", previewTranslatedButton: "İçeriği Çevir", savePreviewButton: "Çeviriyi kaydet", translatedPreviewLabel: "Çeviri önizlemesi", translationEditHelp: "Bu isteğe bağlı taslağı inceleyebilir veya düzenleyebilirsiniz. Kutudaki metin teklifle birlikte otomatik olarak kaydedilir.", acknowledgementText: "Eksik veya hatalı gönderimlerin promosyonu geciktirebileceğini ve materyallerin 6 hafta önceden gönderilmesi gerektiğini anlıyorum.",
+  menuPdfHelp: "PDF'leri tek bir dosyada birleştirin. PDF 5 MB'tan küçük olmalıdır.",
   },
 };
 
@@ -847,12 +849,7 @@ function applyLanguage(language) {
   if (heroText) heroText.textContent = copy.heroText || uiTranslations.en.heroText;
   translationSourceDisplay.textContent = labels[language] || contentLanguageLabels[language] || contentLanguageLabels.en;
   updateTranslationTargetOptions(language);
-  if (activeTranslationTarget !== translationTargetLanguage.value) {
-    persistTranslationPreview(activeTranslationTarget);
-    activeTranslationTarget = translationTargetLanguage.value;
-    translationPreview.value = generatedContentTranslations[activeTranslationTarget]?.text || "";
-    translationPreviewPanel.classList.toggle("is-hidden", !translationPreview.value);
-  }
+  renderTranslationPreviews();
   localStorage.setItem("explorer-offer-language", language);
 }
 
@@ -1271,6 +1268,12 @@ function validateRequiredUploads() {
   if (isDiningOrEventOffer() && !form.elements.menu_pdf.files.length) {
     missing.push("menu PDF");
   }
+  const menuPdf = form.elements.menu_pdf.files[0];
+  if (menuPdf && menuPdf.size >= maxPdfUploadSize) {
+    menuPdfMessage.textContent = "PDF files must be less than 5 MB. Please reduce the file size and try again.";
+    setMessage("The menu PDF must be less than 5 MB.", "error");
+    return false;
+  }
   if (requiresBookingScreenshot() && !form.elements.booking_screenshot.files.length) {
     missing.push("final booking-page screenshot");
   }
@@ -1438,6 +1441,15 @@ function updateFileName(input) {
 document.querySelectorAll('input[type="file"]').forEach((input) => {
   input.addEventListener("change", () => updateFileName(input));
 });
+form.elements.menu_pdf.addEventListener("change", () => {
+  const file = form.elements.menu_pdf.files[0];
+  menuPdfMessage.textContent = "";
+  if (file && file.size >= maxPdfUploadSize) {
+    menuPdfMessage.textContent = "PDF files must be less than 5 MB. Please reduce the file size and try again.";
+    form.elements.menu_pdf.value = "";
+    updateFileName(form.elements.menu_pdf);
+  }
+});
 
 alignBrandToneButton.addEventListener("click", async () => {
   const copy = uiTranslations[languageSelect.value] || uiTranslations.en;
@@ -1479,7 +1491,7 @@ alignBrandToneButton.addEventListener("click", async () => {
 
 translateContentButton.addEventListener("click", async () => {
   const sourceLanguage = languageSelect.value;
-  const targetLanguage = translationTargetLanguage.value;
+  const targetLanguages = Array.from(translationTargetLanguage.selectedOptions).map((option) => option.value);
   const content = buildContentForTranslation();
 
   if (!content) {
@@ -1487,27 +1499,32 @@ translateContentButton.addEventListener("click", async () => {
     return;
   }
 
+  if (!targetLanguages.length) {
+    setTranslationStatus("Select at least one language to translate.");
+    return;
+  }
   translateContentButton.disabled = true;
   translateContentButton.textContent = "Translating...";
-  setTranslationStatus(`Generating ${contentLanguageLabels[targetLanguage]} draft translation...`);
+  setTranslationStatus(`Generating ${targetLanguages.length} translation${targetLanguages.length === 1 ? "" : "s"}...`);
 
   try {
-    translationPreview.value = await translateText(content, sourceLanguage, targetLanguage);
-    translationPreviewPanel.classList.remove("is-hidden");
-    persistTranslationPreview(targetLanguage);
-    setTranslationStatus(`Draft ${contentLanguageLabels[targetLanguage]} translation generated. It will be included automatically unless you clear it.`);
+    for (const targetLanguage of targetLanguages) {
+      const text = await translateText(content, sourceLanguage, targetLanguage);
+      persistTranslationPreview(targetLanguage, text);
+      renderTranslationPreviews();
+    }
+    setTranslationStatus(`${targetLanguages.length} optional translation${targetLanguages.length === 1 ? "" : "s"} generated and included automatically.`);
   } catch (error) {
-    translationPreviewPanel.classList.remove("is-hidden");
-    setTranslationStatus(`${error.message} You can still paste an optional translation into the preview; it will be included automatically.`);
+    setTranslationStatus(error.message || "One or more translations could not be generated.");
   } finally {
     translateContentButton.disabled = false;
     translateContentButton.textContent = (uiTranslations[languageSelect.value] || uiTranslations.en).previewTranslatedButton;
   }
 });
 
-function persistTranslationPreview(targetLanguage = activeTranslationTarget) {
+function persistTranslationPreview(targetLanguage, value) {
   const sourceLanguage = languageSelect.value;
-  const text = translationPreview.value.trim();
+  const text = String(value || "").trim();
 
   if (!text) {
     delete generatedContentTranslations[targetLanguage];
@@ -1525,14 +1542,26 @@ function persistTranslationPreview(targetLanguage = activeTranslationTarget) {
   };
 }
 
-translationPreview.addEventListener("input", () => {
-  persistTranslationPreview();
-  setTranslationStatus(
-    translationPreview.value.trim()
-      ? `${contentLanguageLabels[activeTranslationTarget]} translation will be included automatically.`
-      : "Translation cleared. Translations are optional.",
-  );
-});
+function renderTranslationPreviews() {
+  translationPreviewList.innerHTML = "";
+  Object.values(generatedContentTranslations).forEach((item) => {
+    const panel = document.createElement("div");
+    panel.className = "translation-preview-panel";
+    const label = document.createElement("label");
+    const title = document.createElement("span");
+    title.textContent = `${item.language} translation`;
+    const textarea = document.createElement("textarea");
+    textarea.rows = 8;
+    textarea.value = item.text;
+    textarea.addEventListener("input", () => persistTranslationPreview(item.language_code, textarea.value));
+    label.append(title, textarea);
+    const help = document.createElement("p");
+    help.className = "muted translation-edit-help";
+    help.textContent = "Optional. Edits are saved automatically with the offer.";
+    panel.append(label, help);
+    translationPreviewList.append(panel);
+  });
+}
 
 offerType.addEventListener("change", () => {
   offerTypeTiles.forEach((tile) => {
@@ -1557,13 +1586,7 @@ languageSelect.addEventListener("change", () => {
   renderTypeSpecificFields();
 });
 
-translationTargetLanguage.addEventListener("change", () => {
-  persistTranslationPreview(activeTranslationTarget);
-  activeTranslationTarget = translationTargetLanguage.value;
-  translationPreview.value = generatedContentTranslations[activeTranslationTarget]?.text || "";
-  translationPreviewPanel.classList.toggle("is-hidden", !translationPreview.value);
-  setTranslationStatus("");
-});
+translationTargetLanguage.addEventListener("change", () => setTranslationStatus(""));
 
 function setActiveFormSection(sectionId) {
   const activeIndex = sectionNavigationButtons.findIndex((button) => button.dataset.scrollTarget === sectionId);
@@ -1693,7 +1716,6 @@ function setTranslationStatus(message, type = "") {
 }
 
 function buildSubmissionRecord() {
-  persistTranslationPreview(activeTranslationTarget);
   const submittedNow = new Date();
   const submissionDate = [submittedNow.getFullYear(), String(submittedNow.getMonth() + 1).padStart(2, "0"), String(submittedNow.getDate()).padStart(2, "0")].join("-");
   return {
@@ -1772,58 +1794,33 @@ async function fileToBase64(file) {
   return String(dataUrl).split(",")[1] || "";
 }
 
-async function buildAsanaImageAttachments() {
+async function buildSubmissionAssets() {
   const uploadMap = {
     rate_screenshot: form.elements.rate_screenshot?.files?.[0] || null,
     booking_screenshot: form.elements.booking_screenshot?.files?.[0] || null,
     banner_image: resizedBannerFile,
     listing_tile_image: resizedListingTileFile,
     social_image: resizedSocialFile,
+    menu_pdf: form.elements.menu_pdf?.files?.[0] || null,
   };
-  return Promise.all(Object.entries(uploadMap).filter(([, file]) => Boolean(file)).map(async ([field, file]) => ({
+  return Promise.all(Object.entries(uploadMap).filter(([, file]) => Boolean(file)).map(async ([field, file]) => {
+    const processedFile = ["rate_screenshot", "booking_screenshot"].includes(field)
+      ? await resizeImage(file, 1600, 1600, false)
+      : file;
+    return {
       field,
-      file_name: file.name,
-      file_type: file.type || "image/jpeg",
-      file_size_kb: Math.round(file.size / 1024),
-      data_base64: await fileToBase64(file),
-    })));
+      file_name: processedFile.name,
+      file_type: processedFile.type || "image/jpeg",
+      file_size_kb: Math.round(processedFile.size / 1024),
+      data_base64: await fileToBase64(processedFile),
+    };
+  }));
 }
 
-async function submitOfferToDrive(record, turnstileToken = "") {
-  const controller = new AbortController();
-  let timeout;
-  const deadline = new Promise((resolve, reject) => {
-    timeout = window.setTimeout(() => {
-      controller.abort();
-      const error = new Error("The Drive archive is taking too long to create. Check Google Drive before submitting again, as the ZIP may already have been uploaded.");
-      error.name = "SubmissionTimeoutError";
-      reject(error);
-    }, 28000);
+async function postSubmission(payload) {
+  const response = await window.authenticatedFetch("/.netlify/functions/submit-offer", {
+    method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload),
   });
-  let response;
-  try {
-    const submission = (async () => {
-      const payload = {
-        ...record,
-        turnstile_token: turnstileToken,
-      };
-      return window.authenticatedFetch("/.netlify/functions/submit-offer", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload),
-        signal: controller.signal,
-      });
-    })();
-    response = await Promise.race([submission, deadline]);
-  } catch (error) {
-    if (error.name === "AbortError" || error.name === "SubmissionTimeoutError") {
-      throw new Error("The Drive archive is taking too long to create. Check Google Drive before submitting again, as the ZIP may already have been uploaded.");
-    }
-    throw error;
-  } finally {
-    window.clearTimeout(timeout);
-  }
-
   const responseText = await response.text();
   let result = {};
   try {
@@ -1833,7 +1830,7 @@ async function submitOfferToDrive(record, turnstileToken = "") {
   }
   if (!response.ok) {
     if (response.status === 413) {
-      throw new Error("Submission files are too large for the upload service. Please use smaller source images and try again.");
+      throw new Error(result.error || "A file is too large. PDFs must be less than 5 MB.");
     }
     const diagnostic = [result.host && `Host: ${result.host}`, result.reason && `Reason: ${result.reason}`]
       .filter(Boolean)
@@ -1844,6 +1841,30 @@ async function submitOfferToDrive(record, turnstileToken = "") {
         .join(" ")
     );
   }
+  return result;
+}
+
+function updateSubmissionProgress(text, percent) {
+  submissionProgress.classList.remove("is-hidden");
+  submissionProgressText.textContent = text;
+  submissionProgressBar.style.width = `${percent}%`;
+}
+
+async function submitOfferToDrive(record, turnstileToken = "") {
+  updateSubmissionProgress("Creating your secure submission folder…", 8);
+  const created = await postSubmission({ ...record, turnstile_token: turnstileToken });
+  const assets = await buildSubmissionAssets();
+  const uploadedAssets = [];
+  for (let index = 0; index < assets.length; index += 1) {
+    const asset = assets[index];
+    updateSubmissionProgress(`Saving file ${index + 1} of ${assets.length}…`, 15 + Math.round(((index + 1) / Math.max(assets.length, 1)) * 65));
+    const folderId = asset.file_type === "application/pdf" ? created.storage.documentsFolderId : created.storage.imagesFolderId;
+    const result = await postSubmission({ action: "upload_asset", folder_id: folderId, asset });
+    uploadedAssets.push(result.asset);
+  }
+  updateSubmissionProgress("Finalising your offer…", 88);
+  const result = await postSubmission({ action: "finalize_submission", offer_id: created.offer_id, folder_id: created.storage.folderId, record, assets: uploadedAssets });
+  updateSubmissionProgress("Offer successfully submitted.", 100);
   return result;
 }
 
@@ -2023,6 +2044,7 @@ form.addEventListener("submit", async (event) => {
     sessionStorage.setItem("offerSubmissionConfirmation", JSON.stringify(confirmation));
     window.location.assign("/confirmation.html");
   } catch (error) {
+    submissionProgress.classList.add("is-hidden");
     const isTurnstileError = /turnstile/i.test(error.message || "");
     setMessage(isTurnstileError ? copy.turnstileUnavailable : (error.message || "The submission could not be completed."), "error");
   } finally {
@@ -2051,10 +2073,8 @@ form.addEventListener("reset", () => {
     socialMessage.textContent = "";
     document.querySelectorAll('input[type="file"]').forEach((input) => updateFileName(input));
     generatedContentTranslations = {};
-    activeTranslationTarget = translationTargetLanguage.value;
     form.querySelector('button[type="submit"]').textContent = (uiTranslations[languageSelect.value] || uiTranslations.en).submitButton;
-    translationPreview.value = "";
-    translationPreviewPanel.classList.add("is-hidden");
+    renderTranslationPreviews();
     setTranslationStatus("");
     dateMessage.textContent = "";
     renderTypeSpecificFields();

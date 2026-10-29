@@ -62,7 +62,8 @@ function archiveFilename(offer) {
 
 function summary(offer) {
   const details = Object.entries(offer.offer_details || {}).filter(([, value]) => value).map(([key, value]) => `${key.replace(/_/g, " ")}: ${value}`);
-  return [`Explorer Offer ID: ${offer.offer_id}`, `Submitted: ${offer.generated_at}`, `Submitter: ${offer.person_in_charge_name} (${offer.email})`, `Hotel: ${offer.hotel_name}`, `Hotel RID code: ${offer.hotel_rid_code}`, `Offer type: ${offer.offer_type}`, `Offer title: ${offer.offer_tile_title}`, "", "Offer details", ...details, "", "Offer description", offer.offer_description || "", "", "Terms and conditions", offer.terms || ""].join("\n");
+  const assets = (offer.assets || []).map((asset) => `${asset.field || asset.name}: ${asset.webViewLink || ""}`);
+  return [`Explorer Offer ID: ${offer.offer_id}`, `Submitted: ${offer.generated_at}`, `Submitter: ${offer.person_in_charge_name} (${offer.email})`, `Hotel: ${offer.hotel_name}`, `Hotel RID code: ${offer.hotel_rid_code}`, `Offer type: ${offer.offer_type}`, `Offer title: ${offer.offer_tile_title}`, "", "Offer details", ...details, "", "Offer description", offer.offer_description || "", "", "Terms and conditions", offer.terms || "", "", "Uploaded images and documents", ...(assets.length ? assets : ["None"])].join("\n");
 }
 
 function buildArchive(offer) {
@@ -77,27 +78,19 @@ function buildArchive(offer) {
   return createZip(files);
 }
 
-async function uploadOfferArchive(offer) {
+async function callStorage(payload, timeoutMs = 25000) {
   const webhookUrl = clean(process.env.GOOGLE_APPS_SCRIPT_WEBHOOK_URL);
   const webhookSecret = clean(process.env.GOOGLE_APPS_SCRIPT_SECRET);
   if (!webhookUrl || !webhookSecret) throw new Error("Google Apps Script storage is not configured.");
   if (!/^https:\/\/script\.google\.com\//.test(webhookUrl)) throw new Error("GOOGLE_APPS_SCRIPT_WEBHOOK_URL must be a Google Apps Script deployment URL.");
-  const filename = archiveFilename(offer);
-  const zip = buildArchive(offer);
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 20000);
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
   let response;
   try {
     response = await fetch(webhookUrl, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        secret: webhookSecret,
-        filename,
-        mime_type: "application/zip",
-        archive_base64: zip.toString("base64"),
-        offer: { offer_id: offer.offer_id, submission_date: offer.submission_date, generated_at: offer.generated_at, offer_type: offer.offer_type, hotel_rid_code: offer.hotel_rid_code, hotel_name: offer.hotel_name, offer_title: offer.offer_tile_title, submitter_email: offer.email },
-      }),
+      body: JSON.stringify({ secret: webhookSecret, ...payload }),
       redirect: "follow",
       signal: controller.signal,
     });
@@ -108,7 +101,27 @@ async function uploadOfferArchive(offer) {
   }
   const result = await response.json().catch(() => ({}));
   if (!response.ok || !result.ok) throw new Error(result.error || `Google Apps Script storage failed (${response.status}).`);
-  return { ok: true, id: result.file_id, name: result.file_name || filename, size: result.file_size, webViewLink: result.file_url, sheet_updated: Boolean(result.sheet_updated) };
+  return result;
 }
 
-module.exports = { archiveFilename, buildArchive, uploadOfferArchive };
+async function createSubmissionFolder(offer) {
+  const result = await callStorage({ action: "create_submission", offer });
+  return { ok: true, folderId: result.folder_id, folderUrl: result.folder_url, imagesFolderId: result.images_folder_id, documentsFolderId: result.documents_folder_id };
+}
+
+async function uploadSubmissionAsset(folderId, asset) {
+  const result = await callStorage({ action: "upload_asset", folder_id: folderId, filename: asset.file_name, mime_type: asset.file_type, data_base64: asset.data_base64 });
+  return { ok: true, field: asset.field, id: result.file_id, name: result.file_name, size: result.file_size, webViewLink: result.file_url };
+}
+
+async function uploadOfferArchive(offer, folderId) {
+  const filename = archiveFilename(offer);
+  const zip = buildArchive(offer);
+  const result = await callStorage({
+    action: "finalize_submission", folder_id: folderId, filename, mime_type: "application/zip", archive_base64: zip.toString("base64"),
+    offer: { offer_id: offer.offer_id, submission_date: offer.submission_date, generated_at: offer.generated_at, offer_type: offer.offer_type, hotel_rid_code: offer.hotel_rid_code, hotel_name: offer.hotel_name, offer_title: offer.offer_tile_title, submitter_email: offer.email },
+  });
+  return { ok: true, id: result.file_id, name: result.file_name || filename, size: result.file_size, webViewLink: result.file_url, folderUrl: result.folder_url, sheet_updated: Boolean(result.sheet_updated) };
+}
+
+module.exports = { archiveFilename, buildArchive, createSubmissionFolder, uploadSubmissionAsset, uploadOfferArchive };

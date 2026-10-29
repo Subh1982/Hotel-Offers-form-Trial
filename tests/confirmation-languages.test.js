@@ -27,18 +27,10 @@ test("confirmation page retains RTL behavior for Arabic", () => {
   assert.match(source, /confirmationLanguage === "ar" \? "rtl" : "ltr"/);
 });
 
-test("confirmation interactions include copy ID and Asana action", () => {
-  assert.match(source, /navigator\.clipboard\.writeText\(confirmation\.offer_id\)/);
-  assert.match(source, /confirmation\.drive\?\.webViewLink/);
-});
-
 test("confirmation page keeps only the essential completion content", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "confirmation.html"), "utf8");
-  assert.match(html, /id="confirmationOfferId"/);
+  assert.match(html, /Offer successfully submitted/);
   assert.match(html, /class="next-steps"/);
-  assert.match(html, /id="openDriveButton"/);
   assert.match(html, /data-confirmation-i18n="createAnother"/);
-  assert.match(html, /class="offer-ticket-collection">Explorer Offers Collection/);
-  assert.doesNotMatch(html, /class="confirmation-details"/);
-  assert.doesNotMatch(html, /id="confirmationAttachmentStatus"/);
+  assert.doesNotMatch(html, /id="confirmationOfferId"|id="openDriveButton"|class="confirmation-details"/);
 });

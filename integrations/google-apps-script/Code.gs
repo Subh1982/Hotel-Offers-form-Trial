@@ -21,14 +21,32 @@ function doPost(event) {
     if (!folderId || !spreadsheetId) {
       return jsonResponse_({ ok: false, error: 'Drive folder or spreadsheet is not configured.' });
     }
-    if (!payload.filename || !payload.archive_base64) {
-      return jsonResponse_({ ok: false, error: 'ZIP archive data is missing.' });
+    var offer = payload.offer || {};
+    var rootFolder = DriveApp.getFolderById(folderId);
+
+    if (payload.action === 'create_submission') {
+      var folderName = (offer.offer_id || 'offer') + '_' + (offer.hotel_rid_code || 'no-rid');
+      var submissionFolder = rootFolder.createFolder(folderName);
+      var imagesFolder = submissionFolder.createFolder('images');
+      var documentsFolder = submissionFolder.createFolder('documents');
+      return jsonResponse_({ ok: true, folder_id: submissionFolder.getId(), folder_url: submissionFolder.getUrl(), images_folder_id: imagesFolder.getId(), documents_folder_id: documentsFolder.getId() });
     }
 
+    if (payload.action === 'upload_asset') {
+      if (!payload.folder_id || !payload.filename || !payload.data_base64) return jsonResponse_({ ok: false, error: 'Asset data is missing.' });
+      var assetBytes = Utilities.base64Decode(payload.data_base64);
+      var assetBlob = Utilities.newBlob(assetBytes, payload.mime_type || 'application/octet-stream', payload.filename);
+      var assetFile = DriveApp.getFolderById(payload.folder_id).createFile(assetBlob);
+      return jsonResponse_({ ok: true, file_id: assetFile.getId(), file_name: assetFile.getName(), file_size: assetFile.getSize(), file_url: assetFile.getUrl() });
+    }
+
+    if (payload.action !== 'finalize_submission' || !payload.folder_id || !payload.filename || !payload.archive_base64) {
+      return jsonResponse_({ ok: false, error: 'Final ZIP archive data is missing.' });
+    }
     var bytes = Utilities.base64Decode(payload.archive_base64);
     var blob = Utilities.newBlob(bytes, payload.mime_type || 'application/zip', payload.filename);
-    var file = DriveApp.getFolderById(folderId).createFile(blob);
-    var offer = payload.offer || {};
+    var submissionFolder = DriveApp.getFolderById(payload.folder_id);
+    var file = submissionFolder.createFile(blob);
 
     var lock = LockService.getScriptLock();
     lock.waitLock(15000);
@@ -37,7 +55,7 @@ function doPost(event) {
       var spreadsheet = SpreadsheetApp.openById(spreadsheetId);
       var sheet = spreadsheet.getSheetByName(sheetName) || spreadsheet.insertSheet(sheetName);
       if (sheet.getLastRow() === 0) {
-        sheet.appendRow(['Offer ID', 'Submission date', 'Created at', 'Offer type', 'Hotel RID code', 'Hotel name', 'Offer title', 'Submitter email', 'ZIP filename', 'Drive URL']);
+        sheet.appendRow(['Offer ID', 'Submission date', 'Created at', 'Offer type', 'Hotel RID code', 'Hotel name', 'Offer title', 'Submitter email', 'ZIP filename', 'ZIP URL', 'Submission folder URL']);
         sheet.setFrozenRows(1);
       }
       sheet.appendRow([
@@ -50,13 +68,13 @@ function doPost(event) {
         offer.offer_title || '',
         offer.submitter_email || '',
         file.getName(),
-        file.getUrl(),
+        file.getUrl(), submissionFolder.getUrl(),
       ]);
     } finally {
       lock.releaseLock();
     }
 
-    return jsonResponse_({ ok: true, file_id: file.getId(), file_name: file.getName(), file_size: file.getSize(), file_url: file.getUrl(), sheet_updated: true });
+    return jsonResponse_({ ok: true, file_id: file.getId(), file_name: file.getName(), file_size: file.getSize(), file_url: file.getUrl(), folder_url: submissionFolder.getUrl(), sheet_updated: true });
   } catch (error) {
     return jsonResponse_({ ok: false, error: error && error.message ? error.message : 'Storage webhook failed.' });
   }

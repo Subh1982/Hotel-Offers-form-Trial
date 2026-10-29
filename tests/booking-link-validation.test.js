@@ -30,8 +30,9 @@ test("translation drafts are saved automatically without a save button", () => {
   const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
   assert.doesNotMatch(html, /saveTranslationPreviewButton/);
   assert.doesNotMatch(app, /saveTranslationPreviewButton/);
-  assert.match(app, /translationPreview\.addEventListener\("input"/);
-  assert.match(app, /function buildSubmissionRecord\(\) \{\s*persistTranslationPreview\(activeTranslationTarget\)/);
+  assert.match(app, /textarea\.addEventListener\("input", \(\) => persistTranslationPreview/);
+  assert.match(html, /id="translationTargetLanguage" multiple/);
+  assert.match(html, />Translate Content</);
   assert.match(app, /auto_translations: generatedContentTranslations/);
 });
 

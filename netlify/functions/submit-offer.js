@@ -1,5 +1,5 @@
 const { requireAuth } = require("./_auth");
-const { uploadOfferArchive } = require("./_drive-archive");
+const { createSubmissionFolder, uploadSubmissionAsset, uploadOfferArchive } = require("./_drive-archive");
 
 function json(statusCode, body) {
   return { statusCode, headers: { "content-type": "application/json" }, body: JSON.stringify(body) };
@@ -192,6 +192,33 @@ exports.handler = async (event) => {
     return json(400, { error: "Invalid JSON payload." });
   }
 
+  if (submission.action === "upload_asset") {
+    const asset = submission.asset || {};
+    const isImage = /^image\/(jpeg|png|webp)$/.test(asset.file_type || "");
+    const isPdf = asset.file_type === "application/pdf";
+    const bytes = Buffer.from(asset.data_base64 || "", "base64");
+    if (!submission.folder_id || (!isImage && !isPdf) || !bytes.length) return json(400, { error: "A valid image or PDF is required." });
+    if (isPdf && bytes.length >= 5 * 1024 * 1024) return json(413, { error: "PDF files must be less than 5 MB." });
+    if (isImage && bytes.length > 2 * 1024 * 1024) return json(413, { error: "The processed image is too large." });
+    try {
+      const uploaded = await uploadSubmissionAsset(submission.folder_id, asset);
+      return json(200, { ok: true, asset: uploaded });
+    } catch (error) {
+      return json(502, { error: error.message || "The asset could not be stored.", service: "google_drive" });
+    }
+  }
+
+  if (submission.action === "finalize_submission") {
+    if (!/^EXP-[A-Z0-9-]+$/.test(submission.offer_id || "") || !submission.folder_id) return json(400, { error: "Submission details are incomplete." });
+    const offer = { ...submission.record, offer_id: submission.offer_id, email: auth.email, assets: submission.assets || [], status: "submitted" };
+    try {
+      const drive = await uploadOfferArchive(offer, submission.folder_id);
+      return json(200, { ok: true, offer_id: offer.offer_id, drive, asana: { ok: false, skipped: true, disabled: true } });
+    } catch (error) {
+      return json(502, { error: error.message || "The ZIP archive could not be stored in Google Drive.", service: "google_drive" });
+    }
+  }
+
   if (submission.action === "attach_image") {
     if (cleanEnvironmentValue(process.env.ENABLE_ASANA_TASK_CREATION).toLowerCase() !== "true") {
       return json(409, { error: "Asana task creation is temporarily disabled." });
@@ -233,19 +260,13 @@ exports.handler = async (event) => {
 
   let drive;
   try {
-    drive = await uploadOfferArchive(offer);
+    drive = await createSubmissionFolder(offer);
   } catch (error) {
     console.error("Google Drive archive upload failed", error);
     return json(502, { error: error.message || "The ZIP archive could not be stored in Google Drive.", service: "google_drive" });
   }
 
-  const asanaEnabled = cleanEnvironmentValue(process.env.ENABLE_ASANA_TASK_CREATION).toLowerCase() === "true";
-  let asana = { ok: false, skipped: true, disabled: !asanaEnabled };
-  if (asanaEnabled) {
-    asana = await createAsanaTask(offer);
-    if (!asana.ok) return json(asana.skipped ? 500 : 502, { error: asana.error, details: asana.details, service: "asana", drive });
-  }
-  return json(200, { ok: true, offer_id: offer.offer_id, drive, asana });
+  return json(200, { ok: true, offer_id: offer.offer_id, storage: drive });
 };
 
 exports._test = { asanaTaskNotes, savedTranslationSections };

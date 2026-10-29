@@ -49,36 +49,7 @@ if (!rawConfirmation) {
   window.location.replace("/");
 } else {
   const confirmation = JSON.parse(rawConfirmation);
-  const setText = (id, value) => {
-    document.getElementById(id).textContent = value || copy.notProvided;
-  };
-
   const offerTitle = confirmation.offer_tile_title || copy.notProvided;
   document.title = `${offerTitle} | Explorer Offers Collection`;
-  document.getElementById("confirmationTitle").textContent = copy.headline;
-  setText("confirmationOfferId", confirmation.offer_id);
-
-  const copyButton = document.getElementById("copyOfferIdButton");
-  const copyStatus = document.getElementById("copyOfferIdStatus");
-  copyButton.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(confirmation.offer_id);
-      copyStatus.textContent = copy.copied;
-      copyButton.classList.add("is-copied");
-      window.setTimeout(() => {
-        copyStatus.textContent = "";
-        copyButton.classList.remove("is-copied");
-      }, 2200);
-    } catch (error) {
-      copyStatus.textContent = copy.copyFailed;
-    }
-  });
-
-  document.getElementById("confirmationDriveStatus").textContent = copy.driveCreated || confirmationCopy.en.driveCreated;
-  const driveButton = document.getElementById("openDriveButton");
-  if (confirmation.drive?.webViewLink) {
-    driveButton.href = confirmation.drive.webViewLink;
-    driveButton.classList.remove("is-hidden");
-  }
-
+  document.getElementById("confirmationTitle").textContent = confirmationLanguage === "en" ? "Offer successfully submitted" : copy.headline;
 }
