@@ -19,6 +19,8 @@ const formMessage = document.querySelector("#formMessage");
 const dateMessage = document.querySelector("#dateMessage");
 const bookingDialog = document.querySelector("#bookingDialog");
 const bookingPreview = document.querySelector("#bookingPreview");
+const bookingDialogTitle = document.querySelector("#bookingDialogTitle");
+const bookingDialogText = document.querySelector("#bookingDialogText");
 const languageSelect = document.querySelector("#languageSelect");
 const heroText = document.querySelector("[data-i18n='heroText']");
 const sectionNavigationButtons = Array.from(document.querySelectorAll("[data-scroll-target]"));
@@ -67,15 +69,17 @@ const contentLanguageLabels = {
   id: "Bahasa Indonesia",
   ja: "Japanese",
   ar: "Arabic",
+  tr: "Turkish",
 };
 
 const localizedLanguageLabels = {
-  en: { en: "English", th: "Thai", vi: "Vietnamese", id: "Bahasa Indonesia", ja: "Japanese", ar: "Arabic" },
-  th: { en: "อังกฤษ", th: "ไทย", vi: "เวียดนาม", id: "บาฮาซาอินโดนีเซีย", ja: "ญี่ปุ่น", ar: "อาหรับ" },
-  vi: { en: "Tiếng Anh", th: "Tiếng Thái", vi: "Tiếng Việt", id: "Bahasa Indonesia", ja: "Tiếng Nhật", ar: "Tiếng Ả Rập" },
-  id: { en: "Inggris", th: "Thailand", vi: "Vietnam", id: "Bahasa Indonesia", ja: "Jepang", ar: "Arab" },
-  ja: { en: "英語", th: "タイ語", vi: "ベトナム語", id: "インドネシア語", ja: "日本語", ar: "アラビア語" },
-  ar: { en: "الإنجليزية", th: "التايلاندية", vi: "الفيتنامية", id: "الإندونيسية", ja: "اليابانية", ar: "العربية" },
+  en: { en: "English", th: "Thai", vi: "Vietnamese", id: "Bahasa Indonesia", ja: "Japanese", ar: "Arabic", tr: "Turkish" },
+  th: { en: "อังกฤษ", th: "ไทย", vi: "เวียดนาม", id: "บาฮาซาอินโดนีเซีย", ja: "ญี่ปุ่น", ar: "อาหรับ", tr: "ตุรกี" },
+  vi: { en: "Tiếng Anh", th: "Tiếng Thái", vi: "Tiếng Việt", id: "Bahasa Indonesia", ja: "Tiếng Nhật", ar: "Tiếng Ả Rập", tr: "Tiếng Thổ Nhĩ Kỳ" },
+  id: { en: "Inggris", th: "Thailand", vi: "Vietnam", id: "Bahasa Indonesia", ja: "Jepang", ar: "Arab", tr: "Turki" },
+  ja: { en: "英語", th: "タイ語", vi: "ベトナム語", id: "インドネシア語", ja: "日本語", ar: "アラビア語", tr: "トルコ語" },
+  ar: { en: "الإنجليزية", th: "التايلاندية", vi: "الفيتنامية", id: "الإندونيسية", ja: "اليابانية", ar: "العربية", tr: "التركية" },
+  tr: { en: "İngilizce", th: "Tayca", vi: "Vietnamca", id: "Endonezce", ja: "Japonca", ar: "Arapça", tr: "Türkçe" },
 };
 
 function updateTranslationTargetOptions(sourceLanguage) {
@@ -173,6 +177,12 @@ const uiTranslations = {
     alignBrandToneError: "Brand tone alignment failed.",
     turnstileVerifying: "Verifying submission...",
     turnstileUnavailable: "We could not verify this submission. Please try again.",
+    bookingLinkChecking: "Checking booking link...",
+    bookingLinkLiveTitle: "Booking link is live",
+    bookingLinkLiveText: "The link has been validated and is live. You can continue with the submission.",
+    bookingLinkNotLiveTitle: "Booking link may not be live",
+    bookingLinkNotLiveText: "The offer link provided is not live. Do you want to proceed?",
+    continueButton: "Continue",
   },
   th: {
     alignBrandToneButton: "ปรับให้สอดคล้องกับโทนแบรนด์",
@@ -507,6 +517,14 @@ const uiTranslations = {
     turnstileVerifying: "جارٍ التحقق من الإرسال...",
     turnstileUnavailable: "تعذر التحقق من هذا الإرسال. يرجى المحاولة مرة أخرى.",
   },
+  tr: {
+    marketLabel: "Pasifik pazarlama platformu", languageLabel: "Dil", heroTitle: "ALL Accor+ Explorer Teklif Portalı", heroText: "ALL Accor+ Explorer için konaklama, yeme-içme, etkinlik ve iş ortağı teklifleri gönderin.",
+    startEyebrow: "Teklif çalışma alanı", startTitle: "Ne yapmak istersiniz?", startText: "Görevinize uygun yolu seçin.", createOfferTitle: "Yeni teklif oluştur", createOfferText: "Yeni bir Explorer teklifi başlatın.", viewOfferTitle: "Mevcut teklifi görüntüle", viewOfferText: "Gönderilmiş bir teklifi değiştirmeden bulun.", editOfferTitle: "Mevcut teklifi düzenle", editOfferText: "Kaydedilmiş bir teklifi bulun ve güncelleyin.",
+    confirmationEyebrow: "Gönderim tamamlandı", confirmationTitle: "Teklif başarıyla gönderildi", confirmationText: "Teklif kaydedildi ve Asana görevi oluşturuldu.", submissionDateRangeLabel: "Gönderim tarih aralığı", createAnotherButton: "Başka bir teklif oluştur", backToOptionsButton: "Seçeneklere dön",
+    sideTitle: "Teklif Gönderimi", stepType: "Teklif türü", stepHotel: "Otel bilgileri", stepOffer: "Teklif ve tarihler", stepProof: "Kanıt ve formlar", stepImages: "Görseller ve inceleme", stepTranslations: "Çeviriler", formEyebrow: "Konaklama ve yeme-içme teklifleri", formTitle: "Explorer teklifinizi oluşturun",
+    offerTypeQuestion: "Hangi tür teklifi gönderiyorsunuz?", offerTypeHelp: "Seçiminiz aşağıda istenecek tarihleri, fiyatları ve destekleyici bilgileri belirler.", offerTypeHotelStay: "Otel konaklaması", offerTypeDining: "Yeme-içme", offerTypeEvents: "Etkinlikler", offerTypePartners: "İş ortakları", hotelDetails: "Otel bilgileri", coreContent: "Temel teklif içeriği", datesBooking: "Tarihler ve rezervasyon", proofForms: "Kanıt ve gerekli formlar", imagesTitle: "Görseller", finalAcknowledgement: "Son onay", clearButton: "Temizle", submitButton: "Teklifi Gönder", goBackButton: "Geri dön", continueButton: "Devam et",
+    alignBrandToneButton: "Marka tonuna uyarla", alignBrandToneEmpty: "Önce bir teklif açıklaması girin.", alignBrandToneWorking: "Uyarlanıyor...", alignBrandToneProgress: "Açıklamanız Explorer marka tonuna göre yeniden yazılıyor...", alignBrandToneSuccess: "Marka tonuna uygun taslak hazır. Göndermeden önce düzenleyebilirsiniz.", alignBrandToneError: "Marka tonu uyarlaması başarısız oldu.", turnstileVerifying: "Gönderim doğrulanıyor...", turnstileUnavailable: "Bu gönderim doğrulanamadı. Lütfen tekrar deneyin.", bookingLinkChecking: "Rezervasyon bağlantısı kontrol ediliyor...", bookingLinkLiveTitle: "Rezervasyon bağlantısı aktif", bookingLinkLiveText: "Bağlantı doğrulandı ve aktif. Gönderime devam edebilirsiniz.", bookingLinkNotLiveTitle: "Rezervasyon bağlantısı aktif olmayabilir", bookingLinkNotLiveText: "Verilen teklif bağlantısı aktif değil. Devam etmek istiyor musunuz?",
+  },
 };
 
 const formCopyTranslations = {
@@ -795,6 +813,11 @@ const formCopyTranslations = {
     translationEditHelp: "راجع هذه المسودة وعدّلها قبل حفظها مع العرض.",
     acknowledgementText: "أقر بأن الإرسالات غير المكتملة أو غير الدقيقة قد تؤخر الترويج، وأن المواد مطلوبة قبل 6 أسابيع.",
   },
+  tr: {
+  emailLabel: "E-posta", requiredFieldsNote: "* ile işaretli alanlar zorunludur.", contactNameLabel: "Sorumlu kişinin adı", hotelRidLabel: "Otel RID kodu", hotelNameLabel: "Otel adı", offerTypeLabel: "Teklif türü", selectOne: "Birini seçin", cityCountryLabel: "Şehir - Ülke", offerTileTitleLabel: "Teklif kutucuğu başlığı", offerBannerTitleLabel: "Teklif banner başlığı", offerSubtitleLabel: "Teklif alt başlığı", metaDescriptionLabel: "Meta açıklaması", offerDescriptionLabel: "Teklif açıklaması", bookingLinkLabel: "Rezervasyon bağlantısı", bookingMethodQuestion: "Üyeler nasıl rezervasyon yapabilir?", bookingMethodLink: "Rezervasyon bağlantısı", bookingMethodEmailRsvp: "E-posta / RSVP formu ile rezervasyon", bookingEmailRsvpLabel: "Rezervasyon e-postası veya RSVP formu", bookingEmailRsvpPlaceholder: "E-posta adresini, e-posta talimatlarını veya RSVP formu URL'sini girin.", termsLabel: "Hüküm ve koşullar",
+  rateScreenshotLabel: "Fiyat ekran görüntüsü", rateScreenshotHelp: "Lütfen all.com üzerinde yüklenmiş fiyatı gösterin. Görsel en fazla 1 MB.", menuPdfLabel: "Yeme-içme / etkinlik menüsü PDF", menuPdfHelp: "PDF'leri tek bir dosyada birleştirin. En fazla 10 MB.", bookingScreenshotLabel: "Son rezervasyon sayfası ekran görüntüsü", bookingScreenshotHelp: "Yeme-içme, etkinlik ve iş ortağı teklifleri için gereklidir. Görsel en fazla 1 MB.", departmentConfirmationText: "İlgili tüm otel departmanları, üyelerin rezervasyon yapabilmesi için fiyat yüklemesinin doğru kurulduğunu onaylar.", masterImageTitle: "Tüm yerleşimler için tek görsel kullanın", masterImageHelp: "Yüksek kaliteli tek bir görsel yükleyin; uygulama banner, liste kutucuğu ve sosyal medya sürümlerini oluşturur.", bannerImageTitle: "Banner görseli", bannerImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama görseli otomatik olarak 2048 x 1366px JPG'ye dönüştürür. Kaynak dosya 200 MB'ı aşmamalı; metin ve logo içermemelidir.", listingTileImageTitle: "Liste kutucuğu görseli", listingTileImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama 400 x 250px JPG'ye dönüştürür.", socialImageTitle: "Sosyal medya görseli", socialImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama 1080 x 1080px JPG'ye dönüştürür.",
+  translationPreviewTitle: "Çevrilmiş içeriği önizleyin", translationSourcePrefix: "Yukarıda girilen teklif içeriğinin dili", translationSourceSuffix: "olarak, sağ üstte seçilen dile göre kabul edilir.", previewInLabel: "Önizleme dili", previewTranslatedButton: "Çeviriyi önizle", savePreviewButton: "Çeviriyi kaydet", translatedPreviewLabel: "Çeviri önizlemesi", translationEditHelp: "Teklifle birlikte kaydetmeden önce bu taslağı inceleyip düzenleyin.", acknowledgementText: "Eksik veya hatalı gönderimlerin promosyonu geciktirebileceğini ve materyallerin 6 hafta önceden gönderilmesi gerektiğini anlıyorum.",
+  },
 };
 
 Object.entries(formCopyTranslations).forEach(([language, copy]) => {
@@ -883,7 +906,7 @@ const typeFieldGroups = {
     { name: "member_benefits", label: "Member benefits", type: "textarea", placeholder: "Describe the member dining benefit, discount, inclusions, or early bird offer.", required: true },
   ],
   events: [
-    { name: "accommodation_details", label: "Accommodation details", type: "textarea", placeholder: "Optional stay package or room-night details connected to the event." },
+    { name: "accommodation_details", label: "Accommodation details", type: "textarea", placeholder: "Enter stay package or room-night details connected to the event, or N/A." },
     { name: "public_price", label: "Public price", placeholder: "Example: N/A or AUD 169 per person" },
     { name: "event_date", label: "Event date", type: "date", required: true },
     { name: "event_time", label: "Event time", type: "time", required: true },
@@ -1029,6 +1052,9 @@ const dynamicFieldLabels = {
     member_price: "سعر العضو",
     partner_name: "اسم الشريك",
   },
+  tr: {
+    booking_start_date: "Rezervasyon başlangıç tarihi", booking_end_date: "Rezervasyon bitiş tarihi", stay_start_date: "Konaklama başlangıç tarihi", stay_end_date: "Konaklama bitiş tarihi", room_type: "Oda türü", member_benefits: "Üye avantajları", original_price: "Orijinal fiyat", discounted_price: "İndirimli fiyat", package_details: "Paket ayrıntıları", member_package_price: "Üye paket fiyatı", public_package_value: "Herkese açık paket değeri", member_price_per_night: "Gecelik üye fiyatı", public_price_per_night: "Gecelik genel fiyat", price: "Fiyat", offer_validity_start_date: "Teklif geçerlilik başlangıcı", offer_validity_end_date: "Teklif geçerlilik bitişi", venue: "Mekân", booking_email: "E-posta ile rezervasyon", accommodation_details: "Konaklama ayrıntıları", public_price: "Genel fiyat", event_date: "Etkinlik tarihi", event_time: "Etkinlik saati", member_price: "Üye fiyatı", partner_name: "İş ortağı adı",
+  },
 };
 
 const helperNoteTranslations = {
@@ -1038,6 +1064,7 @@ const helperNoteTranslations = {
   id: "Pilih jenis penawaran untuk melihat kolom yang diperlukan untuk proses tersebut.",
   ja: "オファー種別を選択すると、その手順に必要な項目が表示されます。",
   ar: "اختر نوع العرض لعرض الحقول المطلوبة لهذه العملية.",
+  tr: "Bu süreç için gerekli alanları görmek üzere bir teklif türü seçin.",
 };
 
 const offerTypeGuidanceTranslations = {
@@ -1192,14 +1219,13 @@ function renderTypeSpecificFields() {
   fields.forEach((field) => {
     const label = document.createElement("label");
     if (field.name === "member_benefits") label.classList.add("full-width-field");
-    if (field.required) label.classList.add("required-field");
     const labelText = document.createElement("span");
     labelText.textContent = dynamicFieldLabels[language]?.[field.name] || field.label;
     label.append(labelText);
     const input = document.createElement(field.type === "textarea" ? "textarea" : "input");
     input.name = field.name;
     input.dataset.dynamicField = "true";
-    input.required = Boolean(field.required);
+    input.required = true;
     input.placeholder = field.placeholder || "";
     input.value = existingValues[field.name] || "";
     if (field.type === "textarea") input.rows = 4;
@@ -1909,28 +1935,38 @@ function clearTurnstileWidget() {
   turnstileContainer.replaceChildren();
 }
 
+async function validateBookingLink(bookingLink, turnstileToken) {
+  const response = await window.authenticatedFetch("/.netlify/functions/validate-booking-link", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ booking_link: bookingLink, turnstile_token: turnstileToken }),
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(result.error || "The booking link could not be validated.");
+  return result;
+}
+
+function confirmBookingLink(validation, bookingLink, copy) {
+  bookingPreview.href = bookingLink;
+  bookingPreview.textContent = bookingLink;
+  bookingDialogTitle.textContent = validation.live ? copy.bookingLinkLiveTitle : copy.bookingLinkNotLiveTitle;
+  bookingDialogText.textContent = validation.live ? copy.bookingLinkLiveText : copy.bookingLinkNotLiveText;
+  bookingDialog.dataset.status = validation.live ? "live" : "warning";
+  return new Promise((resolve) => {
+    bookingDialog.addEventListener("close", () => resolve(bookingDialog.returnValue === "confirm"), { once: true });
+    bookingDialog.showModal();
+  });
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   setMessage("");
 
-  if (!form.reportValidity() || !validateDates() || !validateRequiredDetails()) {
+  if (!form.reportValidity() || !validateDates() || !validateRequiredDetails() || !validateRequiredUploads()) {
     if (!formMessage.textContent) {
       setMessage("Please fix the highlighted fields before submitting the offer.", "error");
     }
     return;
-  }
-
-  if (selectedBookingMethod() === "booking_link") {
-    const bookingLink = form.elements.booking_link.value.trim();
-    bookingPreview.href = bookingLink;
-    bookingPreview.textContent = bookingLink;
-
-    const result = await new Promise((resolve) => {
-      bookingDialog.addEventListener("close", () => resolve(bookingDialog.returnValue), { once: true });
-      bookingDialog.showModal();
-    });
-
-    if (result !== "confirm") return;
   }
 
   const submitButton = form.querySelector('button[type="submit"]');
@@ -1940,7 +1976,14 @@ form.addEventListener("submit", async (event) => {
 
   try {
     const record = buildSubmissionRecord();
-    const turnstileToken = await requestTurnstileToken();
+    let turnstileToken = await requestTurnstileToken();
+    if (selectedBookingMethod() === "booking_link") {
+      submitButton.textContent = copy.bookingLinkChecking;
+      const validation = await validateBookingLink(record.booking_link, turnstileToken);
+      if (!await confirmBookingLink(validation, record.booking_link, copy)) return;
+      submitButton.textContent = copy.turnstileVerifying;
+      turnstileToken = await requestTurnstileToken();
+    }
     submitButton.textContent = "Creating Asana task...";
     const result = await createAsanaTask(record, turnstileToken);
     submitButton.textContent = "Attaching images...";

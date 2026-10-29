@@ -54,6 +54,7 @@
                 <option value="id">Bahasa Indonesia</option>
                 <option value="ja">日本語</option>
                 <option value="ar">العربية</option>
+                <option value="tr">Türkçe</option>
               </select>
             </label>
           </div>
@@ -93,12 +94,11 @@
             <div>
               <p class="eyebrow" data-i18n="formEyebrow">Stay and dining offers</p>
               <h2 data-i18n="formTitle">Create your Explorer offer</h2>
-              <p class="required-fields-note" data-i18n="requiredFieldsNote">Fields marked * are mandatory.</p>
             </div>
           </div>
 
           <section id="offerTypeSection" class="form-section offer-type-first" data-section-number="01">
-            <h3 id="offerTypeQuestion" class="required-label" data-i18n="offerTypeQuestion">What type of offer are you submitting?</h3>
+            <h3 id="offerTypeQuestion" data-i18n="offerTypeQuestion">What type of offer are you submitting?</h3>
             <p data-i18n="offerTypeHelp">Your choice determines the dates, pricing, and supporting information requested below.</p>
             <label class="select-only visually-hidden">
               <select id="offerType" name="offer_type" required aria-label="Offer type" data-i18n-aria-label="offerTypeLabel">
@@ -131,13 +131,13 @@
                 <input name="person_in_charge_name" required autocomplete="name" placeholder="Example: Yeni Meytadewi">
               </label>
               <label><span data-i18n="hotelRidLabel">Hotel RID code</span>
-                <input name="hotel_rid_code" placeholder="Example: B590">
+                <input name="hotel_rid_code" required placeholder="Example: B590">
               </label>
               <label><span data-i18n="hotelNameLabel">Hotel name</span>
-                <input name="hotel_name" autocomplete="organization" placeholder="Example: Swissotel Jakarta PIK Avenue">
+                <input name="hotel_name" required autocomplete="organization" placeholder="Example: Swissotel Jakarta PIK Avenue">
               </label>
               <label><span data-i18n="cityCountryLabel">City - Country</span>
-                <input name="city_country" placeholder="Example: Phuket - Thailand">
+                <input name="city_country" required placeholder="Example: Phuket - Thailand">
               </label>
             </div>
           </section>
@@ -155,7 +155,7 @@
                 <input name="offer_subtitle" required placeholder="Short member-facing benefit line">
               </label>
               <label><span data-i18n="metaDescriptionLabel">Meta description</span>
-                <input name="meta_description" maxlength="160" placeholder="Up to 160 characters for search/social preview">
+                <input name="meta_description" required maxlength="160" placeholder="Up to 160 characters for search/social preview">
               </label>
             </div>
             <label><span data-i18n="offerDescriptionLabel">Offer description</span>
@@ -172,7 +172,7 @@
             <div id="typeSpecificFields" class="dynamic-fields" aria-live="polite"></div>
             <p id="dateMessage" class="inline-alert" aria-live="polite"></p>
             <fieldset class="booking-method-fieldset">
-              <legend class="required-label" data-i18n="bookingMethodQuestion">How can members book?</legend>
+              <legend data-i18n="bookingMethodQuestion">How can members book?</legend>
               <div class="booking-method-options">
                 <label><input name="booking_method" type="radio" value="booking_link" required><span data-i18n="bookingMethodLink">Booking link</span></label>
                 <label><input name="booking_method" type="radio" value="email_rsvp" required><span data-i18n="bookingMethodEmailRsvp">Booking via email / RSVP form</span></label>
@@ -189,7 +189,7 @@
               </label>
             </div>
             <label><span data-i18n="termsLabel">Terms and conditions</span>
-              <textarea name="terms" rows="4" placeholder="Minimum stays, blackout dates, redemption instructions, exclusions..."></textarea>
+              <textarea name="terms" required rows="4" placeholder="Minimum stays, blackout dates, redemption instructions, exclusions..."></textarea>
             </label>
           </section>
 
@@ -285,7 +285,7 @@
 
           <section class="form-section">
             <h3 data-i18n="finalAcknowledgement">Final acknowledgement</h3>
-            <label class="checkline required-field">
+            <label class="checkline">
               <input name="acknowledgement" type="checkbox" value="I understand" required>
               <span data-i18n="acknowledgementText">I understand incomplete or inaccurate submissions may delay promotion, and assets are due 6 weeks in advance.</span>
             </label>
@@ -304,12 +304,12 @@
 
     <dialog id="bookingDialog">
       <form method="dialog" class="dialog-content">
-        <h2 data-i18n="dialogTitle">Double-check the booking link</h2>
-        <p data-i18n="dialogText">Hotels will send guests to this exact URL. Please confirm it opens the correct booking page for this offer.</p>
+        <h2 id="bookingDialogTitle">Booking link validation</h2>
+        <p id="bookingDialogText">The booking link has been checked.</p>
         <a id="bookingPreview" href="#" target="_blank" rel="noreferrer"></a>
         <div class="actions">
           <button value="cancel" class="secondary" data-i18n="goBackButton">Go back</button>
-          <button value="confirm" data-i18n="confirmButton">Confirm and submit</button>
+          <button value="confirm" data-i18n="continueButton">Continue</button>
         </div>
       </form>
     </dialog>

@@ -20,6 +20,9 @@ const confirmationCopy = {
   ar: {
     eyebrow: "اكتمل الإرسال", headline: (title) => `${title} في طريقه إلى المراجعة`, intro: "تم استلام عرضك وإرساله إلى الفريق للمراجعة.", reference: "مرجع العرض", copyId: "نسخ المعرّف", copied: "تم النسخ", copyFailed: "حدد المعرّف وانسخه يدويًا.", whatNext: "ماذا سيحدث بعد ذلك؟", received: "تم الاستلام", inReview: "قيد المراجعة", live: "منشور", hotelName: "اسم الفندق", hotelCode: "رمز الفندق", offerType: "نوع العرض", offerTitle: "عنوان العرض", submitterEmail: "البريد الإلكتروني للمرسل", bookingMethod: "طريقة الحجز", dateRange: "نطاق تاريخ الإرسال", createAnother: "إنشاء عرض آخر", notProvided: "غير متوفر", asanaCreated: "مهمة المراجعة في Asana جاهزة.", openAsana: "عرض المهمة في Asana", noImages: "لم يتم اختيار صور لإرفاقها.", imagesAttached: (count) => `تم إرفاق ${count} من الصور بمهمة المراجعة.`, imagesFailed: (attached, attempted, failed) => `تم إرفاق ${attached} من أصل ${attempted} صورة. تعذر إرفاق ${failed}.`,
   },
+  tr: {
+    eyebrow: "Gönderim tamamlandı", headline: "Teklif başarıyla oluşturuldu", intro: "Teklifiniz alındı ve incelenmek üzere ekibe gönderildi.", reference: "Teklif ID", copyId: "ID'yi kopyala", copied: "Kopyalandı", copyFailed: "ID'yi seçip elle kopyalayın.", whatNext: "Sonraki adımlar", received: "Alındı", inReview: "İnceleniyor", live: "Yayında", createAnother: "Başka bir teklif oluştur", notProvided: "Belirtilmedi", asanaLabel: "İnceleme çalışma alanı", asanaCreated: "Asana göreviniz görüntülenmeye hazır.", openAsana: "Görevi Asana'da görüntüle",
+  },
 };
 
 const simplifiedConfirmationCopy = {
@@ -28,6 +31,7 @@ const simplifiedConfirmationCopy = {
   id: { headline: "Penawaran berhasil dibuat", asanaLabel: "Ruang peninjauan" },
   ja: { headline: "オファーを作成しました", asanaLabel: "レビューワークスペース" },
   ar: { headline: "تم إنشاء العرض بنجاح", asanaLabel: "مساحة عمل المراجعة" },
+  tr: { headline: "Teklif başarıyla oluşturuldu", asanaLabel: "İnceleme çalışma alanı" },
 };
 const copy = {
   ...(confirmationCopy[confirmationLanguage] || confirmationCopy.en),

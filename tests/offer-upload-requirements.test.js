@@ -24,7 +24,17 @@ assert.deepEqual(
 );
 assert.match(source, /rateScreenshotInput\.required = needsRateScreenshot/);
 assert.match(source, /bookingScreenshotInput\.required = needsBookingScreenshot/);
+assert.match(source, /input\.required = true/);
+assert.match(source, /validateRequiredDetails\(\) \|\| !validateRequiredUploads\(\)/);
 assert.match(html, /id="rateScreenshotCard"[^>]*is-hidden/);
 assert.match(html, /id="bookingScreenshotCard"[^>]*is-hidden/);
+
+["hotel_rid_code", "hotel_name", "city_country", "meta_description"].forEach((name) => {
+  assert.match(html, new RegExp(`<input name="${name}"[^>]*required`), `${name} should be required`);
+});
+assert.match(html, /<textarea name="terms" required/);
+assert.doesNotMatch(html, /required-fields-note/);
+assert.doesNotMatch(html, /required-label/);
+assert.doesNotMatch(html, /required-field/);
 
 console.log("Conditional upload requirements passed for all six offer types.");

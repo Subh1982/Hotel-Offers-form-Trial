@@ -14,6 +14,7 @@ const LANGUAGE_NAMES = {
   id: "Bahasa Indonesia",
   ja: "Japanese",
   ar: "Arabic",
+  tr: "Turkish",
 };
 
 const LANGUAGE_RULES = {
@@ -23,6 +24,7 @@ const LANGUAGE_RULES = {
   vi: "Use native-level Vietnamese that feels written by a professional Vietnamese copywriter. Be warm, premium, clear and benefit-driven. Follow Vietnamese CRM conventions and use DD/MM/YY dates (for example, 31/08/26).",
   ar: "Use native-level Modern Standard Arabic suitable for premium hospitality audiences across the Middle East. Make the copy natural, warm, refined, clear and benefit-driven, and preserve right-to-left readability.",
   en: "Use natural, polished English suitable for premium hospitality audiences. Be warm, refined, clear and benefit-driven.",
+  tr: "Use native-level Turkish suitable for premium hospitality audiences. Make the copy natural, warm, refined, concise and benefit-driven; use contemporary Turkish travel and CRM conventions.",
 };
 
 function includesTerm(text, term) {

@@ -28,7 +28,7 @@ for (const [language, copy] of Object.entries(formCopyTranslations)) {
   Object.assign(uiTranslations[language], copy);
 }
 
-const languages = ["en", "th", "vi", "id", "ja", "ar"];
+const languages = ["en", "th", "vi", "id", "ja", "ar", "tr"];
 const pageKeys = [...html.matchAll(/data-i18n="([^"]+)"/g)].map((match) => match[1]);
 const ariaKeys = [...html.matchAll(/data-i18n-aria-label="([^"]+)"/g)].map((match) => match[1]);
 const placeholderKeys = [...html.matchAll(/data-i18n-placeholder="([^"]+)"/g)].map((match) => match[1]);

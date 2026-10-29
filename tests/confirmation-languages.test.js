@@ -6,7 +6,7 @@ const test = require("node:test");
 const source = fs.readFileSync(path.join(__dirname, "..", "confirmation.js"), "utf8");
 
 test("confirmation copy is present for every supported interface language", () => {
-  const languages = ["en", "th", "vi", "id", "ja", "ar"];
+  const languages = ["en", "th", "vi", "id", "ja", "ar", "tr"];
   const requiredKeys = ["headline", "copyId", "copied", "whatNext", "received", "inReview", "live", "openAsana"];
   languages.forEach((language, index) => {
     assert.match(source, new RegExp(`\\n  ${language}: \\{`), `missing confirmation copy for ${language}`);
@@ -18,7 +18,7 @@ test("confirmation copy is present for every supported interface language", () =
 });
 
 test("simplified confirmation headline and Asana label are localized", () => {
-  ["th", "vi", "id", "ja", "ar"].forEach((language) => {
+  ["th", "vi", "id", "ja", "ar", "tr"].forEach((language) => {
     assert.match(source, new RegExp(`${language}: \\{ headline: .*asanaLabel:`), `${language} is missing simplified confirmation copy`);
   });
 });
