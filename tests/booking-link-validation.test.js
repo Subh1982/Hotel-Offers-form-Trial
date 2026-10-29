@@ -13,7 +13,7 @@ test("booking-link check occurs after Turnstile and before submission", () => {
   const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
   const submitFlow = app.slice(app.indexOf('form.addEventListener("submit"'));
   assert.ok(submitFlow.indexOf("requestTurnstileToken()") < submitFlow.indexOf("validateBookingLink(record.booking_link"));
-  assert.ok(submitFlow.indexOf("validateBookingLink(record.booking_link") < submitFlow.indexOf("createAsanaTask(record"));
+  assert.ok(submitFlow.indexOf("validateBookingLink(record.booking_link") < submitFlow.indexOf("submitOfferToDrive(record"));
   assert.match(submitFlow, /confirmBookingLink\(validation/);
 });
 

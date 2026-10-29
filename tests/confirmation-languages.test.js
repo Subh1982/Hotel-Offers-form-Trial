@@ -7,7 +7,7 @@ const source = fs.readFileSync(path.join(__dirname, "..", "confirmation.js"), "u
 
 test("confirmation copy is present for every supported interface language", () => {
   const languages = ["en", "th", "vi", "id", "ja", "ar", "tr"];
-  const requiredKeys = ["headline", "copyId", "copied", "whatNext", "received", "inReview", "live", "openAsana"];
+  const requiredKeys = ["headline", "copyId", "copied", "whatNext", "received", "inReview", "live"];
   languages.forEach((language, index) => {
     assert.match(source, new RegExp(`\\n  ${language}: \\{`), `missing confirmation copy for ${language}`);
     const start = source.indexOf(`\n  ${language}: {`);
@@ -17,9 +17,9 @@ test("confirmation copy is present for every supported interface language", () =
   });
 });
 
-test("simplified confirmation headline and Asana label are localized", () => {
+test("simplified confirmation headline and Drive label are localized", () => {
   ["th", "vi", "id", "ja", "ar", "tr"].forEach((language) => {
-    assert.match(source, new RegExp(`${language}: \\{ headline: .*asanaLabel:`), `${language} is missing simplified confirmation copy`);
+    assert.match(source, new RegExp(`${language}: \\{ headline: .*driveLabel:`), `${language} is missing simplified confirmation copy`);
   });
 });
 
@@ -29,14 +29,14 @@ test("confirmation page retains RTL behavior for Arabic", () => {
 
 test("confirmation interactions include copy ID and Asana action", () => {
   assert.match(source, /navigator\.clipboard\.writeText\(confirmation\.offer_id\)/);
-  assert.match(source, /confirmation\.asana\?\.permalink_url/);
+  assert.match(source, /confirmation\.drive\?\.webViewLink/);
 });
 
 test("confirmation page keeps only the essential completion content", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "confirmation.html"), "utf8");
   assert.match(html, /id="confirmationOfferId"/);
   assert.match(html, /class="next-steps"/);
-  assert.match(html, /id="openAsanaButton"/);
+  assert.match(html, /id="openDriveButton"/);
   assert.match(html, /data-confirmation-i18n="createAnother"/);
   assert.match(html, /class="offer-ticket-collection">Explorer Offers Collection/);
   assert.doesNotMatch(html, /class="confirmation-details"/);

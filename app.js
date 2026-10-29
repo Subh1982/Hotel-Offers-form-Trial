@@ -1694,10 +1694,13 @@ function setTranslationStatus(message, type = "") {
 
 function buildSubmissionRecord() {
   persistTranslationPreview(activeTranslationTarget);
+  const submittedNow = new Date();
+  const submissionDate = [submittedNow.getFullYear(), String(submittedNow.getMonth() + 1).padStart(2, "0"), String(submittedNow.getDate()).padStart(2, "0")].join("-");
   return {
     id: null,
     offer_id: "",
-    generated_at: new Date().toISOString(),
+    generated_at: submittedNow.toISOString(),
+    submission_date: submissionDate,
     email: fieldValue("email"),
     person_in_charge_name: fieldValue("person_in_charge_name"),
     hotel_rid_code: fieldValue("hotel_rid_code"),
@@ -1786,13 +1789,13 @@ async function buildAsanaImageAttachments() {
     })));
 }
 
-async function createAsanaTask(record, turnstileToken = "") {
+async function submitOfferToDrive(record, turnstileToken = "") {
   const controller = new AbortController();
   let timeout;
   const deadline = new Promise((resolve, reject) => {
     timeout = window.setTimeout(() => {
       controller.abort();
-      const error = new Error("Asana is taking too long to respond. Check Asana before submitting again, as the task may already have been created.");
+      const error = new Error("The Drive archive is taking too long to create. Check Google Drive before submitting again, as the ZIP may already have been uploaded.");
       error.name = "SubmissionTimeoutError";
       reject(error);
     }, 28000);
@@ -1814,7 +1817,7 @@ async function createAsanaTask(record, turnstileToken = "") {
     response = await Promise.race([submission, deadline]);
   } catch (error) {
     if (error.name === "AbortError" || error.name === "SubmissionTimeoutError") {
-      throw new Error("Asana is taking too long to respond. Check Asana before submitting again, as the task may already have been created.");
+      throw new Error("The Drive archive is taking too long to create. Check Google Drive before submitting again, as the ZIP may already have been uploaded.");
     }
     throw error;
   } finally {
@@ -2002,10 +2005,8 @@ form.addEventListener("submit", async (event) => {
       submitButton.textContent = copy.turnstileVerifying;
       turnstileToken = await requestTurnstileToken();
     }
-    submitButton.textContent = "Creating Asana task...";
-    const result = await createAsanaTask(record, turnstileToken);
-    submitButton.textContent = "Attaching images...";
-    const attachments = await attachImagesToAsana(result.asana.gid);
+    submitButton.textContent = "Creating ZIP and saving to Google Drive...";
+    const result = await submitOfferToDrive(record, turnstileToken);
     const confirmation = {
       offer_id: result.offer_id,
       hotel_name: record.hotel_name || record.offer_details.partner_name || "Not provided",
@@ -2016,8 +2017,8 @@ form.addEventListener("submit", async (event) => {
       booking_link: record.booking_link || "Not provided",
       booking_details: record.booking_link || record.offer_details.booking_email || "Not provided",
       date_range: buildDateRangeSummary(record),
+      drive: result.drive,
       asana: result.asana,
-      attachments,
     };
     sessionStorage.setItem("offerSubmissionConfirmation", JSON.stringify(confirmation));
     window.location.assign("/confirmation.html");

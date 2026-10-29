@@ -1,4 +1,5 @@
 const { requireAuth } = require("./_auth");
+const { uploadOfferArchive } = require("./_drive-archive");
 
 function json(statusCode, body) {
   return { statusCode, headers: { "content-type": "application/json" }, body: JSON.stringify(body) };
@@ -192,6 +193,9 @@ exports.handler = async (event) => {
   }
 
   if (submission.action === "attach_image") {
+    if (cleanEnvironmentValue(process.env.ENABLE_ASANA_TASK_CREATION).toLowerCase() !== "true") {
+      return json(409, { error: "Asana task creation is temporarily disabled." });
+    }
     const taskGid = String(submission.task_gid || "").trim();
     if (!/^\d+$/.test(taskGid)) return json(400, { error: "A valid Asana task ID is required." });
     const attachments = await attachImagesToAsanaTask(taskGid, [submission.asset]);
@@ -206,6 +210,7 @@ exports.handler = async (event) => {
   const offer = {
     offer_id: createOfferId(),
     generated_at: submission.generated_at,
+    submission_date: submission.submission_date,
     email: auth.email,
     person_in_charge_name: submission.person_in_charge_name,
     hotel_rid_code: submission.hotel_rid_code,
@@ -226,9 +231,21 @@ exports.handler = async (event) => {
     status: "submitted",
   };
 
-  const asana = await createAsanaTask(offer);
-  if (!asana.ok) return json(asana.skipped ? 500 : 502, { error: asana.error, details: asana.details, service: "asana" });
-  return json(200, { ok: true, offer_id: offer.offer_id, asana });
+  let drive;
+  try {
+    drive = await uploadOfferArchive(offer);
+  } catch (error) {
+    console.error("Google Drive archive upload failed", error);
+    return json(502, { error: error.message || "The ZIP archive could not be stored in Google Drive.", service: "google_drive" });
+  }
+
+  const asanaEnabled = cleanEnvironmentValue(process.env.ENABLE_ASANA_TASK_CREATION).toLowerCase() === "true";
+  let asana = { ok: false, skipped: true, disabled: !asanaEnabled };
+  if (asanaEnabled) {
+    asana = await createAsanaTask(offer);
+    if (!asana.ok) return json(asana.skipped ? 500 : 502, { error: asana.error, details: asana.details, service: "asana", drive });
+  }
+  return json(200, { ok: true, offer_id: offer.offer_id, drive, asana });
 };
 
 exports._test = { asanaTaskNotes, savedTranslationSections };

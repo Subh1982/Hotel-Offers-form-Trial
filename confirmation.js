@@ -3,7 +3,7 @@ const confirmationLanguage = localStorage.getItem("explorer-offer-language") || 
 
 const confirmationCopy = {
   en: {
-    eyebrow: "Submission complete", headline: "Offer created successfully", intro: "Your offer has been received and sent to the team for review.", reference: "Offer ID", copyId: "Copy ID", copied: "Copied", copyFailed: "Select and copy the ID manually.", whatNext: "Next steps", received: "Received", inReview: "In review", live: "Live", createAnother: "Create another offer", notProvided: "Not provided", asanaLabel: "Review workspace", asanaCreated: "Your Asana task is ready to view.", openAsana: "View task in Asana",
+    eyebrow: "Submission complete", headline: "Offer created successfully", intro: "Your offer has been received and archived securely.", reference: "Offer ID", copyId: "Copy ID", copied: "Copied", copyFailed: "Select and copy the ID manually.", whatNext: "Next steps", received: "Received", inReview: "In review", live: "Live", createAnother: "Create another offer", notProvided: "Not provided", driveLabel: "Submission archive", driveCreated: "Your ZIP archive has been saved to Google Drive.", openDrive: "View ZIP in Google Drive",
   },
   th: {
     eyebrow: "ส่งข้อมูลเรียบร้อย", headline: (title) => `${title} กำลังเข้าสู่การตรวจสอบ`, intro: "เราได้รับข้อเสนอของคุณและส่งให้ทีมตรวจสอบแล้ว", reference: "หมายเลขอ้างอิงข้อเสนอ", copyId: "คัดลอก ID", copied: "คัดลอกแล้ว", copyFailed: "โปรดเลือกและคัดลอก ID ด้วยตนเอง", whatNext: "ขั้นตอนต่อไป", received: "ได้รับแล้ว", inReview: "กำลังตรวจสอบ", live: "เผยแพร่", hotelName: "ชื่อโรงแรม", hotelCode: "รหัสโรงแรม", offerType: "ประเภทข้อเสนอ", offerTitle: "ชื่อข้อเสนอ", submitterEmail: "อีเมลผู้ส่ง", bookingMethod: "วิธีการจอง", dateRange: "ช่วงวันที่ส่งข้อมูล", createAnother: "สร้างข้อเสนออื่น", notProvided: "ไม่ได้ระบุ", asanaCreated: "งานตรวจสอบใน Asana พร้อมแล้ว", openAsana: "ดูงานใน Asana", noImages: "ไม่ได้เลือกภาพสำหรับแนบ", imagesAttached: (count) => `แนบภาพ ${count} ภาพกับงานตรวจสอบแล้ว`, imagesFailed: (attached, attempted, failed) => `แนบภาพสำเร็จ ${attached} จาก ${attempted} ภาพ และไม่สำเร็จ ${failed} ภาพ`,
@@ -21,17 +21,17 @@ const confirmationCopy = {
     eyebrow: "اكتمل الإرسال", headline: (title) => `${title} في طريقه إلى المراجعة`, intro: "تم استلام عرضك وإرساله إلى الفريق للمراجعة.", reference: "مرجع العرض", copyId: "نسخ المعرّف", copied: "تم النسخ", copyFailed: "حدد المعرّف وانسخه يدويًا.", whatNext: "ماذا سيحدث بعد ذلك؟", received: "تم الاستلام", inReview: "قيد المراجعة", live: "منشور", hotelName: "اسم الفندق", hotelCode: "رمز الفندق", offerType: "نوع العرض", offerTitle: "عنوان العرض", submitterEmail: "البريد الإلكتروني للمرسل", bookingMethod: "طريقة الحجز", dateRange: "نطاق تاريخ الإرسال", createAnother: "إنشاء عرض آخر", notProvided: "غير متوفر", asanaCreated: "مهمة المراجعة في Asana جاهزة.", openAsana: "عرض المهمة في Asana", noImages: "لم يتم اختيار صور لإرفاقها.", imagesAttached: (count) => `تم إرفاق ${count} من الصور بمهمة المراجعة.`, imagesFailed: (attached, attempted, failed) => `تم إرفاق ${attached} من أصل ${attempted} صورة. تعذر إرفاق ${failed}.`,
   },
   tr: {
-    eyebrow: "Gönderim tamamlandı", headline: "Teklif başarıyla oluşturuldu", intro: "Teklifiniz alındı ve incelenmek üzere ekibe gönderildi.", reference: "Teklif ID", copyId: "ID'yi kopyala", copied: "Kopyalandı", copyFailed: "ID'yi seçip elle kopyalayın.", whatNext: "Sonraki adımlar", received: "Alındı", inReview: "İnceleniyor", live: "Yayında", createAnother: "Başka bir teklif oluştur", notProvided: "Belirtilmedi", asanaLabel: "İnceleme çalışma alanı", asanaCreated: "Asana göreviniz görüntülenmeye hazır.", openAsana: "Görevi Asana'da görüntüle",
+    eyebrow: "Gönderim tamamlandı", headline: "Teklif başarıyla oluşturuldu", intro: "Teklifiniz alındı ve güvenli şekilde arşivlendi.", reference: "Teklif ID", copyId: "ID'yi kopyala", copied: "Kopyalandı", copyFailed: "ID'yi seçip elle kopyalayın.", whatNext: "Sonraki adımlar", received: "Alındı", inReview: "İnceleniyor", live: "Yayında", createAnother: "Başka bir teklif oluştur", notProvided: "Belirtilmedi", driveLabel: "Gönderim arşivi", driveCreated: "ZIP arşiviniz Google Drive'a kaydedildi.", openDrive: "ZIP'i Google Drive'da görüntüle",
   },
 };
 
 const simplifiedConfirmationCopy = {
-  th: { headline: "สร้างข้อเสนอสำเร็จ", asanaLabel: "พื้นที่ตรวจสอบ" },
-  vi: { headline: "Đã tạo ưu đãi thành công", asanaLabel: "Không gian xét duyệt" },
-  id: { headline: "Penawaran berhasil dibuat", asanaLabel: "Ruang peninjauan" },
-  ja: { headline: "オファーを作成しました", asanaLabel: "レビューワークスペース" },
-  ar: { headline: "تم إنشاء العرض بنجاح", asanaLabel: "مساحة عمل المراجعة" },
-  tr: { headline: "Teklif başarıyla oluşturuldu", asanaLabel: "İnceleme çalışma alanı" },
+  th: { headline: "สร้างข้อเสนอสำเร็จ", driveLabel: "ไฟล์เก็บถาวรการส่งข้อมูล" },
+  vi: { headline: "Đã tạo ưu đãi thành công", driveLabel: "Tệp lưu trữ nội dung gửi" },
+  id: { headline: "Penawaran berhasil dibuat", driveLabel: "Arsip pengiriman" },
+  ja: { headline: "オファーを作成しました", driveLabel: "提出アーカイブ" },
+  ar: { headline: "تم إنشاء العرض بنجاح", driveLabel: "أرشيف الإرسال" },
+  tr: { headline: "Teklif başarıyla oluşturuldu", driveLabel: "Gönderim arşivi" },
 };
 const copy = {
   ...(confirmationCopy[confirmationLanguage] || confirmationCopy.en),
@@ -74,11 +74,11 @@ if (!rawConfirmation) {
     }
   });
 
-  document.getElementById("confirmationAsanaStatus").textContent = copy.asanaCreated;
-  const asanaButton = document.getElementById("openAsanaButton");
-  if (confirmation.asana?.permalink_url) {
-    asanaButton.href = confirmation.asana.permalink_url;
-    asanaButton.classList.remove("is-hidden");
+  document.getElementById("confirmationDriveStatus").textContent = copy.driveCreated || confirmationCopy.en.driveCreated;
+  const driveButton = document.getElementById("openDriveButton");
+  if (confirmation.drive?.webViewLink) {
+    driveButton.href = confirmation.drive.webViewLink;
+    driveButton.classList.remove("is-hidden");
   }
 
 }

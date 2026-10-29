@@ -2,7 +2,7 @@
 
 ## Overview
 
-The application is an Asana-first offer intake workflow. It does not persist submissions in an application database, generate ZIP files, synchronise Google Sheets, or send package emails.
+The application is a Google Drive-backed offer intake workflow. It does not persist submissions in an application database or send package emails. Asana integration remains in the codebase but is disabled unless explicitly enabled.
 
 ```text
 Hotel user
@@ -11,7 +11,7 @@ Hotel user
   -> Gemini-assisted brand tone and translations (on request)
   -> Cloudflare Turnstile verification
   -> Netlify submit-offer function
-  -> Asana task plus direct image attachments
+  -> ZIP archive uploaded to Google Drive
   -> Dedicated confirmation page
 ```
 
@@ -21,7 +21,7 @@ Hotel user
 
 `auth.js` validates exact `accor.com` and `accorplus.com` domains before contacting Clerk, manages the passwordless email-code session, and adds a Clerk bearer token to protected requests.
 
-A generated translation remains editable in the preview. It is added to `auto_translations` only when the user clicks **Save translation**. Multiple target languages can be saved before submission.
+A generated translation remains editable in the preview and is added automatically to `auto_translations`. Multiple optional target languages can be included before submission.
 
 ## Netlify Functions
 
@@ -31,13 +31,14 @@ A generated translation remains editable in the preview. It is added to `auto_tr
 | `auth-config.js` | Returns the browser-safe Clerk publishable key. |
 | `align-brand-tone.js` | Rewrites offer descriptions through Gemini using the supplied brand prompt. |
 | `translate-content.js` | Produces glossary-aware Gemini translation drafts. |
-| `submit-offer.js` | Verifies authentication and Turnstile, creates the Asana task, and attaches images. |
+| `_drive-archive.js` | Builds the ZIP and sends it to the protected Apps Script webhook. |
+| `submit-offer.js` | Verifies authentication and Turnstile, uploads the Drive archive, and conditionally runs the disabled-by-default Asana integration. |
 
-## Asana task creation
+## Drive archive creation
 
-`submit-offer.js` generates a timestamp-based Explorer Offer ID and builds the task title and description. The description contains the source offer, offer-specific details, terms, and a **Saved translations** section. Each saved translation is labelled with its target and source language.
+`submit-offer.js` generates a timestamp-based Explorer Offer ID. `_drive-archive.js` packages `submission.json`, `submission-summary.txt`, and one text file per optional translation, then sends the ZIP to a Google Apps Script web app. The script runs as its owner, saves the ZIP in Drive, and appends a tracking row to Google Sheets.
 
-After task creation, the function uploads the selected marketing images and applicable screenshots directly to the task through the Asana attachments API. Attachment failures are returned separately so the confirmation page can distinguish task creation from image-upload results.
+ZIP filenames use `YYYY-MM-DD_offer-type_hotel-rid.zip`. Asana task creation can be restored later by setting `ENABLE_ASANA_TASK_CREATION=true` and retaining the existing Asana environment variables.
 
 ## Security boundaries
 
@@ -53,6 +54,8 @@ After task creation, the function uploads the selected marketing images and appl
 | --- | --- |
 | `CLERK_PUBLISHABLE_KEY` | Initializes Clerk in the browser. |
 | `CLERK_SECRET_KEY` | Verifies sessions and retrieves the verified email. |
+| `GOOGLE_APPS_SCRIPT_WEBHOOK_URL` | Receives the ZIP and tracking metadata in the owner-authorized Apps Script. |
+| `GOOGLE_APPS_SCRIPT_SECRET` | Authenticates server-to-server webhook requests. |
 | `ASANA_ACCESS_TOKEN` | Creates tasks and uploads attachments. |
 | `ASANA_PROJECT_GID` | Selects the destination project. |
 | `ASANA_ASSIGNEE_GID` | Optionally assigns every task. |

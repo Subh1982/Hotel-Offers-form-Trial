@@ -4,6 +4,7 @@ const path = require("node:path");
 const test = require("node:test");
 
 const submitOffer = require("../netlify/functions/submit-offer");
+const driveArchive = require("../netlify/functions/_drive-archive");
 
 test("saved translations are included in the Asana task notes", () => {
   const notes = submitOffer._test.asanaTaskNotes({
@@ -33,12 +34,12 @@ test("saved translations are included in the Asana task notes", () => {
   assert.match(notes, /3泊してお得に滞在。/);
 });
 
-test("removed persistence and package services are absent", () => {
+test("legacy persistence services are absent", () => {
   const root = path.join(__dirname, "..");
   const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
   const submit = fs.readFileSync(path.join(root, "netlify/functions/submit-offer.js"), "utf8");
 
-  ["createZip", "create-package-upload", "email-package", "SUPABASE_URL", "GOOGLE_SHEETS_WEBHOOK_URL"].forEach((removed) => {
+  ["create-package-upload", "email-package", "SUPABASE_URL", "GOOGLE_SHEETS_WEBHOOK_URL"].forEach((removed) => {
     assert.equal(app.includes(removed), false, `${removed} should not remain in app.js`);
     assert.equal(submit.includes(removed), false, `${removed} should not remain in submit-offer.js`);
   });
@@ -46,22 +47,47 @@ test("removed persistence and package services are absent", () => {
   assert.equal(fs.existsSync(path.join(root, "netlify/functions/email-package.js")), false);
 });
 
-test("submission and attachment uploads cannot leave the form waiting indefinitely", () => {
+test("submission cannot leave the form waiting indefinitely and Asana defaults to disabled", () => {
   const root = path.join(__dirname, "..");
   const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
   const submit = fs.readFileSync(path.join(root, "netlify/functions/submit-offer.js"), "utf8");
 
   assert.match(app, /Promise\.race\(\[submission, deadline\]\)/);
   assert.match(app, /error\.name = "SubmissionTimeoutError"/);
-  assert.match(app, /Preparing \$\{file\.name\} took too long/);
   assert.match(app, /verificationTimeout = window\.setTimeout\(fail, 15000\)/);
-  assert.match(app, /task may already have been created/);
-  assert.match(app, /submitButton\.textContent = "Attaching images\.\.\."/);
-  assert.match(app, /action: "attach_image"/);
-  assert.doesNotMatch(app, /\.\.\.await buildAsanaSubmission\(record\)/);
-  assert.match(submit, /submission\.action === "attach_image"/);
-  assert.match(submit, /return json\(200, \{ ok: true, offer_id: offer\.offer_id, asana \}\)/);
-  assert.match(submit, /Promise\.all\(images\.map/);
-  assert.match(submit, /signal: controller\.signal/);
-  assert.match(submit, /Asana attachment upload timed out/);
+  assert.match(app, /ZIP may already have been uploaded/);
+  assert.match(app, /Creating ZIP and saving to Google Drive/);
+  assert.match(submit, /ENABLE_ASANA_TASK_CREATION/);
+  assert.match(submit, /uploadOfferArchive\(offer\)/);
+  assert.match(submit, /return json\(200, \{ ok: true, offer_id: offer\.offer_id, drive, asana \}\)/);
+});
+
+test("Drive ZIP uses the required date, offer type, and RID filename", () => {
+  const offer = {
+    submission_date: "2026-10-29",
+    generated_at: "2026-10-29T01:02:03.000Z",
+    offer_type: "Hotel stay",
+    hotel_rid_code: "B590",
+    offer_id: "EXP-TEST",
+    offer_details: {},
+    auto_translations: { tr: { language_code: "tr", text: "Türkçe teklif" } },
+  };
+  assert.equal(driveArchive.archiveFilename(offer), "2026-10-29_hotel-stay_b590.zip");
+  const archive = driveArchive.buildArchive(offer);
+  assert.equal(archive.subarray(0, 2).toString(), "PK");
+  assert.match(archive.toString("utf8"), /submission\.json/);
+  assert.match(archive.toString("utf8"), /submission-summary\.txt/);
+  assert.match(archive.toString("utf8"), /translations\/tr\.txt/);
+});
+
+test("Drive storage uses the protected Apps Script webhook without OAuth credentials", () => {
+  const root = path.join(__dirname, "..");
+  const drive = fs.readFileSync(path.join(root, "netlify/functions/_drive-archive.js"), "utf8");
+  const script = fs.readFileSync(path.join(root, "integrations/google-apps-script/Code.gs"), "utf8");
+  assert.match(drive, /GOOGLE_APPS_SCRIPT_WEBHOOK_URL/);
+  assert.match(drive, /GOOGLE_APPS_SCRIPT_SECRET/);
+  assert.doesNotMatch(drive, /GOOGLE_DRIVE_CLIENT_ID|GOOGLE_DRIVE_REFRESH_TOKEN|GOOGLE_SERVICE_ACCOUNT_JSON/);
+  assert.match(script, /DriveApp\.getFolderById\(folderId\)\.createFile\(blob\)/);
+  assert.match(script, /sheet\.appendRow/);
+  assert.match(script, /WEBHOOK_SECRET/);
 });
