@@ -6,6 +6,7 @@
  * - DRIVE_FOLDER_ID: destination Google Drive folder
  * - SPREADSHEET_ID: tracking spreadsheet
  * - SHEET_NAME: optional, defaults to "Offers"
+ * - ALLOWED_DOMAINS_SPREADSHEET_ID: created automatically on first use
  */
 function doPost(event) {
   try {
@@ -23,6 +24,11 @@ function doPost(event) {
     }
     var offer = payload.offer || {};
     var rootFolder = DriveApp.getFolderById(folderId);
+
+    if (payload.action === 'get_allowed_domains') {
+      var allowedDomainsFile = getOrCreateAllowedDomainsFile_(properties, rootFolder);
+      return jsonResponse_({ ok: true, domains: readAllowedDomains_(allowedDomainsFile.spreadsheet), file_id: allowedDomainsFile.spreadsheet.getId(), file_url: allowedDomainsFile.spreadsheet.getUrl() });
+    }
 
     if (payload.action === 'create_submission') {
       var createdAt = offer.generated_at ? new Date(offer.generated_at) : new Date();
@@ -81,6 +87,55 @@ function doPost(event) {
   } catch (error) {
     return jsonResponse_({ ok: false, error: error && error.message ? error.message : 'Storage webhook failed.' });
   }
+}
+
+function getOrCreateAllowedDomainsFile_(properties, rootFolder) {
+  var configuredId = properties.getProperty('ALLOWED_DOMAINS_SPREADSHEET_ID');
+  if (configuredId) {
+    try {
+      return { spreadsheet: SpreadsheetApp.openById(configuredId) };
+    } catch (error) {
+      properties.deleteProperty('ALLOWED_DOMAINS_SPREADSHEET_ID');
+    }
+  }
+
+  var fileName = 'Explorer Offers - Allowed Domains';
+  var matches = rootFolder.getFilesByName(fileName);
+  if (matches.hasNext()) {
+    var existing = SpreadsheetApp.openById(matches.next().getId());
+    properties.setProperty('ALLOWED_DOMAINS_SPREADSHEET_ID', existing.getId());
+    return { spreadsheet: existing };
+  }
+
+  var spreadsheet = SpreadsheetApp.create(fileName);
+  DriveApp.getFileById(spreadsheet.getId()).moveTo(rootFolder);
+  var sheet = spreadsheet.getSheets()[0];
+  sheet.setName('Allowed Domains');
+  sheet.getRange('A1:D3').setValues([
+    ['Domain', 'Enabled', 'Notes', 'Expires'],
+    ['accor.com', true, 'Permanent Accor access', ''],
+    ['accorplus.com', true, 'Permanent Accor Plus access', ''],
+  ]);
+  sheet.setFrozenRows(1);
+  sheet.getRange('B2:B3').insertCheckboxes();
+  sheet.autoResizeColumns(1, 4);
+  properties.setProperty('ALLOWED_DOMAINS_SPREADSHEET_ID', spreadsheet.getId());
+  return { spreadsheet: spreadsheet };
+}
+
+function readAllowedDomains_(spreadsheet) {
+  var sheet = spreadsheet.getSheetByName('Allowed Domains') || spreadsheet.getSheets()[0];
+  if (sheet.getLastRow() < 2) return [];
+  var rows = sheet.getRange(2, 1, sheet.getLastRow() - 1, 4).getValues();
+  var today = new Date();
+  return rows.reduce(function(domains, row) {
+    var domain = String(row[0] || '').trim().toLowerCase();
+    var enabled = row[1] === true || /^(true|yes|1)$/i.test(String(row[1] || '').trim());
+    var expiry = row[3];
+    var expired = expiry && new Date(expiry).getTime() < today.getTime();
+    if (enabled && !expired && /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/.test(domain)) domains.push(domain);
+    return domains;
+  }, []);
 }
 
 function jsonResponse_(value) {

@@ -1,4 +1,16 @@
-const ALLOWED_AUTH_DOMAINS = new Set(["accor.com", "accorplus.com"]);
+const PERMANENT_AUTH_DOMAINS = ["accor.com", "accorplus.com"];
+const ALLOWED_AUTH_DOMAINS = new Set(PERMANENT_AUTH_DOMAINS);
+
+function setAllowedAuthDomains(domains = []) {
+  ALLOWED_AUTH_DOMAINS.clear();
+  PERMANENT_AUTH_DOMAINS.forEach((domain) => ALLOWED_AUTH_DOMAINS.add(domain));
+  domains.forEach((domain) => {
+    const normalized = String(domain || "").trim().toLowerCase();
+    if (/^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/.test(normalized)) {
+      ALLOWED_AUTH_DOMAINS.add(normalized);
+    }
+  });
+}
 
 function loadAuthScript(src, attributes = {}) {
   return new Promise((resolve, reject) => {
@@ -111,6 +123,7 @@ window.explorerAuthReady = (async () => {
     const response = await fetch("/.netlify/functions/auth-config", { headers: { accept: "application/json" } });
     const config = await response.json().catch(() => ({}));
     if (!response.ok || !config.publishableKey) throw new Error(config.error || "Authentication is not configured.");
+    setAllowedAuthDomains(Array.isArray(config.allowedDomains) ? config.allowedDomains : []);
 
     const frontendApi = frontendApiFromKey(config.publishableKey);
     await loadAuthScript(`https://${frontendApi}/npm/@clerk/clerk-js@6.32.1/dist/clerk.browser.js`, {
@@ -142,7 +155,7 @@ window.explorerAuthReady = (async () => {
       const email = String(input?.value || "").trim().toLowerCase();
 
       if (!isAllowedEmail(email)) {
-        setAuthMessage("Use an @accor.com or @accorplus.com work email address.", true);
+        setAuthMessage("Use an approved work email address. Contact the platform administrator if your organisation requires access.", true);
         input?.focus();
         return;
       }
@@ -233,7 +246,7 @@ window.explorerAuthReady = (async () => {
       const email = primaryEmail(user);
       if (!isAllowedEmail(email)) {
         await window.Clerk.signOut();
-        showSignIn("Use an @accor.com or @accorplus.com work email address.");
+        showSignIn("Use an approved work email address. Contact the platform administrator if your organisation requires access.");
         return;
       }
       showAuthenticatedApp(user);

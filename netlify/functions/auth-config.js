@@ -1,3 +1,5 @@
+const { getAllowedDomains } = require("./_allowed-domains");
+
 function json(statusCode, body) {
   return {
     statusCode,
@@ -15,5 +17,6 @@ exports.handler = async (event) => {
   const publishableKey = String(process.env.CLERK_PUBLISHABLE_KEY || "").trim();
   if (!publishableKey) return json(503, { error: "Authentication is not configured." });
 
-  return json(200, { publishableKey });
+  const allowedDomains = await getAllowedDomains();
+  return json(200, { publishableKey, allowedDomains });
 };

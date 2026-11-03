@@ -12,7 +12,7 @@ const confirmationHtml = fs.readFileSync(path.join(__dirname, "..", "confirmatio
 const helpers = source.slice(0, source.indexOf("async function authenticatedFetch"));
 const context = {};
 
-vm.runInNewContext(`${helpers}\nglobalThis.testIsAllowedEmail = isAllowedEmail;`, context);
+vm.runInNewContext(`${helpers}\nglobalThis.testIsAllowedEmail = isAllowedEmail; globalThis.testSetAllowedAuthDomains = setAllowedAuthDomains;`, context);
 
 test("accepts only exact Accor and Accor Plus email domains", () => {
   assert.equal(context.testIsAllowedEmail("person@accor.com"), true);
@@ -23,6 +23,28 @@ test("accepts only exact Accor and Accor Plus email domains", () => {
   assert.equal(context.testIsAllowedEmail("person@accor.com.example"), false);
   assert.equal(context.testIsAllowedEmail("person@@accor.com"), false);
   assert.equal(context.testIsAllowedEmail("@accor.com"), false);
+});
+
+test("adds stakeholder domains while permanently retaining Accor access", () => {
+  context.testSetAllowedAuthDomains(["partnerhotel.com", "INVALID URL", " ACCOR.COM "]);
+  assert.equal(context.testIsAllowedEmail("person@partnerhotel.com"), true);
+  assert.equal(context.testIsAllowedEmail("person@accor.com"), true);
+  assert.equal(context.testIsAllowedEmail("person@accorplus.com"), true);
+  assert.equal(context.testIsAllowedEmail("person@invalid url"), false);
+
+  context.testSetAllowedAuthDomains([]);
+  assert.equal(context.testIsAllowedEmail("person@partnerhotel.com"), false);
+  assert.equal(context.testIsAllowedEmail("person@accor.com"), true);
+  assert.equal(context.testIsAllowedEmail("person@accorplus.com"), true);
+});
+
+test("server domain configuration validates exact domain names", () => {
+  const { PERMANENT_ALLOWED_DOMAINS, validDomain } = require("../netlify/functions/_allowed-domains");
+  assert.deepEqual(PERMANENT_ALLOWED_DOMAINS, ["accor.com", "accorplus.com"]);
+  assert.equal(validDomain(" PartnerHotel.com "), "partnerhotel.com");
+  assert.equal(validDomain("sub.partnerhotel.com"), "sub.partnerhotel.com");
+  assert.equal(validDomain("https://partnerhotel.com"), "");
+  assert.equal(validDomain("@partnerhotel.com"), "");
 });
 
 test("checks the email domain before starting Clerk sign-in", () => {

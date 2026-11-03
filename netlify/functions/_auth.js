@@ -1,6 +1,5 @@
 const { createClerkClient, verifyToken } = require("@clerk/backend");
-
-const ALLOWED_EMAIL_DOMAINS = new Set(["accor.com", "accorplus.com"]);
+const { getAllowedDomains } = require("./_allowed-domains");
 
 function response(statusCode, error) {
   return {
@@ -46,8 +45,9 @@ async function requireAuth(event) {
       || user.emailAddresses[0];
     const email = String(primary?.emailAddress || "").trim().toLowerCase();
 
-    if (!ALLOWED_EMAIL_DOMAINS.has(emailDomain(email))) {
-      return response(403, "Access is limited to accor.com and accorplus.com email addresses.");
+    const allowedDomains = new Set(await getAllowedDomains());
+    if (!allowedDomains.has(emailDomain(email))) {
+      return response(403, "Use an approved work email address. Contact the platform administrator if your organisation requires access.");
     }
 
     return { ok: true, userId: claims.sub, sessionId: claims.sid, email };
