@@ -64,20 +64,70 @@ function doPost(event) {
       var spreadsheet = SpreadsheetApp.openById(spreadsheetId);
       var sheet = spreadsheet.getSheetByName(sheetName) || spreadsheet.insertSheet(sheetName);
       if (sheet.getLastRow() === 0) {
-        sheet.appendRow(['Offer ID', 'Submission date', 'Created at', 'Offer type', 'Hotel RID code', 'Hotel name', 'Offer title', 'Submitter email', 'ZIP filename', 'ZIP URL', 'Submission folder URL']);
+        sheet.appendRow(trackerHeaders_());
         sheet.setFrozenRows(1);
       }
+      var details = offer.offer_details || {};
+      var translations = offer.auto_translations || {};
+      var assetLinks = (offer.assets || []).reduce(function(links, asset) {
+        if (asset.field) links[asset.field] = asset.webViewLink || asset.file_url || '';
+        return links;
+      }, {});
       sheet.appendRow([
-        offer.offer_id || '',
-        offer.submission_date || '',
         offer.generated_at || '',
+        offer.submission_date || '',
+        offer.offer_id || '',
+        'Submitted',
         offer.offer_type || '',
         offer.hotel_rid_code || '',
         offer.hotel_name || '',
-        offer.offer_title || '',
-        offer.submitter_email || '',
+        offer.city_country || '',
+        offer.person_in_charge_name || '',
+        offer.email || '',
+        offer.offer_tile_title || '',
+        offer.offer_banner_title || '',
+        offer.offer_subtitle || '',
+        offer.meta_description || '',
+        offer.offer_description || '',
+        details.booking_start_date || '',
+        details.booking_end_date || '',
+        details.stay_start_date || '',
+        details.stay_end_date || '',
+        details.offer_validity_start_date || '',
+        details.offer_validity_end_date || '',
+        details.event_date || '',
+        details.event_time || '',
+        details.venue || '',
+        details.room_type || '',
+        details.partner_name || '',
+        details.member_benefits || '',
+        details.package_details || '',
+        details.accommodation_details || '',
+        details.original_price || '',
+        details.discounted_price || '',
+        details.member_package_price || '',
+        details.public_package_value || '',
+        details.member_price_per_night || '',
+        details.public_price_per_night || '',
+        details.price || '',
+        details.public_price || '',
+        details.member_price || '',
+        details.booking_method || '',
+        offer.booking_link || '',
+        details.booking_email || '',
+        offer.terms || '',
+        Object.keys(translations).join(', '),
+        submissionFolder.getUrl(),
+        file.getUrl(),
         file.getName(),
-        file.getUrl(), submissionFolder.getUrl(),
+        assetLinks.banner_image || '',
+        assetLinks.listing_tile_image || '',
+        assetLinks.social_image || '',
+        assetLinks.rate_screenshot || '',
+        assetLinks.booking_screenshot || '',
+        assetLinks.menu_pdf || '',
+        '',
+        '',
       ]);
     } finally {
       lock.releaseLock();
@@ -87,6 +137,24 @@ function doPost(event) {
   } catch (error) {
     return jsonResponse_({ ok: false, error: error && error.message ? error.message : 'Storage webhook failed.' });
   }
+}
+
+function trackerHeaders_() {
+  return [
+    'Submission timestamp', 'Submission date', 'Offer ID', 'Status', 'Offer type',
+    'Hotel RID code', 'Hotel name', 'City - Country', 'Person in charge', 'Submitter email',
+    'Offer tile title', 'Offer banner title', 'Offer subtitle', 'Meta description', 'Offer description',
+    'Booking start date', 'Booking end date', 'Stay start date', 'Stay end date',
+    'Offer validity start date', 'Offer validity end date', 'Event date', 'Event time', 'Venue',
+    'Room type', 'Partner name', 'Member benefits', 'Package details', 'Accommodation details',
+    'Original price', 'Discounted price', 'Member package price', 'Public package value',
+    'Member price per night', 'Public price per night', 'Price', 'Public price', 'Member price',
+    'Booking method', 'Booking link', 'Booking email / RSVP', 'Terms and conditions',
+    'Translation languages', 'Submission folder URL', 'ZIP URL', 'ZIP filename',
+    'Banner image URL', 'Listing tile image URL', 'Social image URL',
+    'Rate screenshot URL', 'Booking screenshot URL', 'Menu PDF URL',
+    'Published URL', 'Notes'
+  ];
 }
 
 function getOrCreateAllowedDomainsFile_(properties, rootFolder) {

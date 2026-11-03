@@ -119,7 +119,7 @@ async function uploadOfferArchive(offer, folderId) {
   const zip = buildArchive(offer);
   const result = await callStorage({
     action: "finalize_submission", folder_id: folderId, filename, mime_type: "application/zip", archive_base64: zip.toString("base64"),
-    offer: { offer_id: offer.offer_id, submission_date: offer.submission_date, generated_at: offer.generated_at, offer_type: offer.offer_type, hotel_rid_code: offer.hotel_rid_code, hotel_name: offer.hotel_name, offer_title: offer.offer_tile_title, submitter_email: offer.email },
+    offer,
   });
   return { ok: true, id: result.file_id, name: result.file_name || filename, size: result.file_size, webViewLink: result.file_url, folderUrl: result.folder_url, sheet_updated: Boolean(result.sheet_updated) };
 }

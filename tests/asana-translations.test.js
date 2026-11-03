@@ -95,3 +95,17 @@ test("Drive storage uses the protected Apps Script webhook without OAuth credent
   assert.match(script, /Explorer Offers - Allowed Domains/);
   assert.match(script, /ALLOWED_DOMAINS_SPREADSHEET_ID/);
 });
+
+test("Drive tracker receives the complete offer and separate asset links", () => {
+  const root = path.join(__dirname, "..");
+  const drive = fs.readFileSync(path.join(root, "netlify/functions/_drive-archive.js"), "utf8");
+  const script = fs.readFileSync(path.join(root, "integrations/google-apps-script/Code.gs"), "utf8");
+
+  assert.match(drive, /archive_base64: zip\.toString\("base64"\),\s*\n\s*offer,/);
+  assert.doesNotMatch(drive, /offer:\s*\{\s*offer_id/);
+  [
+    "offer_banner_title", "offer_description", "booking_start_date", "booking_method",
+    "banner_image", "listing_tile_image", "social_image", "rate_screenshot",
+    "booking_screenshot", "menu_pdf",
+  ].forEach((field) => assert.match(script, new RegExp(field)));
+});
