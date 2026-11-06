@@ -38,11 +38,11 @@ const confirmationCopy = {
 };
 
 const offerTypes = {
-  more_escapes: { label: "More Escapes", iconId: "i-package" }, red_hot_rooms: { label: "Red Hot Rooms", iconId: "i-tag" },
-  hotel_stay: { label: "Hotel stay", localized: { th: "การเข้าพักโรงแรม", vi: "Lưu trú khách sạn", id: "Menginap di hotel", ja: "ホテル宿泊", ar: "إقامة فندقية", tr: "Otel konaklaması" }, iconId: "i-bed" },
+  more_escapes: { label: "More Escapes", iconId: "i-badge-more-escapes" }, red_hot_rooms: { label: "Red Hot Rooms", iconId: "i-rhr-tag" },
+  hotel_stay: { label: "Hotel stay", localized: { th: "การเข้าพักโรงแรม", vi: "Lưu trú khách sạn", id: "Menginap di hotel", ja: "ホテル宿泊", ar: "إقامة فندقية", tr: "Otel konaklaması" }, iconId: "i-hotel" },
   dining: { label: "Dining", localized: { th: "การรับประทานอาหาร", vi: "Ẩm thực", id: "Kuliner", ja: "ダイニング", ar: "مطاعم", tr: "Yeme-içme" }, iconId: "i-dining" },
   events: { label: "Events", localized: { th: "กิจกรรม", vi: "Sự kiện", id: "Acara", ja: "イベント", ar: "فعاليات", tr: "Etkinlikler" }, iconId: "i-crown" },
-  partners: { label: "Partners", localized: { th: "พาร์ทเนอร์", vi: "Đối tác", id: "Mitra", ja: "パートナー", ar: "الشركاء", tr: "İş ortakları" }, iconId: "i-overlap" },
+  partners: { label: "Partner Offers", headlineLabel: "Partner Offer", localized: { th: "ข้อเสนอจากพาร์ทเนอร์", vi: "Ưu đãi đối tác", id: "Penawaran partner", ja: "パートナーオファー", ar: "عروض الشركاء", tr: "İş ortağı teklifleri" }, iconId: "i-handshake" },
 };
 const localeByLanguage = { en: "en-AU", th: "th-TH", vi: "vi-VN", id: "id-ID", ja: "ja-JP", ar: "ar", tr: "tr-TR" };
 const confirmation = rawConfirmation ? JSON.parse(rawConfirmation) : null;
@@ -91,16 +91,27 @@ function applyConfirmationLanguage(language) {
     if (typeof value === "string") element.textContent = value;
   });
   if (!confirmation) return;
-  const offerType = offerTypes[confirmation.offer_type] || { label: confirmation.offer_type || "Offer", iconId: "i-tag" };
+  const offerTypeKey = offerTypes[confirmation.offer_type]
+    ? confirmation.offer_type
+    : Object.keys(offerTypes).find((type) => offerTypes[type].label === confirmation.offer_type);
+  const offerType = offerTypes[offerTypeKey] || { label: confirmation.offer_type || "Offer", iconId: "" };
   const offerTypeLabel = offerType.localized?.[confirmationLanguage] || offerType.label;
+  const englishHeadlineLabel = offerType.headlineLabel || `${offerTypeLabel} offer`;
   const offerTitle = isMissing(confirmation.offer_tile_title, copy) ? copy.notProvided : confirmation.offer_tile_title;
   const hotelName = isMissing(confirmation.hotel_name, copy) ? copy.notProvided : confirmation.hotel_name;
   document.title = `${offerTitle} | Explorer Offers Collection`;
   document.getElementById("confirmationTitle").textContent = confirmationLanguage === "en"
-    ? `Your ${offerTypeLabel} offer is submitted`
+    ? `Your ${englishHeadlineLabel} is submitted`
     : copy.headline(offerTypeLabel);
+  const confirmationTypeTile = document.getElementById("confirmationTypeTile");
+  confirmationTypeTile.dataset.offerType = confirmation.offer_type;
+  if (offerTypeKey) confirmationTypeTile.dataset.offerType = offerTypeKey;
   document.getElementById("confirmationTypeLabel").textContent = offerTypeLabel;
-  document.getElementById("confirmationTypeIcon").setAttribute("href", `assets/offer-icons.svg#${offerType.iconId}`);
+  const confirmationTypeIcon = document.getElementById("confirmationTypeIcon");
+  const confirmationTypeIconWrap = confirmationTypeIcon.closest(".offer-type-icon");
+  confirmationTypeIconWrap.hidden = !offerType.iconId;
+  if (offerType.iconId) confirmationTypeIcon.setAttribute("href", `assets/offer-type-icons.svg#${offerType.iconId}`);
+  else confirmationTypeIcon.removeAttribute("href");
   document.getElementById("confirmationOfferId").textContent = confirmation.offer_id || copy.notProvided;
   document.getElementById("confirmationOfferTitle").replaceChildren(bdi(offerTitle));
   document.getElementById("confirmationHotelName").replaceChildren(bdi(hotelName));

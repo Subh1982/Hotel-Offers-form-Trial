@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=feedback-nov26-1">
+    <link rel="stylesheet" href="styles.css?v=feedback-nov26-2">
   </head>
   <body class="auth-loading">
     <section id="authGate" class="auth-gate" aria-labelledby="authTitle">
@@ -15,7 +15,7 @@
         <img class="auth-logo" src="assets/all-accor-plus-logo.png" alt="ALL Accor Plus">
         <div class="auth-card">
           <h1 id="authTitle">Explorer Offer Submission</h1>
-          <p>Enter your Accor or Accor Plus email and we’ll send you a secure verification code. No password is required.</p>
+          <p>Enter your Accor, Accor Plus, or participating hotel work email address. We’ll send you a secure verification code - no password required.</p>
           <div id="authEmailStep" class="auth-step">
             <form id="authEmailForm" class="auth-form" novalidate>
               <label for="authEmail">Work email address</label>
@@ -91,7 +91,7 @@
           <div class="form-section">
             <h3 data-confirmation-i18n="yourOffer">Your offer</h3>
             <div class="confirmation-offer">
-              <div class="offer-type-tile is-selected"><svg aria-hidden="true"><use id="confirmationTypeIcon" href=""></use></svg><span id="confirmationTypeLabel"></span></div>
+              <div class="offer-type-tile is-selected is-static" id="confirmationTypeTile"><span class="offer-type-icon" aria-hidden="true"><svg><use id="confirmationTypeIcon" href=""></use></svg></span><span class="offer-type-name" id="confirmationTypeLabel"></span></div>
               <div class="confirmation-offer-main">
                 <h4 id="confirmationOfferTitle"></h4>
                 <p id="confirmationHotelName"></p>

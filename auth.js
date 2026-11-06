@@ -1,5 +1,6 @@
 const PERMANENT_AUTH_DOMAINS = ["accor.com", "accorplus.com"];
 const ALLOWED_AUTH_DOMAINS = new Set(PERMANENT_AUTH_DOMAINS);
+const UNAPPROVED_EMAIL_DOMAIN_MESSAGE = "That email domain isn’t currently approved. Use an Accor, Accor Plus, or participating hotel work email address. If your hotel should have access, contact the platform administrator.";
 
 function setAllowedAuthDomains(domains = []) {
   ALLOWED_AUTH_DOMAINS.clear();
@@ -169,7 +170,7 @@ window.explorerAuthReady = (async () => {
       const email = String(input?.value || "").trim().toLowerCase();
 
       if (!isAllowedEmail(email)) {
-        setAuthMessage("Use an approved work email address. Contact the platform administrator if your organisation requires access.", true);
+        setAuthMessage(UNAPPROVED_EMAIL_DOMAIN_MESSAGE, true);
         input?.focus();
         return;
       }
@@ -260,7 +261,7 @@ window.explorerAuthReady = (async () => {
       const email = primaryEmail(user);
       if (!isAllowedEmail(email)) {
         await window.Clerk.signOut();
-        showSignIn("Use an approved work email address. Contact the platform administrator if your organisation requires access.");
+        showSignIn(UNAPPROVED_EMAIL_DOMAIN_MESSAGE);
         return;
       }
       showAuthenticatedApp(user);

@@ -81,7 +81,7 @@ assert.equal(uiTranslations.ar.offerTypeHotelStay, "إقامة فندقية");
 assert.equal(uiTranslations.en.offerTypeHotelStay, "Hotel stay");
 assert.equal(uiTranslations.en.offerTypeDining, "Dining");
 assert.equal(uiTranslations.en.offerTypeEvents, "Events");
-assert.equal(uiTranslations.en.offerTypePartners, "Partner offers");
+assert.equal(uiTranslations.en.offerTypePartners, "Partner Offers");
 
 for (const language of languages) {
   assert.deepEqual(Object.keys(localizedLanguageLabels[language]).sort(), languages.slice().sort(), `${language} language menu is incomplete`);

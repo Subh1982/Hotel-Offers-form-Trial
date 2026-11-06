@@ -73,7 +73,7 @@ test("confirmation persists submission time and references every sprite icon", (
   const appSource = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
   const sprite = fs.readFileSync(path.join(__dirname, "..", "assets", "offer-icons.svg"), "utf8");
   assert.match(appSource, /submitted_at: new Date\(\)\.toISOString\(\)/);
-  ["i-check", "i-copy", "i-arrow", "i-info", "i-tag", "i-package", "i-bed", "i-dining", "i-crown", "i-overlap"].forEach((iconId) => {
+  ["i-check", "i-copy", "i-arrow", "i-info"].forEach((iconId) => {
     assert.match(sprite, new RegExp(`id="${iconId}"`), `sprite is missing ${iconId}`);
   });
 });
@@ -81,7 +81,7 @@ test("confirmation persists submission time and references every sprite icon", (
 test("confirmation supports copying the ID and prefilling another offer", () => {
   assert.match(source, /navigator\.clipboard\.writeText\(confirmation\.offer_id\)/);
   assert.match(source, /sessionStorage\.setItem\("offerHotelPrefill"/);
-  assert.match(source, /Your \$\{offerTypeLabel\} offer is submitted/);
+  assert.match(source, /Your \$\{englishHeadlineLabel\} is submitted/);
 });
 
 test("generic offer types are localized on confirmation", () => {

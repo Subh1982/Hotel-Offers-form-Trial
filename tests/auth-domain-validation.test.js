@@ -77,10 +77,19 @@ test("keeps authentication views hidden until Clerk resolves the session", () =>
 test("uses the streamlined Explorer sign-in heading", () => {
   [indexHtml, confirmationHtml].forEach((html) => {
     assert.match(html, /<h1 id="authTitle">Explorer Offer Submission<\/h1>/);
+    assert.match(html, /Enter your Accor, Accor Plus, or participating hotel work email address\. We’ll send you a secure verification code - no password required\./);
     assert.doesNotMatch(html, />Continue with your work email</);
     assert.doesNotMatch(html, /class="auth-rule"/);
     assert.doesNotMatch(html, /<p class="eyebrow">Offer Submission<\/p>/);
   });
+});
+
+test("explains how to resolve an unapproved email domain", () => {
+  assert.match(source, /That email domain isn’t currently approved\./);
+  assert.match(source, /participating hotel work email address/);
+  assert.match(source, /If your hotel should have access, contact the platform administrator\./);
+  assert.match(source, /setAuthMessage\(UNAPPROVED_EMAIL_DOMAIN_MESSAGE, true\)/);
+  assert.match(source, /showSignIn\(UNAPPROVED_EMAIL_DOMAIN_MESSAGE\)/);
 });
 
 test("does not display the missing-auth configuration warning on the static preview", () => {
