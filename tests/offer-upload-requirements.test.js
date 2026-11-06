@@ -24,7 +24,7 @@ assert.deepEqual(
 );
 assert.match(source, /rateScreenshotInput\.required = needsRateScreenshot/);
 assert.match(source, /bookingScreenshotInput\.required = needsBookingScreenshot/);
-assert.match(source, /input\.required = true/);
+assert.match(source, /input\.required = Boolean\(field\.required\)/);
 assert.match(source, /validateRequiredDetails\(\) \|\| !validateRequiredUploads\(\)/);
 assert.match(html, /id="rateScreenshotCard"[^>]*is-hidden/);
 assert.match(html, /id="bookingScreenshotCard"[^>]*is-hidden/);

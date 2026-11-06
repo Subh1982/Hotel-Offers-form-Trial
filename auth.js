@@ -64,8 +64,11 @@ function showAuthenticatedApp(user) {
   const shell = document.querySelector("#appShell");
   if (shell) shell.hidden = false;
 
-  const userEmail = document.querySelector("#authenticatedUserEmail");
-  if (userEmail) userEmail.textContent = email;
+  if (window.siteHeader?.setUser) window.siteHeader.setUser(email);
+  else {
+    const userEmail = document.querySelector("#authenticatedUserEmail");
+    if (userEmail) userEmail.textContent = email;
+  }
 
   const emailInput = document.querySelector('#offerForm input[name="email"]');
   if (emailInput) {
@@ -119,6 +122,17 @@ async function authenticatedFetch(input, init = {}) {
 
 window.authenticatedFetch = authenticatedFetch;
 window.explorerAuthReady = (async () => {
+  const localPreview = ["127.0.0.1", "localhost"].includes(window.location.hostname)
+    && new URLSearchParams(window.location.search).get("preview") === "1";
+  if (localPreview) {
+    showAuthenticatedApp({
+      primaryEmailAddressId: "local-preview",
+      emailAddresses: [{ id: "local-preview", emailAddress: "preview@accorplus.com" }],
+    });
+    window.authenticatedFetch = window.fetch.bind(window);
+    return;
+  }
+
   try {
     const response = await fetch("/.netlify/functions/auth-config", { headers: { accept: "application/json" } });
     const config = await response.json().catch(() => ({}));

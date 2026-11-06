@@ -57,6 +57,9 @@ test("submission shows staged progress and Asana defaults to disabled", () => {
   assert.match(app, /action: "finalize_submission"/);
   assert.match(submit, /disabled: true/);
   assert.match(submit, /uploadOfferArchive\(offer, submission\.folder_id\)/);
+  assert.match(submit, /ENABLE_ASANA_TASK_CREATION/);
+  assert.match(submit, /await createAsanaTask\(offer\)/);
+  assert.match(app, /await attachImagesToAsana\(result\.asana\.gid, assets\)/);
 });
 
 test("Drive ZIP uses the required date, offer type, and RID filename", () => {
@@ -105,7 +108,23 @@ test("Drive tracker receives the complete offer and separate asset links", () =>
   assert.doesNotMatch(drive, /offer:\s*\{\s*offer_id/);
   [
     "offer_banner_title", "offer_description", "booking_start_date", "booking_method",
+    "translation_required", "translation_languages",
     "banner_image", "listing_tile_image", "social_image", "rate_screenshot",
     "booking_screenshot", "menu_pdf",
   ].forEach((field) => assert.match(script, new RegExp(field)));
+});
+
+test("new translation choices are persisted for Drive and Asana", () => {
+  const root = path.join(__dirname, "..");
+  const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
+  const notes = submitOffer._test.asanaTaskNotes({
+    offer_id: "EXP-TEST",
+    status: "submitted",
+    offer_details: { translation_required: "Yes", translation_languages: "ja, ar" },
+  });
+
+  assert.match(app, /translation_required: translationRequired === "yes" \? "Yes" : "No"/);
+  assert.match(app, /translation_languages: requestedTranslationLanguages\.join\(", "\)/);
+  assert.match(notes, /translation required: Yes/);
+  assert.match(notes, /translation languages: ja, ar/);
 });

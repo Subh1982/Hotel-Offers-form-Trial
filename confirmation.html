@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=confirmation-elevated-1">
+    <link rel="stylesheet" href="styles.css?v=feedback-nov26-1">
   </head>
   <body class="auth-loading">
     <section id="authGate" class="auth-gate" aria-labelledby="authTitle">
@@ -40,55 +40,81 @@
         </div>
       </div>
     </section>
-    <main id="appShell" class="shell confirmation-shell" hidden>
-      <header class="masthead confirmation-masthead">
-        <nav class="topbar" aria-label="Platform header">
-          <img class="brand-logo" src="assets/all-accor-plus-logo.png" alt="ALL Accor Plus">
-          <div class="authenticated-user"><span id="authenticatedUserEmail"></span><button id="logoutButton" type="button" class="text-button">Log out</button></div>
-        </nav>
-        <figure class="confirmation-hero">
-          <img src="assets/explorer-resort-hero.jpg" alt="Tropical resort pool overlooking palm trees and the ocean at sunset">
-        </figure>
-      </header>
-      <section class="confirmation-screen" aria-labelledby="confirmationTitle">
-        <div class="confirmation-card confirmation-reveal confirmation-simple">
-          <div class="confirmation-heading">
-            <div class="success-mark" aria-hidden="true">✓</div>
-            <div>
-              <p class="eyebrow" data-confirmation-i18n="eyebrow">Submission complete</p>
-              <h1 id="confirmationTitle">Offer successfully submitted</h1>
-            </div>
-          </div>
-
-          <div class="confirmation-identity" aria-label="Submitted offer details">
-            <span id="confirmationOfferTypeIcon" class="confirmation-offer-icon" aria-hidden="true"></span>
-            <div class="confirmation-identity-main">
-              <strong id="confirmationOfferTitle"></strong>
-              <span id="confirmationHotelName"></span>
-            </div>
-            <div class="confirmation-id-group">
-              <span data-confirmation-i18n="reference">Offer ID</span>
-              <button id="copyOfferIdButton" type="button" class="offer-id-chip"><span id="confirmationOfferId"></span><span aria-hidden="true">⧉</span></button>
+    <div id="appShell" hidden>
+      <div id="siteHeaderMount"></div>
+      <main class="shell">
+        <header class="masthead">
+        <section class="hero-panel" aria-labelledby="confirmationTitle">
+          <div class="hero-copy">
+            <div class="success-mark" aria-hidden="true"><svg><use href="assets/offer-icons.svg#i-check"></use></svg></div>
+            <p class="eyebrow" data-confirmation-i18n="eyebrow">Submission complete</p>
+            <h1 id="confirmationTitle">Offer successfully submitted</h1>
+            <div class="confirmation-id">
+              <span class="confirmation-id-label" data-confirmation-i18n="reference">Offer ID</span>
+              <button id="copyOfferIdButton" type="button" class="offer-id-chip">
+                <span id="confirmationOfferId" class="id-text"></span>
+                <svg aria-hidden="true"><use href="assets/offer-icons.svg#i-copy"></use></svg>
+                <span class="sr-only" data-confirmation-i18n="copyId">Copy ID</span>
+              </button>
               <span id="copyOfferIdStatus" class="copy-status" role="status" aria-live="polite"></span>
             </div>
           </div>
+          <figure class="hero-visual"><img src="assets/explorer-resort-hero.jpg" alt="Tropical resort pool overlooking palm trees and the ocean at sunset"></figure>
+        </section>
+        </header>
+      <div class="workspace confirmation-workspace">
+        <aside class="panel next-steps" aria-labelledby="nextStepsTitle">
+          <h2 id="nextStepsTitle" data-confirmation-i18n="whatNext">What happens next</h2>
+          <div class="form-progress" aria-hidden="true"><span></span></div>
+          <p class="progress-note" data-confirmation-i18n="stagesProgress">1 of 3 stages complete</p>
+          <ol class="status-tracker">
+            <li class="complete">
+              <span class="node" aria-hidden="true"><svg><use href="assets/offer-icons.svg#i-check"></use></svg></span>
+              <div><div class="step-title"><strong data-confirmation-i18n="received">Received</strong><span class="step-meta" id="confirmationSubmittedShort"></span></div><p data-confirmation-i18n="receivedDesc"></p></div>
+            </li>
+            <li class="current" aria-current="step">
+              <span class="node" aria-hidden="true">2</span>
+              <div><div class="step-title"><strong data-confirmation-i18n="inReview">In review</strong><span class="step-meta" data-confirmation-i18n="now">Now</span></div><p data-confirmation-i18n="reviewDesc"></p></div>
+            </li>
+            <li>
+              <span class="node" aria-hidden="true">3</span>
+              <div><div class="step-title"><strong data-confirmation-i18n="live">Live</strong></div><p data-confirmation-i18n="liveDesc"></p></div>
+            </li>
+          </ol>
+        </aside>
 
-          <section class="next-steps" aria-labelledby="nextStepsTitle">
-            <h2 id="nextStepsTitle" data-confirmation-i18n="whatNext">What happens next?</h2>
-            <ol class="status-tracker">
-              <li class="complete" aria-current="step"><span aria-hidden="true">✓</span><strong data-confirmation-i18n="received">Received</strong></li>
-              <li><span aria-hidden="true">2</span><strong data-confirmation-i18n="inReview">In review</strong></li>
-              <li><span aria-hidden="true">3</span><strong data-confirmation-i18n="live">Live</strong></li>
-            </ol>
-          </section>
-
-          <div class="actions confirmation-actions">
-            <a id="createAnotherOfferButton" class="button-link" href="/"><span id="createAnotherOfferLabel" data-confirmation-i18n="createAnother">Create another offer</span><span aria-hidden="true">→</span></a>
+        <section class="form-surface confirmation-surface" aria-labelledby="summaryTitle">
+          <div class="form-header"><div>
+            <p class="eyebrow" data-confirmation-i18n="summaryEyebrow">Submission summary</p>
+            <h2 id="summaryTitle" data-confirmation-i18n="summaryTitle">Here’s what we received</h2>
+          </div></div>
+          <div class="form-section">
+            <h3 data-confirmation-i18n="yourOffer">Your offer</h3>
+            <div class="confirmation-offer">
+              <div class="offer-type-tile is-selected"><svg aria-hidden="true"><use id="confirmationTypeIcon" href=""></use></svg><span id="confirmationTypeLabel"></span></div>
+              <div class="confirmation-offer-main">
+                <h4 id="confirmationOfferTitle"></h4>
+                <p id="confirmationHotelName"></p>
+                <p id="confirmationHotelSub" class="muted"></p>
+              </div>
+            </div>
+            <dl class="facts">
+              <div class="fact"><dt data-confirmation-i18n="submitted">Submitted</dt><dd id="confirmationSubmitted"></dd></div>
+              <div class="fact"><dt data-confirmation-i18n="submittedBy">Submitted by</dt><dd id="confirmationEmail"></dd></div>
+              <div class="fact wide"><dt data-confirmation-i18n="dateRange">Dates</dt><dd id="confirmationDateRange"></dd></div>
+              <div class="fact wide"><dt data-confirmation-i18n="howMembersBook">How members book</dt><dd id="confirmationBooking"></dd></div>
+            </dl>
           </div>
-        </div>
-      </section>
-    </main>
-    <script src="auth.js?v=login-refine-1"></script>
-    <script src="confirmation.js?v=confirmation-simple-1"></script>
+          <div class="confirmation-notice"><svg aria-hidden="true"><use href="assets/offer-icons.svg#i-info"></use></svg><p id="confirmationNotice"></p></div>
+          <div class="confirmation-actions">
+            <a id="createAnotherOfferButton" class="button-link" href="/"><span data-confirmation-i18n="createAnother">Create another offer</span><svg aria-hidden="true"><use href="assets/offer-icons.svg#i-arrow"></use></svg></a>
+          </div>
+        </section>
+      </div>
+      </main>
+    </div>
+    <script src="site-header.js?v=site-header-1"></script>
+    <script src="auth.js?v=site-header-1"></script>
+    <script src="confirmation.js?v=site-header-1"></script>
   </body>
 </html>

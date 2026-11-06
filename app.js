@@ -36,7 +36,6 @@ const alignBrandToneButton = document.querySelector("#alignBrandToneButton");
 const brandToneStatus = document.querySelector("#brandToneStatus");
 const turnstileContainer = document.querySelector("#turnstileContainer");
 const bookingLinkFields = document.querySelector("#bookingLinkFields");
-const bookingEmailFields = document.querySelector("#bookingEmailFields");
 const rateScreenshotCard = document.querySelector("#rateScreenshotCard");
 const menuPdfCard = document.querySelector("#menuPdfCard");
 const menuPdfMessage = document.querySelector("#menuPdfMessage");
@@ -44,6 +43,14 @@ const submissionProgress = document.querySelector("#submissionProgress");
 const submissionProgressText = document.querySelector("#submissionProgressText");
 const submissionProgressBar = document.querySelector("#submissionProgressBar");
 const bookingScreenshotCard = document.querySelector("#bookingScreenshotCard");
+const accommodationDetailsCoreField = document.querySelector("#accommodationDetailsCoreField");
+const hotelNameInput = form.elements.hotel_name;
+const offerBannerTitleInput = form.elements.offer_banner_title;
+const translationComponent = document.querySelector("#translationComponent");
+const generatedImagePreviews = document.querySelector("#generatedImagePreviews");
+const offerDependentNavigationItems = sectionNavigationButtons
+  .filter((button) => button.dataset.scrollTarget !== "offerTypeSection")
+  .map((button) => button.closest("li"));
 
 const TURNSTILE_SITE_KEY = "0x4AAAAAAEx2NTrp7G-EkGjO";
 
@@ -170,7 +177,7 @@ const uiTranslations = {
     dialogText: "Hotels will send guests to this exact URL. Please confirm it opens the correct booking page for this offer.",
     goBackButton: "Go back",
     confirmButton: "Confirm and submit",
-    alignBrandToneButton: "Align with Brand tone",
+    alignBrandToneButton: "Align Offer Description with Brand Tone (Optional)",
     alignBrandToneEmpty: "Enter an offer description first.",
     alignBrandToneWorking: "Aligning...",
     alignBrandToneProgress: "Rewriting your description in the Explorer brand tone...",
@@ -186,7 +193,7 @@ const uiTranslations = {
     continueButton: "Continue",
   },
   th: {
-    alignBrandToneButton: "ปรับให้สอดคล้องกับโทนแบรนด์",
+    alignBrandToneButton: "ปรับคำอธิบายข้อเสนอให้สอดคล้องกับโทนแบรนด์ (ไม่บังคับ)",
     alignBrandToneEmpty: "โปรดกรอกรายละเอียดข้อเสนอก่อน",
     alignBrandToneWorking: "กำลังปรับโทน...",
     alignBrandToneProgress: "กำลังปรับรายละเอียดให้สอดคล้องกับโทนแบรนด์ Explorer...",
@@ -258,7 +265,7 @@ const uiTranslations = {
     confirmButton: "ยืนยันและสร้างแพ็กเกจ",
   },
   vi: {
-    alignBrandToneButton: "Điều chỉnh theo giọng điệu thương hiệu",
+    alignBrandToneButton: "Điều chỉnh mô tả ưu đãi theo giọng thương hiệu (không bắt buộc)",
     alignBrandToneEmpty: "Vui lòng nhập mô tả ưu đãi trước.",
     alignBrandToneWorking: "Đang điều chỉnh...",
     alignBrandToneProgress: "Đang viết lại mô tả theo giọng điệu thương hiệu Explorer...",
@@ -330,7 +337,7 @@ const uiTranslations = {
     confirmButton: "Xác nhận và tạo gói",
   },
   id: {
-    alignBrandToneButton: "Sesuaikan dengan gaya bahasa merek",
+    alignBrandToneButton: "Selaraskan deskripsi penawaran dengan gaya merek (opsional)",
     alignBrandToneEmpty: "Masukkan deskripsi penawaran terlebih dahulu.",
     alignBrandToneWorking: "Sedang menyesuaikan...",
     alignBrandToneProgress: "Sedang menulis ulang deskripsi dengan gaya bahasa merek Explorer...",
@@ -402,7 +409,7 @@ const uiTranslations = {
     confirmButton: "Konfirmasi dan buat paket",
   },
   ja: {
-    alignBrandToneButton: "ブランドトーンに合わせる",
+    alignBrandToneButton: "オファー説明をブランドトーンに合わせる（任意）",
     alignBrandToneEmpty: "まずオファー説明を入力してください。",
     alignBrandToneWorking: "調整中...",
     alignBrandToneProgress: "Explorerのブランドトーンに合わせて説明を書き換えています...",
@@ -509,7 +516,7 @@ const uiTranslations = {
     dialogText: "سيتم توجيه الضيوف إلى هذا الرابط تحديدًا. يرجى التأكد من أنه يفتح صفحة الحجز الصحيحة لهذا العرض.",
     goBackButton: "رجوع",
     confirmButton: "تأكيد وإرسال",
-    alignBrandToneButton: "مواءمة مع نبرة العلامة التجارية",
+    alignBrandToneButton: "مواءمة وصف العرض مع نبرة العلامة التجارية (اختياري)",
     alignBrandToneEmpty: "أدخل وصف العرض أولًا.",
     alignBrandToneWorking: "جارٍ المواءمة...",
     alignBrandToneProgress: "جارٍ إعادة صياغة الوصف وفق نبرة علامة Explorer...",
@@ -826,8 +833,77 @@ Object.entries(formCopyTranslations).forEach(([language, copy]) => {
   Object.assign(uiTranslations[language], copy);
 });
 
+const feedbackCopyTranslations = {
+  en: {
+    oneOfferTypeNote: "Please note: submit one offer type per submission.", offerTypePartners: "Partner offers", emailLabel: "Contact email", contactNameLabel: "Contact name", coreContentWebsiteNote: "To be displayed on the website.", offerTileTitleHelp: "Displayed on the offer listing. Example: Sofitel Sydney Darling Harbour.", offerBannerTitleHelp: "Displayed on the offer page. Example: More Escapes at Sofitel Sydney Darling Harbour.", offerSubtitleHelp: "Up to 150 characters. Summarise the member benefit and key inclusions.", metaDescriptionHelp: "Up to 180 characters. Include the stay, starting price and main complimentary inclusions.", offerDescriptionHelp: "Up to 500 characters. Describe the experience and include the room type if relevant.", accommodationDetailsLabel: "Accommodation details", accommodationDetailsPlaceholder: "Include hotel room and inclusions if relevant.", packageDetailsLabel: "Package details", packageDetailsPlaceholder: "List inclusions, member benefits, minimum stay and exclusions.", packageDetailsHelp: "Up to 300 characters. List inclusions, member benefits, minimum stay and exclusions.", termsPlaceholder: "Include all terms and conditions in bullet points.", termsHelp: "Up to 300 characters. Include all terms and conditions in bullet points.", alignBrandToneButton: "Align Offer Description with Brand Tone (Optional)", proofForms: "Required documents", imagesRequirementNote: "One raw image is required that accurately represents the offer.", socialImageTitle: "Social media image", socialImageHelp: "Optional, for possible social media exposure. The app will auto-resize it to 1080 x 1080px JPG.", translationPreviewTitle: "Translate content (optional)", translationOptionalNote: "Use this only when translations are required for selected markets."
+  },
+  th: {
+    oneOfferTypeNote: "โปรดทราบ: ส่งข้อเสนอหนึ่งประเภทต่อการส่งหนึ่งครั้ง", offerTypePartners: "ข้อเสนอจากพาร์ทเนอร์", emailLabel: "อีเมลผู้ติดต่อ", contactNameLabel: "ชื่อผู้ติดต่อ", coreContentWebsiteNote: "ข้อมูลนี้จะแสดงบนเว็บไซต์", offerTileTitleHelp: "แสดงบนหน้ารวมข้อเสนอ", offerBannerTitleHelp: "แสดงบนหน้ารายละเอียดข้อเสนอ", offerSubtitleHelp: "ไม่เกิน 150 ตัวอักษร", metaDescriptionHelp: "ไม่เกิน 180 ตัวอักษร", offerDescriptionHelp: "ไม่เกิน 500 ตัวอักษร และระบุประเภทห้องหากเกี่ยวข้อง", accommodationDetailsLabel: "รายละเอียดที่พัก", accommodationDetailsPlaceholder: "ระบุห้องพักและสิทธิประโยชน์ที่เกี่ยวข้อง", packageDetailsLabel: "รายละเอียดแพ็กเกจ", packageDetailsPlaceholder: "ระบุสิ่งที่รวม สิทธิประโยชน์สมาชิก จำนวนคืนขั้นต่ำ และข้อยกเว้น", packageDetailsHelp: "ไม่เกิน 300 ตัวอักษร ระบุสิ่งที่รวม สิทธิประโยชน์สมาชิก จำนวนคืนขั้นต่ำ และข้อยกเว้น", termsPlaceholder: "ระบุข้อกำหนดและเงื่อนไขทั้งหมดเป็นข้อ ๆ", termsHelp: "ไม่เกิน 300 ตัวอักษร ระบุข้อกำหนดและเงื่อนไขทั้งหมดเป็นข้อ ๆ", alignBrandToneButton: "ปรับคำอธิบายข้อเสนอให้สอดคล้องกับโทนแบรนด์ (ไม่บังคับ)", proofForms: "เอกสารที่จำเป็น", imagesRequirementNote: "ต้องมีภาพต้นฉบับ 1 ภาพที่สื่อถึงข้อเสนออย่างถูกต้อง", socialImageTitle: "ภาพโซเชียลมีเดีย", socialImageHelp: "ไม่บังคับ สำหรับโอกาสเผยแพร่บนโซเชียลมีเดีย ระบบจะปรับเป็น JPG ขนาด 1080 x 1080 พิกเซล", translationPreviewTitle: "แปลเนื้อหา (ไม่บังคับ)", translationOptionalNote: "ใช้เฉพาะเมื่อต้องการคำแปลสำหรับตลาดที่เลือก"
+  },
+  vi: {
+    oneOfferTypeNote: "Lưu ý: mỗi lần gửi chỉ dành cho một loại ưu đãi.", offerTypePartners: "Ưu đãi đối tác", emailLabel: "Email liên hệ", contactNameLabel: "Tên người liên hệ", coreContentWebsiteNote: "Nội dung sẽ hiển thị trên website.", offerTileTitleHelp: "Hiển thị trong danh sách ưu đãi.", offerBannerTitleHelp: "Hiển thị trên trang ưu đãi.", offerSubtitleHelp: "Tối đa 150 ký tự.", metaDescriptionHelp: "Tối đa 180 ký tự.", offerDescriptionHelp: "Tối đa 500 ký tự. Bao gồm loại phòng nếu phù hợp.", accommodationDetailsLabel: "Chi tiết lưu trú", accommodationDetailsPlaceholder: "Bao gồm phòng khách sạn và quyền lợi nếu phù hợp.", packageDetailsLabel: "Chi tiết gói", packageDetailsPlaceholder: "Liệt kê hạng mục bao gồm, quyền lợi thành viên, số đêm tối thiểu và ngoại lệ.", packageDetailsHelp: "Tối đa 300 ký tự. Liệt kê hạng mục bao gồm, quyền lợi, số đêm tối thiểu và ngoại lệ.", termsPlaceholder: "Liệt kê tất cả điều khoản và điều kiện theo từng ý.", termsHelp: "Tối đa 300 ký tự. Liệt kê tất cả điều khoản và điều kiện theo từng ý.", alignBrandToneButton: "Điều chỉnh mô tả ưu đãi theo giọng thương hiệu (không bắt buộc)", proofForms: "Tài liệu bắt buộc", imagesRequirementNote: "Cần 1 ảnh gốc thể hiện chính xác ưu đãi.", socialImageTitle: "Ảnh mạng xã hội", socialImageHelp: "Không bắt buộc, dành cho khả năng quảng bá trên mạng xã hội. Ảnh sẽ được đổi thành JPG 1080 x 1080px.", translationPreviewTitle: "Dịch nội dung (không bắt buộc)", translationOptionalNote: "Chỉ sử dụng khi cần bản dịch cho các thị trường đã chọn."
+  },
+  id: {
+    oneOfferTypeNote: "Harap diperhatikan: kirim satu jenis penawaran per pengajuan.", offerTypePartners: "Penawaran partner", emailLabel: "Email kontak", contactNameLabel: "Nama kontak", coreContentWebsiteNote: "Akan ditampilkan di situs web.", offerTileTitleHelp: "Ditampilkan pada daftar penawaran.", offerBannerTitleHelp: "Ditampilkan pada halaman penawaran.", offerSubtitleHelp: "Maksimal 150 karakter.", metaDescriptionHelp: "Maksimal 180 karakter.", offerDescriptionHelp: "Maksimal 500 karakter. Sertakan tipe kamar jika relevan.", accommodationDetailsLabel: "Detail akomodasi", accommodationDetailsPlaceholder: "Sertakan kamar hotel dan manfaat jika relevan.", packageDetailsLabel: "Detail paket", packageDetailsPlaceholder: "Cantumkan inklusi, manfaat anggota, masa inap minimum, dan pengecualian.", packageDetailsHelp: "Maksimal 300 karakter. Cantumkan inklusi, manfaat, masa inap minimum, dan pengecualian.", termsPlaceholder: "Cantumkan semua syarat dan ketentuan dalam poin-poin.", termsHelp: "Maksimal 300 karakter. Cantumkan semua syarat dan ketentuan dalam poin-poin.", alignBrandToneButton: "Selaraskan deskripsi penawaran dengan gaya merek (opsional)", proofForms: "Dokumen wajib", imagesRequirementNote: "Diperlukan 1 gambar asli yang menggambarkan penawaran secara akurat.", socialImageTitle: "Gambar media sosial", socialImageHelp: "Opsional, untuk kemungkinan eksposur media sosial. Gambar akan diubah menjadi JPG 1080 x 1080px.", translationPreviewTitle: "Terjemahkan konten (opsional)", translationOptionalNote: "Gunakan hanya jika terjemahan diperlukan untuk pasar yang dipilih."
+  },
+  ja: {
+    oneOfferTypeNote: "ご注意：1回の送信につき1種類のオファーを送信してください。", offerTypePartners: "パートナーオファー", emailLabel: "連絡先メールアドレス", contactNameLabel: "担当者名", coreContentWebsiteNote: "ウェブサイトに表示される内容です。", offerTileTitleHelp: "オファー一覧に表示されます。", offerBannerTitleHelp: "オファーページに表示されます。", offerSubtitleHelp: "150文字以内。", metaDescriptionHelp: "180文字以内。", offerDescriptionHelp: "500文字以内。該当する場合は客室タイプを含めてください。", accommodationDetailsLabel: "宿泊詳細", accommodationDetailsPlaceholder: "該当する場合は客室と特典を記載してください。", packageDetailsLabel: "パッケージ詳細", packageDetailsPlaceholder: "含まれる内容、会員特典、最低宿泊数、除外事項を記載してください。", packageDetailsHelp: "300文字以内。含まれる内容、会員特典、最低宿泊数、除外事項を記載してください。", termsPlaceholder: "すべての利用規約を箇条書きで記載してください。", termsHelp: "300文字以内。すべての利用規約を箇条書きで記載してください。", alignBrandToneButton: "オファー説明をブランドトーンに合わせる（任意）", proofForms: "必要書類", imagesRequirementNote: "オファーを正確に表す元画像が1枚必要です。", socialImageTitle: "ソーシャルメディア画像", socialImageHelp: "任意。ソーシャルメディア掲載の可能性があります。1080 x 1080pxのJPGに変換されます。", translationPreviewTitle: "コンテンツを翻訳（任意）", translationOptionalNote: "選択した市場で翻訳が必要な場合にのみ使用してください。"
+  },
+  ar: {
+    oneOfferTypeNote: "يرجى الملاحظة: أرسل نوع عرض واحداً في كل طلب.", offerTypePartners: "عروض الشركاء", emailLabel: "البريد الإلكتروني لجهة الاتصال", contactNameLabel: "اسم جهة الاتصال", coreContentWebsiteNote: "سيُعرض هذا المحتوى على الموقع الإلكتروني.", offerTileTitleHelp: "يظهر في قائمة العروض.", offerBannerTitleHelp: "يظهر في صفحة العرض.", offerSubtitleHelp: "حتى 150 حرفاً.", metaDescriptionHelp: "حتى 180 حرفاً.", offerDescriptionHelp: "حتى 500 حرف. أضف نوع الغرفة إذا كان مناسباً.", accommodationDetailsLabel: "تفاصيل الإقامة", accommodationDetailsPlaceholder: "أضف غرفة الفندق والمزايا إذا كانت مناسبة.", packageDetailsLabel: "تفاصيل الباقة", packageDetailsPlaceholder: "اذكر المشتملات ومزايا الأعضاء والحد الأدنى للإقامة والاستثناءات.", packageDetailsHelp: "حتى 300 حرف. اذكر المشتملات والمزايا والحد الأدنى للإقامة والاستثناءات.", termsPlaceholder: "أدرج جميع الشروط والأحكام في نقاط.", termsHelp: "حتى 300 حرف. أدرج جميع الشروط والأحكام في نقاط.", alignBrandToneButton: "مواءمة وصف العرض مع نبرة العلامة التجارية (اختياري)", proofForms: "المستندات المطلوبة", imagesRequirementNote: "مطلوب صورة أصلية واحدة تمثل العرض بدقة.", socialImageTitle: "صورة وسائل التواصل الاجتماعي", socialImageHelp: "اختيارية، لاحتمال النشر على وسائل التواصل. سيُعاد تحجيمها إلى JPG بمقاس 1080 × 1080 بكسل.", translationPreviewTitle: "ترجمة المحتوى (اختياري)", translationOptionalNote: "استخدم هذا فقط عند الحاجة إلى ترجمات للأسواق المحددة."
+  },
+  tr: {
+    oneOfferTypeNote: "Lütfen dikkat: her gönderimde tek bir teklif türü gönderin.", offerTypePartners: "İş ortağı teklifleri", emailLabel: "İletişim e-postası", contactNameLabel: "İletişim kişisi", coreContentWebsiteNote: "Web sitesinde görüntülenecektir.", offerTileTitleHelp: "Teklif listesinde görüntülenir.", offerBannerTitleHelp: "Teklif sayfasında görüntülenir.", offerSubtitleHelp: "En fazla 150 karakter.", metaDescriptionHelp: "En fazla 180 karakter.", offerDescriptionHelp: "En fazla 500 karakter. İlgiliyse oda türünü ekleyin.", accommodationDetailsLabel: "Konaklama ayrıntıları", accommodationDetailsPlaceholder: "İlgiliyse otel odasını ve dahil olanları belirtin.", packageDetailsLabel: "Paket ayrıntıları", packageDetailsPlaceholder: "Dahil olanları, üye avantajlarını, minimum konaklamayı ve istisnaları listeleyin.", packageDetailsHelp: "En fazla 300 karakter. Dahil olanları, avantajları, minimum konaklamayı ve istisnaları listeleyin.", termsPlaceholder: "Tüm hüküm ve koşulları maddeler halinde yazın.", termsHelp: "En fazla 300 karakter. Tüm hüküm ve koşulları maddeler halinde yazın.", alignBrandToneButton: "Teklif açıklamasını marka tonuna uyarla (isteğe bağlı)", proofForms: "Gerekli belgeler", imagesRequirementNote: "Teklifi doğru şekilde temsil eden 1 adet ham görsel gereklidir.", socialImageTitle: "Sosyal medya görseli", socialImageHelp: "İsteğe bağlıdır; sosyal medyada kullanılabilir. Görsel 1080 x 1080px JPG'ye dönüştürülür.", translationPreviewTitle: "İçeriği çevir (isteğe bağlı)", translationOptionalNote: "Yalnızca seçili pazarlar için çeviri gerekiyorsa kullanın."
+  }
+};
+
+Object.entries(feedbackCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
+
+const workflowCopyTranslations = {
+  en: { contactEmailHelp: "The email address we should use if we need to discuss this offer.", contactNameHelp: "The person responsible for answering questions about this offer.", hotelRidHelp: "Enter the hotel's unique RID code.", hotelNameHelp: "Enter the full hotel name as it should appear on the offer.", cityCountryHelp: "Enter the city and country where the hotel is located.", translationRequiredQuestion: "Is translation to another language required?", translationMarketDisclaimer: "Translation is relevant only when publishing the offer in the selected market is planned.", yesLabel: "Yes", noLabel: "No", masterImageHelp: "Upload one high-quality image. The app will resize it and show previews for the banner, listing tile, and social image formats.", translationPreviewTitle: "Translate content" },
+  th: { contactEmailHelp: "อีเมลที่เราควรใช้หากต้องติดต่อเรื่องข้อเสนอนี้", contactNameHelp: "ผู้รับผิดชอบในการตอบคำถามเกี่ยวกับข้อเสนอนี้", hotelRidHelp: "กรอกรหัส RID เฉพาะของโรงแรม", hotelNameHelp: "กรอกชื่อโรงแรมเต็มตามที่ควรแสดงในข้อเสนอ", cityCountryHelp: "กรอกเมืองและประเทศที่โรงแรมตั้งอยู่", translationRequiredQuestion: "ต้องการแปลเป็นภาษาอื่นหรือไม่?", translationMarketDisclaimer: "การแปลเกี่ยวข้องเฉพาะเมื่อมีแผนเผยแพร่ข้อเสนอในตลาดนั้น", yesLabel: "ใช่", noLabel: "ไม่", masterImageHelp: "อัปโหลดภาพคุณภาพสูงหนึ่งภาพ ระบบจะปรับขนาดและแสดงตัวอย่างสำหรับแบนเนอร์ การ์ดรายการ และโซเชียลมีเดีย", translationPreviewTitle: "แปลเนื้อหา" },
+  vi: { contactEmailHelp: "Email chúng tôi nên sử dụng nếu cần trao đổi về ưu đãi này.", contactNameHelp: "Người phụ trách trả lời các câu hỏi về ưu đãi này.", hotelRidHelp: "Nhập mã RID riêng của khách sạn.", hotelNameHelp: "Nhập tên đầy đủ của khách sạn như sẽ hiển thị trong ưu đãi.", cityCountryHelp: "Nhập thành phố và quốc gia nơi khách sạn tọa lạc.", translationRequiredQuestion: "Có cần dịch sang ngôn ngữ khác không?", translationMarketDisclaimer: "Bản dịch chỉ phù hợp khi có kế hoạch đăng ưu đãi tại thị trường tương ứng.", yesLabel: "Có", noLabel: "Không", masterImageHelp: "Tải lên một ảnh chất lượng cao. Ứng dụng sẽ đổi kích thước và hiển thị bản xem trước cho banner, ô danh sách và ảnh mạng xã hội.", translationPreviewTitle: "Dịch nội dung" },
+  id: { contactEmailHelp: "Alamat email yang dapat kami gunakan jika perlu membahas penawaran ini.", contactNameHelp: "Orang yang bertanggung jawab menjawab pertanyaan tentang penawaran ini.", hotelRidHelp: "Masukkan kode RID unik hotel.", hotelNameHelp: "Masukkan nama lengkap hotel seperti yang akan ditampilkan pada penawaran.", cityCountryHelp: "Masukkan kota dan negara lokasi hotel.", translationRequiredQuestion: "Apakah terjemahan ke bahasa lain diperlukan?", translationMarketDisclaimer: "Terjemahan hanya relevan jika penawaran direncanakan untuk diterbitkan di pasar terkait.", yesLabel: "Ya", noLabel: "Tidak", masterImageHelp: "Unggah satu gambar berkualitas tinggi. Aplikasi akan mengubah ukuran dan menampilkan pratinjau untuk banner, tile daftar, dan gambar media sosial.", translationPreviewTitle: "Terjemahkan konten" },
+  ja: { contactEmailHelp: "このオファーについて確認が必要な場合に使用するメールアドレスです。", contactNameHelp: "このオファーに関する質問に回答する担当者です。", hotelRidHelp: "ホテル固有のRIDコードを入力してください。", hotelNameHelp: "オファーに表示するホテルの正式名称を入力してください。", cityCountryHelp: "ホテルが所在する都市と国を入力してください。", translationRequiredQuestion: "他の言語への翻訳は必要ですか？", translationMarketDisclaimer: "翻訳は、該当市場でオファーを公開する予定がある場合にのみ必要です。", yesLabel: "はい", noLabel: "いいえ", masterImageHelp: "高品質の画像を1枚アップロードしてください。バナー、一覧タイル、ソーシャル画像用にリサイズしてプレビューを表示します。", translationPreviewTitle: "コンテンツを翻訳" },
+  ar: { contactEmailHelp: "عنوان البريد الإلكتروني الذي سنستخدمه إذا احتجنا إلى مناقشة هذا العرض.", contactNameHelp: "الشخص المسؤول عن الإجابة عن الأسئلة المتعلقة بهذا العرض.", hotelRidHelp: "أدخل رمز RID الفريد للفندق.", hotelNameHelp: "أدخل الاسم الكامل للفندق كما يجب أن يظهر في العرض.", cityCountryHelp: "أدخل المدينة والدولة التي يقع فيها الفندق.", translationRequiredQuestion: "هل يلزم ترجمة العرض إلى لغة أخرى؟", translationMarketDisclaimer: "تكون الترجمة ذات صلة فقط عند التخطيط لنشر العرض في السوق المعني.", yesLabel: "نعم", noLabel: "لا", masterImageHelp: "حمّل صورة واحدة عالية الجودة. سيغيّر التطبيق حجمها ويعرض معاينات للافتة وبطاقة القائمة وصورة وسائل التواصل.", translationPreviewTitle: "ترجمة المحتوى" },
+  tr: { contactEmailHelp: "Bu teklif hakkında görüşmemiz gerekirse kullanacağımız e-posta adresi.", contactNameHelp: "Bu teklifle ilgili soruları yanıtlayacak sorumlu kişi.", hotelRidHelp: "Otelin benzersiz RID kodunu girin.", hotelNameHelp: "Teklifte görünmesi gereken tam otel adını girin.", cityCountryHelp: "Otelin bulunduğu şehir ve ülkeyi girin.", translationRequiredQuestion: "Başka bir dile çeviri gerekiyor mu?", translationMarketDisclaimer: "Çeviri yalnızca teklifin ilgili pazarda yayımlanması planlanıyorsa gereklidir.", yesLabel: "Evet", noLabel: "Hayır", masterImageHelp: "Tek bir yüksek kaliteli görsel yükleyin. Uygulama görseli banner, liste kutucuğu ve sosyal medya biçimleri için yeniden boyutlandırıp önizlemeleri gösterir.", translationPreviewTitle: "İçeriği çevir" },
+};
+Object.entries(workflowCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
+
+const translationAuditCopyTranslations = {
+  th: { offerTypeHotelStay: "การเข้าพักโรงแรม", offerTypeDining: "การรับประทานอาหาร", offerTypeEvents: "กิจกรรม", continueButton: "ดำเนินการต่อ" },
+  vi: { offerTypeHotelStay: "Lưu trú khách sạn", offerTypeDining: "Ẩm thực", offerTypeEvents: "Sự kiện", continueButton: "Tiếp tục" },
+  id: { offerTypeHotelStay: "Menginap di hotel", offerTypeDining: "Kuliner", offerTypeEvents: "Acara", continueButton: "Lanjutkan" },
+  ja: { offerTypeHotelStay: "ホテル宿泊", offerTypeDining: "ダイニング", offerTypeEvents: "イベント", continueButton: "続行" },
+  ar: { continueButton: "متابعة" },
+};
+Object.entries(translationAuditCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
+
+const imagePreviewCopyTranslations = {
+  en: { previewAfterUpload: "Preview appears after upload", socialImageOptionalNote: "Optional, for possible social media exposure." },
+  th: { previewAfterUpload: "ตัวอย่างจะแสดงหลังอัปโหลด", socialImageOptionalNote: "ไม่บังคับ สำหรับโอกาสเผยแพร่บนโซเชียลมีเดีย" },
+  vi: { previewAfterUpload: "Bản xem trước xuất hiện sau khi tải lên", socialImageOptionalNote: "Không bắt buộc, dành cho khả năng quảng bá trên mạng xã hội." },
+  id: { previewAfterUpload: "Pratinjau muncul setelah diunggah", socialImageOptionalNote: "Opsional, untuk kemungkinan eksposur media sosial." },
+  ja: { previewAfterUpload: "アップロード後にプレビューが表示されます", socialImageOptionalNote: "任意。ソーシャルメディア掲載の可能性があります。" },
+  ar: { previewAfterUpload: "تظهر المعاينة بعد التحميل", socialImageOptionalNote: "اختيارية، لاحتمال النشر على وسائل التواصل الاجتماعي." },
+  tr: { previewAfterUpload: "Önizleme yüklemeden sonra görünür", socialImageOptionalNote: "İsteğe bağlıdır; sosyal medyada kullanılabilir." },
+};
+Object.entries(imagePreviewCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
+
+const runtimeCopyTranslations = {
+  en: { moreInformationLabel: "More information", translationSelectionHelp: "Select one or more languages. Use Ctrl/Command-click to select multiple options.", imageInvalidType: "Please upload a PNG, JPG, or WebP image.", imageTooLarge: "Image source file must not exceed 200 MB.", imageProcessing: "Creating banner, listing tile, and social image versions...", imageReady: "All image versions ready from one source image. Source size: {size} KB." },
+  th: { moreInformationLabel: "ข้อมูลเพิ่มเติม", translationSelectionHelp: "เลือกหนึ่งภาษาหรือหลายภาษา ใช้ Ctrl/Command-click เพื่อเลือกหลายรายการ", imageInvalidType: "โปรดอัปโหลดภาพ PNG, JPG หรือ WebP", imageTooLarge: "ไฟล์ภาพต้นฉบับต้องมีขนาดไม่เกิน 200 MB", imageProcessing: "กำลังสร้างภาพแบนเนอร์ การ์ดรายการ และโซเชียลมีเดีย...", imageReady: "ภาพทุกเวอร์ชันพร้อมแล้วจากภาพต้นฉบับหนึ่งภาพ ขนาดต้นฉบับ: {size} KB" },
+  vi: { moreInformationLabel: "Thông tin thêm", translationSelectionHelp: "Chọn một hoặc nhiều ngôn ngữ. Dùng Ctrl/Command-click để chọn nhiều mục.", imageInvalidType: "Vui lòng tải lên ảnh PNG, JPG hoặc WebP.", imageTooLarge: "Tệp ảnh nguồn không được vượt quá 200 MB.", imageProcessing: "Đang tạo các phiên bản banner, ô danh sách và ảnh mạng xã hội...", imageReady: "Đã tạo xong tất cả phiên bản từ một ảnh nguồn. Kích thước nguồn: {size} KB." },
+  id: { moreInformationLabel: "Informasi selengkapnya", translationSelectionHelp: "Pilih satu atau beberapa bahasa. Gunakan Ctrl/Command-click untuk memilih beberapa opsi.", imageInvalidType: "Unggah gambar PNG, JPG, atau WebP.", imageTooLarge: "File gambar sumber tidak boleh melebihi 200 MB.", imageProcessing: "Membuat versi banner, tile daftar, dan gambar media sosial...", imageReady: "Semua versi gambar siap dari satu gambar sumber. Ukuran sumber: {size} KB." },
+  ja: { moreInformationLabel: "詳細情報", translationSelectionHelp: "1つ以上の言語を選択してください。複数選択にはCtrl/Command-clickを使用します。", imageInvalidType: "PNG、JPG、またはWebP画像をアップロードしてください。", imageTooLarge: "元画像のファイルサイズは200 MB以下にしてください。", imageProcessing: "バナー、一覧タイル、ソーシャル画像を作成しています...", imageReady: "1枚の元画像からすべての画像を作成しました。元画像サイズ：{size} KB。" },
+  ar: { moreInformationLabel: "مزيد من المعلومات", translationSelectionHelp: "اختر لغة واحدة أو أكثر. استخدم Ctrl/Command-click لتحديد عدة خيارات.", imageInvalidType: "يرجى تحميل صورة بصيغة PNG أو JPG أو WebP.", imageTooLarge: "يجب ألا يتجاوز ملف الصورة المصدر 200 ميغابايت.", imageProcessing: "جارٍ إنشاء نسخ اللافتة وبطاقة القائمة وصورة وسائل التواصل...", imageReady: "جميع نسخ الصور جاهزة من صورة مصدر واحدة. حجم المصدر: {size} كيلوبايت." },
+  tr: { moreInformationLabel: "Daha fazla bilgi", translationSelectionHelp: "Bir veya daha fazla dil seçin. Birden fazla seçim için Ctrl/Command-click kullanın.", imageInvalidType: "Lütfen PNG, JPG veya WebP görseli yükleyin.", imageTooLarge: "Kaynak görsel dosyası 200 MB'ı aşmamalıdır.", imageProcessing: "Banner, liste kutucuğu ve sosyal medya görseli sürümleri oluşturuluyor...", imageReady: "Tüm görsel sürümleri tek bir kaynak görselden hazırlandı. Kaynak boyutu: {size} KB." },
+};
+Object.entries(runtimeCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
+
 function applyLanguage(language) {
   const copy = uiTranslations[language] || uiTranslations.en;
+  window.siteHeader?.setLanguage(language);
   const labels = localizedLanguageLabels[language] || localizedLanguageLabels.en;
   document.documentElement.lang = language;
   document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
@@ -846,6 +922,9 @@ function applyLanguage(language) {
     const value = copy[key] ?? uiTranslations.en[key];
     if (value !== undefined) element.setAttribute("placeholder", value);
   });
+  document.querySelectorAll(".field-tooltip-trigger").forEach((element) => {
+    element.setAttribute("aria-label", copy.moreInformationLabel || uiTranslations.en.moreInformationLabel);
+  });
   if (heroText) heroText.textContent = copy.heroText || uiTranslations.en.heroText;
   translationSourceDisplay.textContent = labels[language] || contentLanguageLabels[language] || contentLanguageLabels.en;
   updateTranslationTargetOptions(language);
@@ -859,7 +938,7 @@ const offerTypeLabels = {
   hotel_stay: "Hotel stay",
   dining: "Dining",
   events: "Events",
-  partners: "Partners",
+  partners: "Partner offers",
 };
 
 const offerTypeGuidance = {
@@ -883,12 +962,10 @@ const typeFieldGroups = {
     { name: "discounted_price", label: "Discounted price", placeholder: "Example: THB 1,500++", required: true },
   ],
   more_escapes: [
-    { name: "package_details", label: "Package details", type: "textarea", placeholder: "List inclusions for the package, minimum stay, meal/spa/transfer benefits, and exclusions.", required: true },
     { name: "booking_start_date", label: "Booking start date", type: "date", required: true },
     { name: "booking_end_date", label: "Booking end date", type: "date", required: true },
     { name: "stay_start_date", label: "Stay start date", type: "date", required: true },
     { name: "stay_end_date", label: "Stay end date", type: "date", required: true },
-    { name: "member_benefits", label: "Member benefits", placeholder: "Example: Accor Plus member exclusive package", required: true },
     { name: "member_package_price", label: "Member package price", placeholder: "Example: 2 nights from AUD 215", required: true },
     { name: "public_package_value", label: "Public package value", placeholder: "Example: 2 nights from AUD 390" },
   ],
@@ -909,12 +986,13 @@ const typeFieldGroups = {
     { name: "member_benefits", label: "Member benefits", type: "textarea", placeholder: "Describe the member dining benefit, discount, inclusions, or early bird offer.", required: true },
   ],
   events: [
-    { name: "accommodation_details", label: "Accommodation details", type: "textarea", placeholder: "Enter stay package or room-night details connected to the event, or N/A." },
     { name: "public_price", label: "Public price", placeholder: "Example: N/A or AUD 169 per person" },
     { name: "event_date", label: "Event date", type: "date", required: true },
+    { name: "other_event_dates", label: "Other dates", type: "textarea", placeholder: "List any additional event dates." },
     { name: "event_time", label: "Event time", type: "time", required: true },
     { name: "venue", label: "Venue", placeholder: "Example: Room81 at Sofitel Gold Coast Broadbeach", required: true },
     { name: "member_price", label: "Member price", placeholder: "Example: AUD 139 per person", required: true },
+    { name: "exclusive_member_event", label: "Exclusive member event", type: "select", options: ["Yes", "No"], required: true },
   ],
   partners: [
     { name: "partner_name", label: "Partner name", placeholder: "Example: Europcar", required: true },
@@ -1060,6 +1138,16 @@ const dynamicFieldLabels = {
   },
 };
 
+const feedbackDynamicFieldLabels = {
+  th: { other_event_dates: "วันที่อื่น ๆ", exclusive_member_event: "อีเวนต์เฉพาะสมาชิก" },
+  vi: { other_event_dates: "Các ngày khác", exclusive_member_event: "Sự kiện dành riêng cho thành viên" },
+  id: { other_event_dates: "Tanggal lainnya", exclusive_member_event: "Event eksklusif anggota" },
+  ja: { other_event_dates: "その他の日程", exclusive_member_event: "会員限定イベント" },
+  ar: { other_event_dates: "تواريخ أخرى", exclusive_member_event: "فعالية حصرية للأعضاء" },
+  tr: { other_event_dates: "Diğer tarihler", exclusive_member_event: "Üyelere özel etkinlik" },
+};
+Object.entries(feedbackDynamicFieldLabels).forEach(([language, labels]) => Object.assign(dynamicFieldLabels[language], labels));
+
 const helperNoteTranslations = {
   en: "Select an offer type to see the fields required for that manual process.",
   th: "เลือกประเภทข้อเสนอเพื่อดูช่องข้อมูลที่จำเป็นสำหรับขั้นตอนนั้น",
@@ -1180,23 +1268,13 @@ function updateProofUploadFields(clearInactive = false) {
 }
 
 function selectedBookingMethod() {
-  return form.elements.booking_method?.value || "";
+  return "booking_link";
 }
 
 function updateBookingMethodFields(clearInactive = false) {
-  const method = selectedBookingMethod();
-  const usesBookingLink = method === "booking_link";
-  const usesEmailRsvp = method === "email_rsvp";
   const bookingLinkInput = form.elements.booking_link;
-  const bookingEmailInput = form.elements.booking_email;
-
-  bookingLinkFields.classList.toggle("is-hidden", !usesBookingLink);
-  bookingEmailFields.classList.toggle("is-hidden", !usesEmailRsvp);
-  bookingLinkInput.required = usesBookingLink;
-  bookingEmailInput.required = usesEmailRsvp;
-
-  if (clearInactive && !usesBookingLink) bookingLinkInput.value = "";
-  if (clearInactive && !usesEmailRsvp) bookingEmailInput.value = "";
+  bookingLinkFields.classList.remove("is-hidden");
+  bookingLinkInput.required = true;
   updateProofUploadFields(clearInactive);
 }
 
@@ -1206,6 +1284,8 @@ function renderTypeSpecificFields() {
   const language = languageSelect.value || "en";
   const existingValues = collectDynamicFields();
   typeSpecificFields.innerHTML = "";
+  accommodationDetailsCoreField.classList.toggle("is-hidden", selected !== "events");
+  form.elements.accommodation_details.required = false;
 
   if (!selected) {
     return;
@@ -1225,11 +1305,25 @@ function renderTypeSpecificFields() {
     const labelText = document.createElement("span");
     labelText.textContent = dynamicFieldLabels[language]?.[field.name] || field.label;
     label.append(labelText);
-    const input = document.createElement(field.type === "textarea" ? "textarea" : "input");
+    const input = document.createElement(field.type === "textarea" ? "textarea" : field.type === "select" ? "select" : "input");
     input.name = field.name;
     input.dataset.dynamicField = "true";
-    input.required = true;
+    input.required = Boolean(field.required);
     input.placeholder = field.placeholder || "";
+    if (field.type === "select") {
+      const emptyOption = document.createElement("option");
+      emptyOption.value = "";
+      emptyOption.textContent = (uiTranslations[language] || uiTranslations.en).selectOne;
+      input.append(emptyOption);
+      field.options.forEach((value) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = field.name === "exclusive_member_event"
+          ? (value === "Yes" ? (uiTranslations[language] || uiTranslations.en).yesLabel : (uiTranslations[language] || uiTranslations.en).noLabel)
+          : value;
+        input.append(option);
+      });
+    }
     input.value = existingValues[field.name] || "";
     if (field.type === "textarea") input.rows = 4;
     if (["date", "time"].includes(field.type)) input.type = field.type;
@@ -1241,6 +1335,52 @@ function renderTypeSpecificFields() {
   typeSpecificFields.append(grid);
   updateBookingMethodFields();
 }
+
+function updateCoreOfferGuidance() {
+  const selected = offerType.value;
+  const tileTitle = form.elements.offer_tile_title;
+  const subtitle = form.elements.offer_subtitle;
+  const metaDescription = form.elements.meta_description;
+
+  if (selected === "events") {
+    tileTitle.placeholder = "Example: An Exclusive Pommery Champagne Pairing Dinner at Tilda";
+    offerBannerTitleInput.placeholder = "Example: An Exclusive Pommery Champagne Pairing Dinner at Tilda";
+    subtitle.placeholder = "Example: Discover a specially curated three-course menu at Tilda";
+    metaDescription.placeholder = "Example: Discover a curated dining event at Tilda at Sofitel Wentworth Sydney.";
+  } else if (selected === "more_escapes") {
+    tileTitle.placeholder = "Example: Sofitel Sydney Darling Harbour";
+    offerBannerTitleInput.placeholder = "Example: More Escapes at Sofitel Sydney Darling Harbour";
+    subtitle.placeholder = "Example: Explorer members receive a luxury escape with premium inclusions.";
+    metaDescription.placeholder = "Example: 2-night luxury escape including upgrade, parking and breakfast.";
+    updateMoreEscapesBannerTitle();
+  } else {
+    tileTitle.placeholder = "Shown on listing tiles";
+    offerBannerTitleInput.placeholder = "Shown on the offer page banner";
+    subtitle.placeholder = "Short member-facing benefit line";
+    metaDescription.placeholder = "Up to 180 characters for search/social preview";
+  }
+}
+
+function updateOfferDependentVisibility() {
+  const hasOfferType = Boolean(offerType.value);
+  form.classList.toggle("offer-type-pending", !hasOfferType);
+  offerDependentNavigationItems.forEach((item) => item?.classList.toggle("is-offer-dependent-hidden", !hasOfferType));
+}
+
+function updateMoreEscapesBannerTitle() {
+  if (offerType.value !== "more_escapes") return;
+  const hotelName = hotelNameInput.value.trim();
+  const suggestion = hotelName ? `More Escapes at ${hotelName}` : "";
+  if (!offerBannerTitleInput.value.trim() || offerBannerTitleInput.dataset.autoSuggested === "true") {
+    offerBannerTitleInput.value = suggestion;
+    offerBannerTitleInput.dataset.autoSuggested = "true";
+  }
+}
+
+hotelNameInput.addEventListener("input", updateMoreEscapesBannerTitle);
+offerBannerTitleInput.addEventListener("input", (event) => {
+  if (event.isTrusted) offerBannerTitleInput.dataset.autoSuggested = "false";
+});
 
 function validateRequiredDetails() {
   const missing = [];
@@ -1359,6 +1499,7 @@ function showPreview(preview, file) {
 }
 
 async function handleMasterImageUpload() {
+  const copy = uiTranslations[languageSelect.value] || uiTranslations.en;
   const file = masterImageInput.files[0];
   masterImageInput.closest(".upload-zone")?.classList.remove("has-preview");
   bannerInput.closest(".upload-zone")?.classList.remove("has-preview");
@@ -1367,21 +1508,22 @@ async function handleMasterImageUpload() {
   masterBannerPreview.style.display = "none";
   masterListingPreview.style.display = "none";
   masterSocialPreview.style.display = "none";
+  generatedImagePreviews.classList.add("is-hidden");
   masterImageMessage.textContent = "";
 
   if (!file) return;
   if (!file.type.startsWith("image/")) {
-    masterImageMessage.textContent = "Please upload a PNG, JPG, or WebP image.";
+    masterImageMessage.textContent = copy.imageInvalidType;
     masterImageInput.value = "";
     return;
   }
   if (file.size > maxImageUploadSize) {
-    masterImageMessage.textContent = "Image source file must not exceed 200 MB.";
+    masterImageMessage.textContent = copy.imageTooLarge;
     masterImageInput.value = "";
     return;
   }
 
-  masterImageMessage.textContent = "Creating banner, listing tile, and social image versions...";
+  masterImageMessage.textContent = copy.imageProcessing;
   const [banner, listingTile, social] = await Promise.all([
     resizeImage(file, 2048, 1366, true),
     resizeImage(file, 400, 250, true),
@@ -1395,12 +1537,13 @@ async function handleMasterImageUpload() {
   showPreview(masterBannerPreview, resizedBannerFile);
   showPreview(masterListingPreview, resizedListingTileFile);
   showPreview(masterSocialPreview, resizedSocialFile);
+  generatedImagePreviews.classList.remove("is-hidden");
   showPreview(bannerPreview, resizedBannerFile);
   showPreview(listingTilePreview, resizedListingTileFile);
   showPreview(socialPreview, resizedSocialFile);
 
   const before = Math.round(file.size / 1024);
-  masterImageMessage.textContent = `All image versions ready from one source image. Source size: ${before} KB.`;
+  masterImageMessage.textContent = copy.imageReady.replace("{size}", before);
   bannerMessage.textContent = "Banner image ready from master upload.";
   listingTileMessage.textContent = "Listing tile image ready from master upload.";
   socialMessage.textContent = "Social image ready from master upload.";
@@ -1569,7 +1712,9 @@ offerType.addEventListener("change", () => {
     tile.classList.toggle("is-selected", selected);
     tile.setAttribute("aria-pressed", String(selected));
   });
+  updateOfferDependentVisibility();
   renderTypeSpecificFields();
+  updateCoreOfferGuidance();
   updateBookingMethodFields(true);
 });
 offerTypeTiles.forEach((tile) => {
@@ -1581,9 +1726,21 @@ offerTypeTiles.forEach((tile) => {
 form.querySelectorAll('input[name="booking_method"]').forEach((input) => {
   input.addEventListener("change", () => updateBookingMethodFields(true));
 });
+form.querySelectorAll('input[name="translation_required"]').forEach((input) => {
+  input.addEventListener("change", () => {
+    const translationRequired = input.value === "yes" && input.checked;
+    translationComponent.classList.toggle("is-hidden", !translationRequired);
+    if (!translationRequired) {
+      generatedContentTranslations = {};
+      renderTranslationPreviews();
+      setTranslationStatus("");
+    }
+  });
+});
 languageSelect.addEventListener("change", () => {
   applyLanguage(languageSelect.value);
   renderTypeSpecificFields();
+  updateCoreOfferGuidance();
 });
 
 translationTargetLanguage.addEventListener("change", () => setTranslationStatus(""));
@@ -1595,7 +1752,9 @@ function setActiveFormSection(sectionId) {
     button.parentElement.classList.toggle("completed", index < activeIndex);
   });
   if (formProgressBar && activeIndex >= 0) {
-    formProgressBar.style.width = `${((activeIndex + 1) / sectionNavigationButtons.length) * 100}%`;
+    const percent = ((activeIndex + 1) / sectionNavigationButtons.length) * 100;
+    formProgressBar.style.width = `${percent}%`;
+    window.siteHeader?.setProgress(percent);
   }
 }
 
@@ -1689,6 +1848,8 @@ function buildContentForTranslation() {
     ["Offer subtitle", fieldValue("offer_subtitle")],
     ["Meta description", fieldValue("meta_description")],
     ["Offer description", fieldValue("offer_description")],
+    ["Accommodation details", fieldValue("accommodation_details")],
+    ["Package details", fieldValue("package_details")],
     ...dynamicLines,
     ["Booking link", fieldValue("booking_link")],
     ["Terms and conditions", fieldValue("terms")],
@@ -1718,6 +1879,10 @@ function setTranslationStatus(message, type = "") {
 function buildSubmissionRecord() {
   const submittedNow = new Date();
   const submissionDate = [submittedNow.getFullYear(), String(submittedNow.getMonth() + 1).padStart(2, "0"), String(submittedNow.getDate()).padStart(2, "0")].join("-");
+  const translationRequired = fieldValue("translation_required");
+  const requestedTranslationLanguages = translationRequired === "yes"
+    ? Array.from(translationTargetLanguage.selectedOptions).map((option) => option.value)
+    : [];
   return {
     id: null,
     offer_id: "",
@@ -1737,8 +1902,11 @@ function buildSubmissionRecord() {
     meta_description: fieldValue("meta_description"),
     offer_details: {
       ...collectDynamicFields(),
-      booking_method: selectedBookingMethod() === "booking_link" ? "Booking link" : "Booking via email / RSVP form",
-      booking_email: fieldValue("booking_email"),
+      accommodation_details: fieldValue("accommodation_details"),
+      package_details: fieldValue("package_details"),
+      booking_method: "Booking link",
+      translation_required: translationRequired === "yes" ? "Yes" : "No",
+      translation_languages: requestedTranslationLanguages.join(", "),
     },
     booking_link: fieldValue("booking_link"),
     terms: fieldValue("terms"),
@@ -1864,6 +2032,10 @@ async function submitOfferToDrive(record, turnstileToken = "") {
   }
   updateSubmissionProgress("Finalising your offer…", 88);
   const result = await postSubmission({ action: "finalize_submission", offer_id: created.offer_id, folder_id: created.storage.folderId, record, assets: uploadedAssets });
+  if (result.asana?.ok && result.asana.gid) {
+    updateSubmissionProgress("Adding images to the Asana task…", 94);
+    result.asana.attachments = await attachImagesToAsana(result.asana.gid, assets);
+  }
   updateSubmissionProgress("Offer successfully submitted.", 100);
   return result;
 }
@@ -1893,14 +2065,8 @@ async function attachImageToAsana(taskGid, asset) {
   }
 }
 
-async function attachImagesToAsana(taskGid) {
-  let uploads;
-  try {
-    uploads = await buildAsanaImageAttachments();
-  } catch (error) {
-    console.error("Could not prepare Asana images", error);
-    return { attempted: 1, attached: 0, failed: 1 };
-  }
+async function attachImagesToAsana(taskGid, assets) {
+  const uploads = assets.filter((asset) => String(asset.file_type || "").startsWith("image/"));
   const results = await Promise.all(uploads.map(async (asset) => {
     try {
       return await attachImageToAsana(taskGid, asset);
@@ -2039,6 +2205,7 @@ form.addEventListener("submit", async (event) => {
       booking_link: record.booking_link || "Not provided",
       booking_details: record.booking_link || record.offer_details.booking_email || "Not provided",
       date_range: buildDateRangeSummary(record),
+      submitted_at: new Date().toISOString(),
       drive: result.drive,
       asana: result.asana,
     };
@@ -2063,6 +2230,7 @@ form.addEventListener("reset", () => {
     masterBannerPreview.style.display = "none";
     masterListingPreview.style.display = "none";
     masterSocialPreview.style.display = "none";
+    generatedImagePreviews.classList.add("is-hidden");
     bannerPreview.style.display = "none";
     listingTilePreview.style.display = "none";
     socialPreview.style.display = "none";
@@ -2074,6 +2242,7 @@ form.addEventListener("reset", () => {
     socialMessage.textContent = "";
     document.querySelectorAll('input[type="file"]').forEach((input) => updateFileName(input));
     generatedContentTranslations = {};
+    translationComponent.classList.add("is-hidden");
     form.querySelector('button[type="submit"]').textContent = (uiTranslations[languageSelect.value] || uiTranslations.en).submitButton;
     renderTranslationPreviews();
     setTranslationStatus("");
@@ -2088,7 +2257,9 @@ form.addEventListener("reset", () => {
 const savedLanguage = localStorage.getItem("explorer-offer-language") || "en";
 languageSelect.value = savedLanguage;
 applyLanguage(savedLanguage);
+updateOfferDependentVisibility();
 renderTypeSpecificFields();
+updateCoreOfferGuidance();
 updateBookingMethodFields();
 const savedHotelPrefill = sessionStorage.getItem("offerHotelPrefill");
 if (savedHotelPrefill) {

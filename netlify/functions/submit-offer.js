@@ -213,7 +213,11 @@ exports.handler = async (event) => {
     const offer = { ...submission.record, offer_id: submission.offer_id, email: auth.email, assets: submission.assets || [], status: "submitted" };
     try {
       const drive = await uploadOfferArchive(offer, submission.folder_id);
-      return json(200, { ok: true, offer_id: offer.offer_id, drive, asana: { ok: false, skipped: true, disabled: true } });
+      const asanaEnabled = cleanEnvironmentValue(process.env.ENABLE_ASANA_TASK_CREATION).toLowerCase() === "true";
+      const asana = asanaEnabled
+        ? await createAsanaTask(offer)
+        : { ok: false, skipped: true, disabled: true };
+      return json(200, { ok: true, offer_id: offer.offer_id, drive, asana });
     } catch (error) {
       return json(502, { error: error.message || "The ZIP archive could not be stored in Google Drive.", service: "google_drive" });
     }

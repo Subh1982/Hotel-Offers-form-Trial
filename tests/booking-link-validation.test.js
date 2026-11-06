@@ -18,9 +18,9 @@ test("booking-link check occurs after Turnstile and before submission", () => {
 });
 
 test("Turkish is available for both the interface and translations", () => {
-  const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+  const header = fs.readFileSync(path.join(__dirname, "..", "site-header.js"), "utf8");
   const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
-  assert.match(html, /<option value="tr">Türkçe<\/option>/);
+  assert.match(header, /<option value="tr">Türkçe<\/option>/);
   assert.match(app, /tr: "Turkish"/);
   assert.match(app, /const formCopyTranslations = [\s\S]*\n  tr: \{/);
 });
