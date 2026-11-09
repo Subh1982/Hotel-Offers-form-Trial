@@ -17,6 +17,24 @@ test("booking-link check occurs after Turnstile and before submission", () => {
   assert.match(submitFlow, /confirmBookingLink\(validation/);
 });
 
+test("only dining and events can use email or RSVP booking", () => {
+  const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+  const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
+  const bookingLogic = app.slice(app.indexOf("function selectedBookingMethod"), app.indexOf("function renderTypeSpecificFields"));
+  const typeFieldRendering = app.slice(app.indexOf("function renderTypeSpecificFields"), app.indexOf("function validateRequiredDetails"));
+
+  assert.match(html, /id="bookingMethodFieldset"[^>]*is-hidden/);
+  assert.match(html, /name="booking_method"[^>]*value="booking_link"/);
+  assert.match(html, /name="booking_method"[^>]*value="email_rsvp"/);
+  assert.match(html, /id="bookingEmailFields"[^>]*is-hidden/);
+  assert.match(bookingLogic, /isDiningOrEventOffer\(\)/);
+  assert.match(bookingLogic, /bookingMethodFieldset\.classList\.toggle\("is-hidden", !offersBookingChoice\)/);
+  assert.match(bookingLogic, /bookingEmailInput\.required = usesEmailRsvp/);
+  assert.doesNotMatch(typeFieldRendering, /process-note|offerTypeGuidance/);
+  assert.match(app, /booking_method: selectedBookingMethod\(\) === "email_rsvp"/);
+  assert.match(app, /booking_email: fieldValue\("booking_email"\)/);
+});
+
 test("Turkish is available for both the interface and translations", () => {
   const header = fs.readFileSync(path.join(__dirname, "..", "site-header.js"), "utf8");
   const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");

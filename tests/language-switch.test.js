@@ -22,6 +22,7 @@ const localizedLanguageLabels = objectBetween(
 const uiTranslations = objectBetween("const uiTranslations = ", "const formCopyTranslations");
 const formCopyTranslations = objectBetween("const formCopyTranslations = ", "Object.entries(formCopyTranslations)");
 const feedbackCopyTranslations = objectBetween("const feedbackCopyTranslations = ", "Object.entries(feedbackCopyTranslations)");
+const accommodationHelpTranslations = objectBetween("const accommodationHelpTranslations = ", "Object.entries(accommodationHelpTranslations)");
 const workflowCopyTranslations = objectBetween("const workflowCopyTranslations = ", "Object.entries(workflowCopyTranslations)");
 const translationAuditCopyTranslations = objectBetween("const translationAuditCopyTranslations = ", "Object.entries(translationAuditCopyTranslations)");
 const imagePreviewCopyTranslations = objectBetween("const imagePreviewCopyTranslations = ", "Object.entries(imagePreviewCopyTranslations)");
@@ -35,6 +36,9 @@ for (const [language, copy] of Object.entries(formCopyTranslations)) {
 }
 for (const [language, copy] of Object.entries(feedbackCopyTranslations)) {
   Object.assign(uiTranslations[language], copy);
+}
+for (const [language, accommodationDetailsHelp] of Object.entries(accommodationHelpTranslations)) {
+  Object.assign(uiTranslations[language], { accommodationDetailsHelp });
 }
 for (const [language, copy] of Object.entries(workflowCopyTranslations)) {
   Object.assign(uiTranslations[language], copy);

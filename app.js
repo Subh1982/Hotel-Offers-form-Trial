@@ -35,7 +35,9 @@ const offerDescription = document.querySelector("#offerDescription");
 const alignBrandToneButton = document.querySelector("#alignBrandToneButton");
 const brandToneStatus = document.querySelector("#brandToneStatus");
 const turnstileContainer = document.querySelector("#turnstileContainer");
+const bookingMethodFieldset = document.querySelector("#bookingMethodFieldset");
 const bookingLinkFields = document.querySelector("#bookingLinkFields");
+const bookingEmailFields = document.querySelector("#bookingEmailFields");
 const rateScreenshotCard = document.querySelector("#rateScreenshotCard");
 const menuPdfCard = document.querySelector("#menuPdfCard");
 const menuPdfMessage = document.querySelector("#menuPdfMessage");
@@ -44,7 +46,12 @@ const submissionProgressText = document.querySelector("#submissionProgressText")
 const submissionProgressBar = document.querySelector("#submissionProgressBar");
 const bookingScreenshotCard = document.querySelector("#bookingScreenshotCard");
 const accommodationDetailsCoreField = document.querySelector("#accommodationDetailsCoreField");
+const offerSubtitleField = document.querySelector("#offerSubtitleField");
+const packageDetailsField = document.querySelector("#packageDetailsField");
+const menuPdfLabel = document.querySelector("#menuPdfLabel");
+const menuPdfHelp = document.querySelector("#menuPdfHelp");
 const hotelNameInput = form.elements.hotel_name;
+const offerTileTitleInput = form.elements.offer_tile_title;
 const offerBannerTitleInput = form.elements.offer_banner_title;
 const translationComponent = document.querySelector("#translationComponent");
 const generatedImagePreviews = document.querySelector("#generatedImagePreviews");
@@ -67,8 +74,8 @@ const uploadRequirementsByOfferType = {
   red_hot_rooms: { rateScreenshot: true, menuPdf: false, bookingScreenshot: false },
   more_escapes: { rateScreenshot: true, menuPdf: false, bookingScreenshot: false },
   hotel_stay: { rateScreenshot: true, menuPdf: false, bookingScreenshot: false },
-  dining: { rateScreenshot: false, menuPdf: true, bookingScreenshot: true },
-  events: { rateScreenshot: false, menuPdf: true, bookingScreenshot: true },
+  dining: { rateScreenshot: false, menuPdf: true, menuPdfRequired: true, bookingScreenshot: true },
+  events: { rateScreenshot: false, menuPdf: true, menuPdfRequired: false, bookingScreenshot: true },
   partners: { rateScreenshot: false, menuPdf: false, bookingScreenshot: true },
 };
 
@@ -835,7 +842,7 @@ Object.entries(formCopyTranslations).forEach(([language, copy]) => {
 
 const feedbackCopyTranslations = {
   en: {
-    oneOfferTypeNote: "Please note: submit one offer type per submission.", offerTypePartners: "Partner Offers", emailLabel: "Contact email", contactNameLabel: "Contact name", coreContentWebsiteNote: "To be displayed on the website.", offerTileTitleHelp: "Displayed on the offer listing. Example: Sofitel Sydney Darling Harbour.", offerBannerTitleHelp: "Displayed on the offer page. Example: More Escapes at Sofitel Sydney Darling Harbour.", offerSubtitleHelp: "Up to 150 characters. Summarise the member benefit and key inclusions.", metaDescriptionHelp: "Up to 180 characters. Include the stay, starting price and main complimentary inclusions.", offerDescriptionHelp: "Up to 500 characters. Describe the experience and include the room type if relevant.", accommodationDetailsLabel: "Accommodation details", accommodationDetailsPlaceholder: "Include hotel room and inclusions if relevant.", packageDetailsLabel: "Package details", packageDetailsPlaceholder: "List inclusions, member benefits, minimum stay and exclusions.", packageDetailsHelp: "Up to 300 characters. List inclusions, member benefits, minimum stay and exclusions.", termsPlaceholder: "Include all terms and conditions in bullet points.", termsHelp: "Up to 300 characters. Include all terms and conditions in bullet points.", alignBrandToneButton: "Align Offer Description with Brand Tone (Optional)", proofForms: "Required documents", imagesRequirementNote: "One raw image is required that accurately represents the offer.", socialImageTitle: "Social media image", socialImageHelp: "Optional, for possible social media exposure. The app will auto-resize it to 1080 x 1080px JPG.", translationPreviewTitle: "Translate content (optional)", translationOptionalNote: "Use this only when translations are required for selected markets."
+    oneOfferTypeNote: "Please note: submit one offer type per submission.", offerTypePartners: "Partner Offers", emailLabel: "Contact email", contactNameLabel: "Contact name", coreContentWebsiteNote: "To be displayed on the website.", offerTileTitleHelp: "Displayed on the offer listing. Example: Sofitel Sydney Darling Harbour.", offerBannerTitleHelp: "Displayed on the offer page. Example: More Escapes at Sofitel Sydney Darling Harbour.", offerSubtitleHelp: "Up to 150 characters. Summarise the member benefit and key inclusions.", metaDescriptionHelp: "Up to 180 characters. Include the stay, starting price and main complimentary inclusions.", offerDescriptionHelp: "Up to 500 characters. Describe the experience and include the room type if relevant.", accommodationDetailsLabel: "Accommodation details", accommodationDetailsPlaceholder: "Include hotel room and inclusions if relevant.", accommodationDetailsHelp: "Include the hotel room and inclusions if accommodation is part of the event.", packageDetailsLabel: "Package details", packageDetailsPlaceholder: "List inclusions, member benefits, minimum stay and exclusions.", packageDetailsHelp: "Up to 300 characters. List inclusions, member benefits, minimum stay and exclusions.", termsPlaceholder: "Include all terms and conditions in bullet points.", termsHelp: "Up to 300 characters. Include all terms and conditions in bullet points.", alignBrandToneButton: "Align Offer Description with Brand Tone (Optional)", proofForms: "Required documents", imagesRequirementNote: "One raw image is required that accurately represents the offer.", socialImageTitle: "Social media image", socialImageHelp: "Optional, for possible social media exposure. The app will auto-resize it to 1080 x 1080px JPG.", translationPreviewTitle: "Translate content (optional)", translationOptionalNote: "Use this only when translations are required for selected markets."
   },
   th: {
     oneOfferTypeNote: "โปรดทราบ: ส่งข้อเสนอหนึ่งประเภทต่อการส่งหนึ่งครั้ง", offerTypePartners: "ข้อเสนอจากพาร์ทเนอร์", emailLabel: "อีเมลผู้ติดต่อ", contactNameLabel: "ชื่อผู้ติดต่อ", coreContentWebsiteNote: "ข้อมูลนี้จะแสดงบนเว็บไซต์", offerTileTitleHelp: "แสดงบนหน้ารวมข้อเสนอ", offerBannerTitleHelp: "แสดงบนหน้ารายละเอียดข้อเสนอ", offerSubtitleHelp: "ไม่เกิน 150 ตัวอักษร", metaDescriptionHelp: "ไม่เกิน 180 ตัวอักษร", offerDescriptionHelp: "ไม่เกิน 500 ตัวอักษร และระบุประเภทห้องหากเกี่ยวข้อง", accommodationDetailsLabel: "รายละเอียดที่พัก", accommodationDetailsPlaceholder: "ระบุห้องพักและสิทธิประโยชน์ที่เกี่ยวข้อง", packageDetailsLabel: "รายละเอียดแพ็กเกจ", packageDetailsPlaceholder: "ระบุสิ่งที่รวม สิทธิประโยชน์สมาชิก จำนวนคืนขั้นต่ำ และข้อยกเว้น", packageDetailsHelp: "ไม่เกิน 300 ตัวอักษร ระบุสิ่งที่รวม สิทธิประโยชน์สมาชิก จำนวนคืนขั้นต่ำ และข้อยกเว้น", termsPlaceholder: "ระบุข้อกำหนดและเงื่อนไขทั้งหมดเป็นข้อ ๆ", termsHelp: "ไม่เกิน 300 ตัวอักษร ระบุข้อกำหนดและเงื่อนไขทั้งหมดเป็นข้อ ๆ", alignBrandToneButton: "ปรับคำอธิบายข้อเสนอให้สอดคล้องกับโทนแบรนด์ (ไม่บังคับ)", proofForms: "เอกสารที่จำเป็น", imagesRequirementNote: "ต้องมีภาพต้นฉบับ 1 ภาพที่สื่อถึงข้อเสนออย่างถูกต้อง", socialImageTitle: "ภาพโซเชียลมีเดีย", socialImageHelp: "ไม่บังคับ สำหรับโอกาสเผยแพร่บนโซเชียลมีเดีย ระบบจะปรับเป็น JPG ขนาด 1080 x 1080 พิกเซล", translationPreviewTitle: "แปลเนื้อหา (ไม่บังคับ)", translationOptionalNote: "ใช้เฉพาะเมื่อต้องการคำแปลสำหรับตลาดที่เลือก"
@@ -858,6 +865,19 @@ const feedbackCopyTranslations = {
 };
 
 Object.entries(feedbackCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
+
+const accommodationHelpTranslations = {
+  en: "Include the hotel room and inclusions if accommodation is part of the event.",
+  th: "ระบุห้องพักและสิ่งที่รวม หากอีเวนต์มีที่พักรวมอยู่ด้วย",
+  vi: "Bao gồm phòng khách sạn và các quyền lợi nếu sự kiện có kèm lưu trú.",
+  id: "Sertakan kamar hotel dan inklusi jika akomodasi merupakan bagian dari event.",
+  ja: "イベントに宿泊が含まれる場合は、客室と特典を記載してください。",
+  ar: "أضف غرفة الفندق والمزايا إذا كانت الإقامة جزءاً من الفعالية.",
+  tr: "Konaklama etkinliğin bir parçasıysa otel odasını ve dahil olanları belirtin.",
+};
+Object.entries(accommodationHelpTranslations).forEach(([language, accommodationDetailsHelp]) => {
+  Object.assign(uiTranslations[language], { accommodationDetailsHelp });
+});
 
 const workflowCopyTranslations = {
   en: { contactEmailHelp: "The email address we should use if we need to discuss this offer.", contactNameHelp: "The person responsible for answering questions about this offer.", hotelRidHelp: "Enter the hotel's unique RID code.", hotelNameHelp: "Enter the full hotel name as it should appear on the offer.", cityCountryHelp: "Enter the city and country where the hotel is located.", translationRequiredQuestion: "Is translation to another language required?", translationMarketDisclaimer: "Translation is relevant only when publishing the offer in the selected market is planned.", yesLabel: "Yes", noLabel: "No", masterImageHelp: "Upload one high-quality image. The app will resize it and show previews for the banner, listing tile, and social image formats.", translationPreviewTitle: "Translate content" },
@@ -941,15 +961,6 @@ const offerTypeLabels = {
   partners: "Partner Offers",
 };
 
-const offerTypeGuidance = {
-  red_hot_rooms: "Room-only, limited-time member rate. The manual process references DSO / Tarskey DSO and fixed prepaid, non-refundable terms.",
-  more_escapes: "Two or more night package with inclusions such as dining, wellness, transfers, parking, or third-party experiences.",
-  hotel_stay: "Member-exclusive hotel offer, generally at least 10% off public rate, with one offer loaded for any given dates.",
-  dining: "Restaurant or bar offer available to members, usually bookable through Table Plus / ResDiary or via email.",
-  events: "Member event or hotel event, with event dates, RSVP timing, venue, pricing, and optional accommodation details.",
-  partners: "Partner offer available to Accor Plus members, usually not attached to a hotel location.",
-};
-
 const typeFieldGroups = {
   red_hot_rooms: [
     { name: "booking_start_date", label: "Booking start date", type: "date", required: true },
@@ -987,11 +998,11 @@ const typeFieldGroups = {
   ],
   events: [
     { name: "public_price", label: "Public price", placeholder: "Example: N/A or AUD 169 per person" },
+    { name: "member_price", label: "Member price", placeholder: "Example: AUD 139 per person", required: true },
     { name: "event_date", label: "Event date", type: "date", required: true },
     { name: "other_event_dates", label: "Other dates", type: "textarea", placeholder: "List any additional event dates." },
     { name: "event_time", label: "Event time", type: "time", required: true },
     { name: "venue", label: "Venue", placeholder: "Example: Room81 at Sofitel Gold Coast Broadbeach", required: true },
-    { name: "member_price", label: "Member price", placeholder: "Example: AUD 139 per person", required: true },
     { name: "exclusive_member_event", label: "Exclusive member event", type: "select", options: ["Yes", "No"], required: true },
   ],
   partners: [
@@ -1148,6 +1159,86 @@ const feedbackDynamicFieldLabels = {
 };
 Object.entries(feedbackDynamicFieldLabels).forEach(([language, labels]) => Object.assign(dynamicFieldLabels[language], labels));
 
+const offerTypeFeedbackCopy = {
+  en: {
+    eventTileTitleHelp: "Enter the offer name and restaurant name. Example: An Exclusive Pommery Champagne Pairing Dinner at Tilda.",
+    eventBannerTitleHelp: "Enter the offer name and restaurant name. Example: An Exclusive Pommery Champagne Pairing Dinner at Tilda.",
+    eventSubtitleHelp: "Up to 150 characters. Summarise the event experience and key inclusion.",
+    eventMetaHelp: "Up to 180 characters. Summarise the event, venue and hotel.",
+    eventDescriptionHelp: "Up to 500 characters. Describe the event experience, menu or inclusions, price and availability.",
+    eventMenuLabel: "Event menu PDF (optional)",
+    eventMenuHelp: "Attach the relevant event menu PDF if applicable. Please merge PDFs into one file. PDF must be less than 5 MB.",
+    redHotTitleHelp: "Use the hotel name. Example: The Sebel Brisbane.",
+    redHotTerms: "Accommodation must be fully prepaid at the time of booking. No cancellation or changes permitted. Subject to availability and a limited allocation of rooms.",
+  },
+  th: {
+    eventTileTitleHelp: "ระบุชื่อข้อเสนอและชื่อห้องอาหาร เช่น An Exclusive Pommery Champagne Pairing Dinner at Tilda",
+    eventBannerTitleHelp: "ระบุชื่อข้อเสนอและชื่อห้องอาหาร เช่น An Exclusive Pommery Champagne Pairing Dinner at Tilda",
+    eventSubtitleHelp: "ไม่เกิน 150 ตัวอักษร สรุปประสบการณ์อีเวนต์และสิ่งสำคัญที่รวมอยู่",
+    eventMetaHelp: "ไม่เกิน 180 ตัวอักษร สรุปอีเวนต์ สถานที่ และโรงแรม",
+    eventDescriptionHelp: "ไม่เกิน 500 ตัวอักษร อธิบายประสบการณ์ เมนูหรือสิ่งที่รวม ราคา และช่วงเวลาที่ให้บริการ",
+    eventMenuLabel: "PDF เมนูอีเวนต์ (ไม่บังคับ)",
+    eventMenuHelp: "แนบ PDF เมนูอีเวนต์ที่เกี่ยวข้องหากมี โปรดรวมเป็นไฟล์เดียวและขนาดต้องน้อยกว่า 5 MB",
+    redHotTitleHelp: "ใช้ชื่อโรงแรม เช่น The Sebel Brisbane",
+    redHotTerms: "ต้องชำระค่าที่พักเต็มจำนวนเมื่อจอง ไม่อนุญาตให้ยกเลิกหรือเปลี่ยนแปลง ขึ้นอยู่กับจำนวนห้องว่างและโควตาห้องที่จำกัด",
+  },
+  vi: {
+    eventTileTitleHelp: "Nhập tên ưu đãi và tên nhà hàng. Ví dụ: An Exclusive Pommery Champagne Pairing Dinner at Tilda.",
+    eventBannerTitleHelp: "Nhập tên ưu đãi và tên nhà hàng. Ví dụ: An Exclusive Pommery Champagne Pairing Dinner at Tilda.",
+    eventSubtitleHelp: "Tối đa 150 ký tự. Tóm tắt trải nghiệm sự kiện và quyền lợi chính.",
+    eventMetaHelp: "Tối đa 180 ký tự. Tóm tắt sự kiện, địa điểm và khách sạn.",
+    eventDescriptionHelp: "Tối đa 500 ký tự. Mô tả trải nghiệm, thực đơn hoặc quyền lợi, giá và thời gian áp dụng.",
+    eventMenuLabel: "PDF thực đơn sự kiện (không bắt buộc)",
+    eventMenuHelp: "Đính kèm PDF thực đơn sự kiện nếu phù hợp. Vui lòng gộp thành một tệp dưới 5 MB.",
+    redHotTitleHelp: "Dùng tên khách sạn. Ví dụ: The Sebel Brisbane.",
+    redHotTerms: "Phải thanh toán toàn bộ tiền phòng tại thời điểm đặt. Không được hủy hoặc thay đổi. Tùy tình trạng phòng và số lượng phòng giới hạn.",
+  },
+  id: {
+    eventTileTitleHelp: "Masukkan nama penawaran dan nama restoran. Contoh: An Exclusive Pommery Champagne Pairing Dinner at Tilda.",
+    eventBannerTitleHelp: "Masukkan nama penawaran dan nama restoran. Contoh: An Exclusive Pommery Champagne Pairing Dinner at Tilda.",
+    eventSubtitleHelp: "Maksimal 150 karakter. Ringkas pengalaman event dan inklusi utama.",
+    eventMetaHelp: "Maksimal 180 karakter. Ringkas event, lokasi, dan hotel.",
+    eventDescriptionHelp: "Maksimal 500 karakter. Jelaskan pengalaman, menu atau inklusi, harga, dan ketersediaan.",
+    eventMenuLabel: "PDF menu event (opsional)",
+    eventMenuHelp: "Lampirkan PDF menu event yang relevan jika ada. Gabungkan menjadi satu file berukuran kurang dari 5 MB.",
+    redHotTitleHelp: "Gunakan nama hotel. Contoh: The Sebel Brisbane.",
+    redHotTerms: "Akomodasi harus dibayar penuh saat pemesanan. Pembatalan atau perubahan tidak diizinkan. Tergantung ketersediaan dan alokasi kamar terbatas.",
+  },
+  ja: {
+    eventTileTitleHelp: "オファー名とレストラン名を入力してください。例：An Exclusive Pommery Champagne Pairing Dinner at Tilda",
+    eventBannerTitleHelp: "オファー名とレストラン名を入力してください。例：An Exclusive Pommery Champagne Pairing Dinner at Tilda",
+    eventSubtitleHelp: "150文字以内。イベント体験と主な内容を要約してください。",
+    eventMetaHelp: "180文字以内。イベント、会場、ホテルを要約してください。",
+    eventDescriptionHelp: "500文字以内。体験、メニューまたは特典、料金、提供期間を記載してください。",
+    eventMenuLabel: "イベントメニューPDF（任意）",
+    eventMenuHelp: "該当する場合はイベントメニューPDFを添付してください。1つのファイルにまとめ、5 MB未満にしてください。",
+    redHotTitleHelp: "ホテル名を使用してください。例：The Sebel Brisbane",
+    redHotTerms: "予約時に宿泊料金全額の事前支払いが必要です。キャンセルや変更はできません。空室状況および限定された客室数によりご利用いただけない場合があります。",
+  },
+  ar: {
+    eventTileTitleHelp: "أدخل اسم العرض واسم المطعم. مثال: An Exclusive Pommery Champagne Pairing Dinner at Tilda.",
+    eventBannerTitleHelp: "أدخل اسم العرض واسم المطعم. مثال: An Exclusive Pommery Champagne Pairing Dinner at Tilda.",
+    eventSubtitleHelp: "حتى 150 حرفاً. لخّص تجربة الفعالية وأبرز ما تتضمنه.",
+    eventMetaHelp: "حتى 180 حرفاً. لخّص الفعالية والمكان والفندق.",
+    eventDescriptionHelp: "حتى 500 حرف. صف التجربة والقائمة أو المزايا والسعر وفترة التوفر.",
+    eventMenuLabel: "قائمة الفعالية بصيغة PDF (اختياري)",
+    eventMenuHelp: "أرفق قائمة الفعالية ذات الصلة إن وجدت. ادمج الملفات في ملف واحد يقل حجمه عن 5 ميغابايت.",
+    redHotTitleHelp: "استخدم اسم الفندق. مثال: The Sebel Brisbane.",
+    redHotTerms: "يجب دفع قيمة الإقامة بالكامل عند الحجز. لا يُسمح بالإلغاء أو التعديل. يخضع العرض للتوافر ولعدد محدود من الغرف.",
+  },
+  tr: {
+    eventTileTitleHelp: "Teklif adını ve restoran adını girin. Örnek: An Exclusive Pommery Champagne Pairing Dinner at Tilda.",
+    eventBannerTitleHelp: "Teklif adını ve restoran adını girin. Örnek: An Exclusive Pommery Champagne Pairing Dinner at Tilda.",
+    eventSubtitleHelp: "En fazla 150 karakter. Etkinlik deneyimini ve temel içeriği özetleyin.",
+    eventMetaHelp: "En fazla 180 karakter. Etkinliği, mekanı ve oteli özetleyin.",
+    eventDescriptionHelp: "En fazla 500 karakter. Deneyimi, menüyü veya dahil olanları, fiyatı ve geçerlilik dönemini açıklayın.",
+    eventMenuLabel: "Etkinlik menüsü PDF (isteğe bağlı)",
+    eventMenuHelp: "Varsa ilgili etkinlik menüsünü PDF olarak ekleyin. Dosyaları tek dosyada birleştirin; dosya 5 MB'tan küçük olmalıdır.",
+    redHotTitleHelp: "Otel adını kullanın. Örnek: The Sebel Brisbane.",
+    redHotTerms: "Konaklama bedelinin tamamı rezervasyon sırasında ödenmelidir. İptal veya değişiklik yapılamaz. Müsaitliğe ve sınırlı oda kontenjanına tabidir.",
+  },
+};
+
 const helperNoteTranslations = {
   en: "Select an offer type to see the fields required for that manual process.",
   th: "เลือกประเภทข้อเสนอเพื่อดูช่องข้อมูลที่จำเป็นสำหรับขั้นตอนนั้น",
@@ -1156,49 +1247,6 @@ const helperNoteTranslations = {
   ja: "オファー種別を選択すると、その手順に必要な項目が表示されます。",
   ar: "اختر نوع العرض لعرض الحقول المطلوبة لهذه العملية.",
   tr: "Bu süreç için gerekli alanları görmek üzere bir teklif türü seçin.",
-};
-
-const offerTypeGuidanceTranslations = {
-  th: {
-    red_hot_rooms: "ราคาห้องพักสำหรับสมาชิกแบบจำกัดเวลา",
-    more_escapes: "แพ็กเกจอย่างน้อยสองคืนพร้อมสิทธิประโยชน์ เช่น อาหาร สปา รถรับส่ง ที่จอดรถ หรือประสบการณ์จากบุคคลที่สาม",
-    hotel_stay: "ข้อเสนอพิเศษสำหรับสมาชิก โดยทั่วไปลดอย่างน้อย 10% จากราคาสาธารณะ",
-    dining: "ข้อเสนอร้านอาหารหรือบาร์สำหรับสมาชิก โดยทั่วไปสามารถจองผ่าน Table Plus / ResDiary หรืออีเมล",
-    events: "อีเวนต์สำหรับสมาชิกหรืออีเวนต์ของโรงแรม พร้อมวันที่ RSVP สถานที่ ราคา และรายละเอียดที่พักถ้ามี",
-    partners: "ข้อเสนอพาร์ทเนอร์สำหรับสมาชิก Accor Plus โดยทั่วไปไม่ผูกกับที่ตั้งโรงแรม",
-  },
-  vi: {
-    red_hot_rooms: "Giá phòng giới hạn thời gian dành cho thành viên.",
-    more_escapes: "Gói từ hai đêm trở lên với các quyền lợi như ẩm thực, wellness, đưa đón, đỗ xe hoặc trải nghiệm bên thứ ba.",
-    hotel_stay: "Ưu đãi khách sạn dành riêng cho thành viên, thường giảm ít nhất 10% so với giá công khai.",
-    dining: "Ưu đãi nhà hàng hoặc bar dành cho thành viên, thường đặt qua Table Plus / ResDiary hoặc email.",
-    events: "Sự kiện thành viên hoặc sự kiện khách sạn với ngày sự kiện, hạn RSVP, địa điểm, giá và chi tiết lưu trú nếu có.",
-    partners: "Ưu đãi đối tác dành cho thành viên Accor Plus, thường không gắn với địa điểm khách sạn.",
-  },
-  id: {
-    red_hot_rooms: "Tarif kamar khusus anggota untuk periode terbatas.",
-    more_escapes: "Paket dua malam atau lebih dengan manfaat seperti dining, wellness, transfer, parkir, atau pengalaman pihak ketiga.",
-    hotel_stay: "Penawaran hotel eksklusif anggota, umumnya minimal 10% lebih rendah dari harga publik.",
-    dining: "Penawaran restoran atau bar untuk anggota, biasanya dapat dipesan melalui Table Plus / ResDiary atau email.",
-    events: "Event anggota atau event hotel dengan tanggal event, batas RSVP, tempat, harga, dan detail akomodasi bila ada.",
-    partners: "Penawaran partner untuk anggota Accor Plus, biasanya tidak terikat dengan lokasi hotel.",
-  },
-  ja: {
-    red_hot_rooms: "期間限定の会員向け客室料金です。",
-    more_escapes: "ダイニング、ウェルネス、送迎、駐車場、外部体験などを含む2泊以上のパッケージです。",
-    hotel_stay: "会員限定のホテルオファーで、通常は一般料金から少なくとも10%割引です。",
-    dining: "会員向けレストランまたはバーのオファーで、通常はTable Plus / ResDiaryまたはメールで予約できます。",
-    events: "イベント日、RSVP期限、会場、価格、必要に応じた宿泊詳細を含む会員イベントまたはホテルイベントです。",
-    partners: "Accor Plus会員向けのパートナーオファーで、通常はホテル所在地に紐づきません。",
-  },
-  ar: {
-    red_hot_rooms: "سعر غرف خاص بالأعضاء ولفترة محدودة.",
-    more_escapes: "باقة لإقامتين أو أكثر تشمل مزايا مثل المطاعم أو العافية أو النقل أو مواقف السيارات أو تجارب من جهات خارجية.",
-    hotel_stay: "عرض فندقي حصري للأعضاء، ويكون عادةً أقل من السعر العام بنسبة 10% على الأقل.",
-    dining: "عرض مطعم أو بار للأعضاء، ويمكن حجزه عادةً عبر Table Plus / ResDiary أو البريد الإلكتروني.",
-    events: "فعالية للأعضاء أو فعالية فندقية تتضمن التاريخ وموعد تأكيد الحضور والمكان والسعر وتفاصيل الإقامة عند توفرها.",
-    partners: "عرض شريك متاح لأعضاء Accor Plus ولا يرتبط عادةً بموقع فندق.",
-  },
 };
 
 const dateRangePairs = [
@@ -1245,6 +1293,7 @@ function updateProofUploadFields(clearInactive = false) {
   const requirements = uploadRequirementsByOfferType[offerType.value] || {};
   const needsRateScreenshot = Boolean(requirements.rateScreenshot);
   const needsMenuPdf = Boolean(requirements.menuPdf);
+  const requiresMenuPdf = Boolean(requirements.menuPdfRequired);
   const needsBookingScreenshot = Boolean(requirements.bookingScreenshot);
   const rateScreenshotInput = form.elements.rate_screenshot;
   const menuPdfInput = form.elements.menu_pdf;
@@ -1254,7 +1303,7 @@ function updateProofUploadFields(clearInactive = false) {
   menuPdfCard.classList.toggle("is-hidden", !needsMenuPdf);
   bookingScreenshotCard.classList.toggle("is-hidden", !needsBookingScreenshot);
   rateScreenshotInput.required = needsRateScreenshot;
-  menuPdfInput.required = needsMenuPdf;
+  menuPdfInput.required = requiresMenuPdf;
   bookingScreenshotInput.required = needsBookingScreenshot;
 
   [
@@ -1268,13 +1317,27 @@ function updateProofUploadFields(clearInactive = false) {
 }
 
 function selectedBookingMethod() {
-  return "booking_link";
+  return isDiningOrEventOffer() ? (form.elements.booking_method?.value || "booking_link") : "booking_link";
 }
 
 function updateBookingMethodFields(clearInactive = false) {
+  const offersBookingChoice = isDiningOrEventOffer();
+  const bookingLinkOption = form.querySelector('input[name="booking_method"][value="booking_link"]');
+  if (!offersBookingChoice || !form.elements.booking_method?.value) bookingLinkOption.checked = true;
+  const method = selectedBookingMethod();
+  const usesBookingLink = method === "booking_link";
+  const usesEmailRsvp = offersBookingChoice && method === "email_rsvp";
   const bookingLinkInput = form.elements.booking_link;
-  bookingLinkFields.classList.remove("is-hidden");
-  bookingLinkInput.required = true;
+  const bookingEmailInput = form.elements.booking_email;
+
+  bookingMethodFieldset.classList.toggle("is-hidden", !offersBookingChoice);
+  bookingLinkFields.classList.toggle("is-hidden", !usesBookingLink);
+  bookingEmailFields.classList.toggle("is-hidden", !usesEmailRsvp);
+  bookingLinkInput.required = usesBookingLink;
+  bookingEmailInput.required = usesEmailRsvp;
+
+  if (clearInactive && !usesBookingLink) bookingLinkInput.value = "";
+  if (clearInactive && !usesEmailRsvp) bookingEmailInput.value = "";
   updateProofUploadFields(clearInactive);
 }
 
@@ -1290,11 +1353,6 @@ function renderTypeSpecificFields() {
   if (!selected) {
     return;
   }
-
-  const guidance = document.createElement("div");
-  guidance.className = "process-note";
-  guidance.innerHTML = `<strong>${offerTypeLabels[selected]}</strong><span>${offerTypeGuidanceTranslations[language]?.[selected] || offerTypeGuidance[selected]}</span>`;
-  typeSpecificFields.append(guidance);
 
   const grid = document.createElement("div");
   grid.className = "grid two dynamic-grid";
@@ -1338,15 +1396,60 @@ function renderTypeSpecificFields() {
 
 function updateCoreOfferGuidance() {
   const selected = offerType.value;
-  const tileTitle = form.elements.offer_tile_title;
+  const language = languageSelect.value || "en";
+  const copy = uiTranslations[language] || uiTranslations.en;
+  const feedbackCopy = offerTypeFeedbackCopy[language] || offerTypeFeedbackCopy.en;
+  const tileTitle = offerTileTitleInput;
   const subtitle = form.elements.offer_subtitle;
   const metaDescription = form.elements.meta_description;
+  const packageDetails = form.elements.package_details;
+  const terms = form.elements.terms;
+  const tileHelp = document.querySelector("[data-i18n='offerTileTitleHelp']");
+  const bannerHelp = document.querySelector("[data-i18n='offerBannerTitleHelp']");
+  const subtitleHelp = document.querySelector("[data-i18n='offerSubtitleHelp']");
+  const metaHelp = document.querySelector("[data-i18n='metaDescriptionHelp']");
+  const descriptionHelp = document.querySelector("[data-i18n='offerDescriptionHelp']");
+  const isRedHotRooms = selected === "red_hot_rooms";
+  const usesPackageDetails = selected === "more_escapes";
+
+  offerSubtitleField.classList.toggle("is-hidden", isRedHotRooms);
+  packageDetailsField.classList.toggle("is-hidden", !usesPackageDetails);
+  subtitle.required = !isRedHotRooms;
+  packageDetails.required = usesPackageDetails;
+  if (isRedHotRooms) {
+    subtitle.value = "";
+  }
+  if (!usesPackageDetails) {
+    packageDetails.value = "";
+  }
+
+  tileHelp.textContent = copy.offerTileTitleHelp;
+  bannerHelp.textContent = copy.offerBannerTitleHelp;
+  subtitleHelp.textContent = copy.offerSubtitleHelp;
+  metaHelp.textContent = copy.metaDescriptionHelp;
+  descriptionHelp.textContent = copy.offerDescriptionHelp;
+  menuPdfLabel.textContent = copy.menuPdfLabel;
+  menuPdfHelp.textContent = copy.menuPdfHelp;
 
   if (selected === "events") {
     tileTitle.placeholder = "Example: An Exclusive Pommery Champagne Pairing Dinner at Tilda";
     offerBannerTitleInput.placeholder = "Example: An Exclusive Pommery Champagne Pairing Dinner at Tilda";
     subtitle.placeholder = "Example: Discover a specially curated three-course menu at Tilda";
     metaDescription.placeholder = "Example: Discover a curated dining event at Tilda at Sofitel Wentworth Sydney.";
+    tileHelp.textContent = feedbackCopy.eventTileTitleHelp;
+    bannerHelp.textContent = feedbackCopy.eventBannerTitleHelp;
+    subtitleHelp.textContent = feedbackCopy.eventSubtitleHelp;
+    metaHelp.textContent = feedbackCopy.eventMetaHelp;
+    descriptionHelp.textContent = feedbackCopy.eventDescriptionHelp;
+    menuPdfLabel.textContent = feedbackCopy.eventMenuLabel;
+    menuPdfHelp.textContent = feedbackCopy.eventMenuHelp;
+  } else if (isRedHotRooms) {
+    tileTitle.placeholder = "Example: The Sebel Brisbane";
+    offerBannerTitleInput.placeholder = "Example: The Sebel Brisbane";
+    metaDescription.placeholder = copy.metaDescriptionHelp;
+    tileHelp.textContent = feedbackCopy.redHotTitleHelp;
+    bannerHelp.textContent = feedbackCopy.redHotTitleHelp;
+    updateRedHotRoomsTitles();
   } else if (selected === "more_escapes") {
     tileTitle.placeholder = "Example: Sofitel Sydney Darling Harbour";
     offerBannerTitleInput.placeholder = "Example: More Escapes at Sofitel Sydney Darling Harbour";
@@ -1358,6 +1461,14 @@ function updateCoreOfferGuidance() {
     offerBannerTitleInput.placeholder = "Shown on the offer page banner";
     subtitle.placeholder = "Short member-facing benefit line";
     metaDescription.placeholder = "Up to 180 characters for search/social preview";
+  }
+
+  if (isRedHotRooms && (!terms.value.trim() || terms.dataset.redHotDefault === "true")) {
+    terms.value = feedbackCopy.redHotTerms;
+    terms.dataset.redHotDefault = "true";
+  } else if (!isRedHotRooms && terms.dataset.redHotDefault === "true") {
+    terms.value = "";
+    terms.dataset.redHotDefault = "false";
   }
 }
 
@@ -1377,9 +1488,32 @@ function updateMoreEscapesBannerTitle() {
   }
 }
 
-hotelNameInput.addEventListener("input", updateMoreEscapesBannerTitle);
+function updateRedHotRoomsTitles() {
+  if (offerType.value !== "red_hot_rooms") return;
+  const hotelName = hotelNameInput.value.trim();
+  [offerTileTitleInput, offerBannerTitleInput].forEach((input) => {
+    if (!input.value.trim() || input.dataset.redHotAutoSuggested === "true") {
+      input.value = hotelName;
+      input.dataset.redHotAutoSuggested = "true";
+    }
+  });
+}
+
+hotelNameInput.addEventListener("input", () => {
+  updateMoreEscapesBannerTitle();
+  updateRedHotRoomsTitles();
+});
+offerTileTitleInput.addEventListener("input", (event) => {
+  if (event.isTrusted) offerTileTitleInput.dataset.redHotAutoSuggested = "false";
+});
 offerBannerTitleInput.addEventListener("input", (event) => {
-  if (event.isTrusted) offerBannerTitleInput.dataset.autoSuggested = "false";
+  if (event.isTrusted) {
+    offerBannerTitleInput.dataset.autoSuggested = "false";
+    offerBannerTitleInput.dataset.redHotAutoSuggested = "false";
+  }
+});
+form.elements.terms.addEventListener("input", (event) => {
+  if (event.isTrusted) form.elements.terms.dataset.redHotDefault = "false";
 });
 
 function validateRequiredDetails() {
@@ -1405,7 +1539,7 @@ function validateRequiredUploads() {
   if (isStayOffer() && !form.elements.rate_screenshot.files.length) {
     missing.push("rate screenshot");
   }
-  if (isDiningOrEventOffer() && !form.elements.menu_pdf.files.length) {
+  if (uploadRequirementsByOfferType[offerType.value]?.menuPdfRequired && !form.elements.menu_pdf.files.length) {
     missing.push("menu PDF");
   }
   const menuPdf = form.elements.menu_pdf.files[0];
@@ -1851,7 +1985,9 @@ function buildContentForTranslation() {
     ["Accommodation details", fieldValue("accommodation_details")],
     ["Package details", fieldValue("package_details")],
     ...dynamicLines,
+    ["Booking method", selectedBookingMethod() === "email_rsvp" ? "Booking via email / RSVP form" : "Booking link"],
     ["Booking link", fieldValue("booking_link")],
+    ["Booking email or RSVP form", fieldValue("booking_email")],
     ["Terms and conditions", fieldValue("terms")],
     ["Final acknowledgement", fieldValue("acknowledgement")],
   ].filter(([, value]) => value);
@@ -1904,7 +2040,8 @@ function buildSubmissionRecord() {
       ...collectDynamicFields(),
       accommodation_details: fieldValue("accommodation_details"),
       package_details: fieldValue("package_details"),
-      booking_method: "Booking link",
+      booking_method: selectedBookingMethod() === "email_rsvp" ? "Booking via email / RSVP form" : "Booking link",
+      booking_email: fieldValue("booking_email"),
       translation_required: translationRequired === "yes" ? "Yes" : "No",
       translation_languages: requestedTranslationLanguages.join(", "),
     },

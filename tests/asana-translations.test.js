@@ -93,6 +93,8 @@ test("Drive storage uses the protected Apps Script webhook without OAuth credent
   assert.match(script, /replace\(\/_test\$\/i, ''\)/);
   assert.match(script, /submissionFolder\.createFile\(blob\)/);
   assert.match(script, /sheet\.appendRow/);
+  assert.match(script, /sheet\.getLastColumn\(\) < trackerHeaders\.length/);
+  assert.match(script, /sheet\.getRange\(1, 1, 1, trackerHeaders\.length\)\.setValues\(\[trackerHeaders\]\)/);
   assert.match(script, /WEBHOOK_SECRET/);
   assert.match(script, /get_allowed_domains/);
   assert.match(script, /Explorer Offers - Allowed Domains/);

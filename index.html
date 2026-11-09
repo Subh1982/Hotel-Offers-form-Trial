@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=feedback-nov26-2">
+    <link rel="stylesheet" href="styles.css?v=feedback-nov26-4">
   </head>
   <body class="auth-loading">
     <section id="authGate" class="auth-gate" aria-labelledby="authTitle">
@@ -138,7 +138,7 @@
               <label><span class="field-label-row"><span data-i18n="offerBannerTitleLabel">Offer banner title</span><span class="field-tooltip"><button type="button" class="field-tooltip-trigger" aria-label="More information">i</button><span class="field-tooltip-content" role="tooltip" data-i18n="offerBannerTitleHelp">Displayed on the offer page.</span></span></span>
                 <input name="offer_banner_title" required placeholder="Shown on the offer page banner">
               </label>
-              <label><span class="field-label-row"><span data-i18n="offerSubtitleLabel">Offer subtitle</span><span class="field-tooltip"><button type="button" class="field-tooltip-trigger" aria-label="More information">i</button><span class="field-tooltip-content" role="tooltip" data-i18n="offerSubtitleHelp">Up to 150 characters.</span></span></span>
+              <label id="offerSubtitleField"><span class="field-label-row"><span data-i18n="offerSubtitleLabel">Offer subtitle</span><span class="field-tooltip"><button type="button" class="field-tooltip-trigger" aria-label="More information">i</button><span class="field-tooltip-content" role="tooltip" data-i18n="offerSubtitleHelp">Up to 150 characters.</span></span></span>
                 <input name="offer_subtitle" required maxlength="150" placeholder="Short member-facing benefit line">
               </label>
               <label><span class="field-label-row"><span data-i18n="metaDescriptionLabel">Meta description</span><span class="field-tooltip"><button type="button" class="field-tooltip-trigger" aria-label="More information">i</button><span class="field-tooltip-content" role="tooltip" data-i18n="metaDescriptionHelp">Up to 180 characters.</span></span></span>
@@ -152,10 +152,10 @@
               <p id="brandToneStatus" class="muted" aria-live="polite"></p>
               <button type="button" id="alignBrandToneButton" class="secondary ai-action" data-i18n="alignBrandToneButton">Align Offer Description with Brand Tone (Optional)</button>
             </div>
-            <label id="accommodationDetailsCoreField" class="is-hidden"><span data-i18n="accommodationDetailsLabel">Accommodation details</span>
+            <label id="accommodationDetailsCoreField" class="is-hidden"><span class="field-label-row"><span data-i18n="accommodationDetailsLabel">Accommodation details</span><span class="field-tooltip"><button type="button" class="field-tooltip-trigger" aria-label="More information">i</button><span class="field-tooltip-content" role="tooltip" data-i18n="accommodationDetailsHelp">Include the hotel room and inclusions if accommodation is part of the event.</span></span></span>
               <textarea name="accommodation_details" rows="4" maxlength="300" data-i18n-placeholder="accommodationDetailsPlaceholder" placeholder="Include hotel room and inclusions if relevant."></textarea>
             </label>
-            <label><span class="field-label-row"><span data-i18n="packageDetailsLabel">Package details</span><span class="field-tooltip"><button type="button" class="field-tooltip-trigger" aria-label="More information">i</button><span class="field-tooltip-content" role="tooltip" data-i18n="packageDetailsHelp">Up to 300 characters. List inclusions, member benefits, minimum stay and exclusions.</span></span></span>
+            <label id="packageDetailsField"><span class="field-label-row"><span data-i18n="packageDetailsLabel">Package details</span><span class="field-tooltip"><button type="button" class="field-tooltip-trigger" aria-label="More information">i</button><span class="field-tooltip-content" role="tooltip" data-i18n="packageDetailsHelp">Up to 300 characters. List inclusions, member benefits, minimum stay and exclusions.</span></span></span>
               <textarea name="package_details" required rows="6" maxlength="300" data-i18n-placeholder="packageDetailsPlaceholder" placeholder="List inclusions, member benefits, minimum stay and exclusions."></textarea>
             </label>
             <label><span class="field-label-row"><span data-i18n="termsLabel">Terms and conditions</span><span class="field-tooltip"><button type="button" class="field-tooltip-trigger" aria-label="More information">i</button><span class="field-tooltip-content" role="tooltip" data-i18n="termsHelp">Up to 300 characters. Include all terms and conditions in bullet points.</span></span></span>
@@ -167,9 +167,21 @@
             <h3 data-i18n="datesBooking">Dates and booking</h3>
             <div id="typeSpecificFields" class="dynamic-fields" aria-live="polite"></div>
             <p id="dateMessage" class="inline-alert" aria-live="polite"></p>
+            <fieldset id="bookingMethodFieldset" class="booking-method-fieldset is-hidden">
+              <legend data-i18n="bookingMethodQuestion">How can members book?</legend>
+              <div class="booking-method-options">
+                <label><input name="booking_method" type="radio" value="booking_link" required><span data-i18n="bookingMethodLink">Booking link</span></label>
+                <label><input name="booking_method" type="radio" value="email_rsvp" required><span data-i18n="bookingMethodEmailRsvp">Booking via email / RSVP form</span></label>
+              </div>
+            </fieldset>
             <div id="bookingLinkFields" class="booking-method-fields">
               <label><span data-i18n="bookingLinkLabel">Booking link</span>
                 <input name="booking_link" type="url" required placeholder="https://">
+              </label>
+            </div>
+            <div id="bookingEmailFields" class="booking-method-fields is-hidden">
+              <label><span data-i18n="bookingEmailRsvpLabel">Booking email or RSVP form</span>
+                <textarea name="booking_email" rows="3" data-i18n-placeholder="bookingEmailRsvpPlaceholder" placeholder="Enter the email address, email instructions, or RSVP form URL."></textarea>
               </label>
             </div>
           </section>
@@ -182,7 +194,7 @@
                 <label class="file-action"><input name="rate_screenshot" type="file" accept="image/png,image/jpeg,image/webp"><span class="file-button">Choose image</span><small data-file-name-for="rate_screenshot">No file selected</small></label>
               </div>
               <div id="menuPdfCard" class="file-card upload-row conditional-dining is-hidden">
-                <div class="upload-copy"><strong data-i18n="menuPdfLabel">Dining / event menu PDF</strong><span data-i18n="menuPdfHelp">Please merge PDFs into one file. PDF must be less than 5 MB.</span><span id="menuPdfMessage" class="file-validation-message" role="alert"></span></div>
+                <div class="upload-copy"><strong id="menuPdfLabel" data-i18n="menuPdfLabel">Dining / event menu PDF</strong><span id="menuPdfHelp" data-i18n="menuPdfHelp">Please merge PDFs into one file. PDF must be less than 5 MB.</span><span id="menuPdfMessage" class="file-validation-message" role="alert"></span></div>
                 <label class="file-action"><input name="menu_pdf" type="file" accept="application/pdf"><span class="file-button">Choose PDF</span><small data-file-name-for="menu_pdf">No file selected</small></label>
               </div>
               <div id="bookingScreenshotCard" class="file-card upload-row conditional-booking-proof is-hidden">
@@ -323,6 +335,6 @@
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
     <script src="site-header.js?v=site-header-1"></script>
     <script src="auth.js?v=site-header-1"></script>
-    <script src="app.js?v=site-header-1"></script>
+    <script src="app.js?v=offer-fields-feedback-1"></script>
   </body>
 </html>

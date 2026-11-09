@@ -39,6 +39,14 @@ test("header offsets and legacy styles are updated", () => {
   assert.doesNotMatch(styles, /\.authenticated-user(?:\s|,|\{)/);
 });
 
+test("language and account controls have matching header heights", () => {
+  const languageRule = styles.match(/\.site-header-lang select\s*\{([\s\S]*?)\}/)?.[1] || "";
+  const accountRule = styles.match(/\.site-header-account-btn\s*\{([\s\S]*?)\}/)?.[1] || "";
+  assert.match(languageRule, /min-height:\s*40px/);
+  assert.match(languageRule, /height:\s*40px/);
+  assert.match(accountRule, /height:\s*40px/);
+});
+
 test("form, authentication and confirmation connect to the header API", () => {
   const appSource = fs.readFileSync(path.join(root, "app.js"), "utf8");
   const authSource = fs.readFileSync(path.join(root, "auth.js"), "utf8");

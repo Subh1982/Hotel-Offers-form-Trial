@@ -63,10 +63,13 @@ function doPost(event) {
       var sheetName = properties.getProperty('SHEET_NAME') || 'Offers';
       var spreadsheet = SpreadsheetApp.openById(spreadsheetId);
       var sheet = spreadsheet.getSheetByName(sheetName) || spreadsheet.insertSheet(sheetName);
+      var trackerHeaders = trackerHeaders_();
       if (sheet.getLastRow() === 0) {
-        sheet.appendRow(trackerHeaders_());
-        sheet.setFrozenRows(1);
+        sheet.appendRow(trackerHeaders);
+      } else if (sheet.getLastColumn() < trackerHeaders.length) {
+        sheet.getRange(1, 1, 1, trackerHeaders.length).setValues([trackerHeaders]);
       }
+      sheet.setFrozenRows(1);
       var details = offer.offer_details || {};
       var translations = offer.auto_translations || {};
       var assetLinks = (offer.assets || []).reduce(function(links, asset) {
@@ -130,6 +133,8 @@ function doPost(event) {
         assetLinks.menu_pdf || '',
         '',
         '',
+        details.other_event_dates || '',
+        details.exclusive_member_event || '',
       ]);
     } finally {
       lock.releaseLock();
@@ -156,7 +161,7 @@ function trackerHeaders_() {
     'Translation languages', 'Submission folder URL', 'ZIP URL', 'ZIP filename',
     'Banner image URL', 'Listing tile image URL', 'Social image URL',
     'Rate screenshot URL', 'Booking screenshot URL', 'Menu PDF URL',
-    'Published URL', 'Notes'
+    'Published URL', 'Notes', 'Other event dates', 'Exclusive member event'
   ];
 }
 
