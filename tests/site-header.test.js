@@ -55,3 +55,9 @@ test("form, authentication and confirmation connect to the header API", () => {
   assert.match(authSource, /siteHeader\.setUser\(email\)/);
   assert.match(confirmationSource, /siteHeader\?\.setProgress\(100\)/);
 });
+
+test("logout uses Clerk's explicit post-sign-out redirect", () => {
+  const authSource = fs.readFileSync(path.join(root, "auth.js"), "utf8");
+  assert.match(authSource, /Clerk\.signOut\(\{ redirectUrl: `\$\{window\.location\.origin\}\/` \}\)/);
+  assert.match(authSource, /Could not sign out of Clerk/);
+});

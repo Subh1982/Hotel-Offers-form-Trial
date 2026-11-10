@@ -74,7 +74,7 @@ const uploadRequirementsByOfferType = {
   red_hot_rooms: { rateScreenshot: true, menuPdf: false, bookingScreenshot: false },
   more_escapes: { rateScreenshot: true, menuPdf: false, bookingScreenshot: false },
   hotel_stay: { rateScreenshot: true, menuPdf: false, bookingScreenshot: false },
-  dining: { rateScreenshot: false, menuPdf: true, menuPdfRequired: true, bookingScreenshot: true },
+  dining: { rateScreenshot: false, menuPdf: true, menuPdfRequired: false, bookingScreenshot: true },
   events: { rateScreenshot: false, menuPdf: true, menuPdfRequired: false, bookingScreenshot: true },
   partners: { rateScreenshot: false, menuPdf: false, bookingScreenshot: true },
 };
@@ -1239,6 +1239,16 @@ const offerTypeFeedbackCopy = {
   },
 };
 
+const diningMenuCopy = {
+  en: { label: "Menu attachment PDF (optional)", help: "Attach the relevant dining menu PDF if available. Please merge PDFs into one file. PDF must be less than 5 MB." },
+  th: { label: "ไฟล์แนบเมนู PDF (ไม่บังคับ)", help: "แนบเมนูอาหาร PDF ที่เกี่ยวข้องหากมี โปรดรวมเป็นไฟล์เดียวและขนาดต้องน้อยกว่า 5 MB" },
+  vi: { label: "Tệp PDF thực đơn đính kèm (không bắt buộc)", help: "Đính kèm PDF thực đơn nhà hàng nếu có. Vui lòng gộp thành một tệp dưới 5 MB." },
+  id: { label: "Lampiran menu PDF (opsional)", help: "Lampirkan PDF menu dining yang relevan jika tersedia. Gabungkan menjadi satu file berukuran kurang dari 5 MB." },
+  ja: { label: "メニュー添付PDF（任意）", help: "該当するダイニングメニューPDFがある場合は添付してください。1つのファイルにまとめ、5 MB未満にしてください。" },
+  ar: { label: "مرفق قائمة الطعام بصيغة PDF (اختياري)", help: "أرفق قائمة الطعام ذات الصلة بصيغة PDF إن توفرت. ادمج الملفات في ملف واحد يقل حجمه عن 5 ميغابايت." },
+  tr: { label: "Menü eki PDF (isteğe bağlı)", help: "Varsa ilgili yemek menüsünü PDF olarak ekleyin. Dosyaları tek dosyada birleştirin; dosya 5 MB'tan küçük olmalıdır." },
+};
+
 const helperNoteTranslations = {
   en: "Select an offer type to see the fields required for that manual process.",
   th: "เลือกประเภทข้อเสนอเพื่อดูช่องข้อมูลที่จำเป็นสำหรับขั้นตอนนั้น",
@@ -1443,6 +1453,10 @@ function updateCoreOfferGuidance() {
     descriptionHelp.textContent = feedbackCopy.eventDescriptionHelp;
     menuPdfLabel.textContent = feedbackCopy.eventMenuLabel;
     menuPdfHelp.textContent = feedbackCopy.eventMenuHelp;
+  } else if (selected === "dining") {
+    const diningCopy = diningMenuCopy[language] || diningMenuCopy.en;
+    menuPdfLabel.textContent = diningCopy.label;
+    menuPdfHelp.textContent = diningCopy.help;
   } else if (isRedHotRooms) {
     tileTitle.placeholder = "Example: The Sebel Brisbane";
     offerBannerTitleInput.placeholder = "Example: The Sebel Brisbane";

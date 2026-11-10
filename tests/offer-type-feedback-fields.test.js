@@ -13,11 +13,23 @@ test("Events fields and guidance match the feedback deck", () => {
   assert.match(app, /name: "exclusive_member_event"/);
   assert.match(app, /eventMenuLabel: "Event menu PDF \(optional\)"/);
   assert.match(app, /events: \{ rateScreenshot: false, menuPdf: true, menuPdfRequired: false/);
+  assert.match(app, /dining: \{ rateScreenshot: false, menuPdf: true, menuPdfRequired: false/);
   assert.match(app, /accommodationDetailsCoreField\.classList\.toggle\("is-hidden", selected !== "events"\)/);
   assert.match(html, /data-i18n="accommodationDetailsHelp"/);
   assert.match(app, /const accommodationHelpTranslations = \{/);
   assert.match(html, /name="menu_pdf" type="file" accept="application\/pdf"/);
   assert.match(app, /events: \[\s*\{ name: "public_price"[\s\S]*?\},\s*\{ name: "member_price"/);
+});
+
+test("Dining menu attachment is optional in all seven languages", () => {
+  const start = app.indexOf("const diningMenuCopy = ") + "const diningMenuCopy = ".length;
+  const end = app.indexOf("const helperNoteTranslations", start);
+  const copy = Function(`"use strict"; return (${app.slice(start, end).trim().replace(/;$/, "")});`)();
+  for (const language of ["en", "th", "vi", "id", "ja", "ar", "tr"]) {
+    assert.deepEqual(Object.keys(copy[language]).sort(), ["help", "label"]);
+    assert.match(copy[language].label, /.+/);
+    assert.match(copy[language].help, /.+/);
+  }
 });
 
 test("Package details is limited to More Escapes and Red Hot Rooms supplies standard terms", () => {
@@ -40,7 +52,7 @@ test("new Events values are retained by Drive and Asana persistence", () => {
 
 test("offer feedback copy is available in all seven languages", () => {
   const start = app.indexOf("const offerTypeFeedbackCopy = ") + "const offerTypeFeedbackCopy = ".length;
-  const end = app.indexOf("const helperNoteTranslations", start);
+  const end = app.indexOf("const diningMenuCopy", start);
   const feedbackCopy = Function(`"use strict"; return (${app.slice(start, end).trim().replace(/;$/, "")});`)();
   const expectedKeys = Object.keys(feedbackCopy.en).sort();
   for (const language of ["en", "th", "vi", "id", "ja", "ar", "tr"]) {

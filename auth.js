@@ -270,9 +270,16 @@ window.explorerAuthReady = (async () => {
     window.Clerk.addListener(({ user }) => applyAuthState(user));
     await applyAuthState(window.Clerk.user);
 
-    document.querySelector("#logoutButton")?.addEventListener("click", async () => {
-      await window.Clerk.signOut();
-      window.location.assign("/");
+    document.querySelector("#logoutButton")?.addEventListener("click", async (event) => {
+      const button = event.currentTarget;
+      button.disabled = true;
+      try {
+        await window.Clerk.signOut({ redirectUrl: `${window.location.origin}/` });
+      } catch (error) {
+        console.error("Could not sign out of Clerk", error);
+        button.disabled = false;
+        window.alert("We could not log you out. Please refresh the page and try again.");
+      }
     });
   } catch (error) {
     console.error("Authentication initialization failed", error);

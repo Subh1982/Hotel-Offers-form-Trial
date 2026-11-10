@@ -24,9 +24,10 @@ assert.deepEqual(
 );
 assert.deepEqual(
   Object.entries(requirements).filter(([, value]) => value.menuPdfRequired).map(([type]) => type).sort(),
-  ["dining"],
+  [],
 );
 assert.equal(requirements.events.menuPdf, true, "Events should display the optional menu PDF upload");
+assert.equal(requirements.dining.menuPdf, true, "Dining should display the optional menu PDF upload");
 assert.match(source, /rateScreenshotInput\.required = needsRateScreenshot/);
 assert.match(source, /bookingScreenshotInput\.required = needsBookingScreenshot/);
 assert.match(source, /input\.required = Boolean\(field\.required\)/);
