@@ -60,4 +60,7 @@ test("logout uses Clerk's explicit post-sign-out redirect", () => {
   const authSource = fs.readFileSync(path.join(root, "auth.js"), "utf8");
   assert.match(authSource, /Clerk\.signOut\(\{ redirectUrl: `\$\{window\.location\.origin\}\/` \}\)/);
   assert.match(authSource, /Could not sign out of Clerk/);
+  assert.match(authSource, /stopImmediatePropagation\(\)/);
+  assert.match(authSource, /\{ capture: true \}/);
+  [indexHtml, confirmationHtml].forEach((html) => assert.match(html, /auth\.js\?v=logout-fix-2/));
 });

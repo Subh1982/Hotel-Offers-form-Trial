@@ -271,6 +271,8 @@ window.explorerAuthReady = (async () => {
     await applyAuthState(window.Clerk.user);
 
     document.querySelector("#logoutButton")?.addEventListener("click", async (event) => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
       const button = event.currentTarget;
       button.disabled = true;
       try {
@@ -280,7 +282,7 @@ window.explorerAuthReady = (async () => {
         button.disabled = false;
         window.alert("We could not log you out. Please refresh the page and try again.");
       }
-    });
+    }, { capture: true });
   } catch (error) {
     console.error("Authentication initialization failed", error);
     const message = error.message || "Authentication could not be loaded. Please refresh and try again.";
