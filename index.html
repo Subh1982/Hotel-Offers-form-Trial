@@ -228,7 +228,7 @@
               </figure>
               <figure class="image-preview-card image-preview-social">
                 <figcaption><strong data-i18n="socialImageTitle">Social media image</strong><span>1080 × 1080</span></figcaption>
-                <p class="image-preview-note" data-i18n="socialImageOptionalNote">Optional, for possible social media exposure.</p>
+                <p class="image-preview-note" data-i18n="socialImageOptionalNote">Please note social media marketing exposure is not guaranteed.</p>
                 <div class="image-preview-placeholder" data-i18n="previewAfterUpload">Preview appears after upload</div>
                 <img id="masterSocialPreview" alt="Social media image preview">
               </figure>
@@ -264,7 +264,10 @@
 
           <section id="translationsSection" class="form-section translation-review-section offer-dependent-section" data-section-number="06">
             <h3 data-i18n="translationRequiredQuestion">Is translation to another language required?</h3>
-            <p class="translation-disclaimer" data-i18n="translationMarketDisclaimer">Translation is relevant only when publishing the offer in the selected market is planned.</p>
+            <div class="translation-disclaimer">
+              <p data-i18n="translationMarketDisclaimer">Translation is relevant only when publishing the offer in the selected market is planned.</p>
+              <p id="translationAvailableLanguages"><strong>Available languages:</strong> English, Thai, Vietnamese, Bahasa Indonesia, Japanese, Arabic and Turkish</p>
+            </div>
             <fieldset class="translation-choice-fieldset">
               <div class="translation-choice-options">
                 <label><input name="translation_required" type="radio" value="yes" required><span data-i18n="yesLabel">Yes</span></label>

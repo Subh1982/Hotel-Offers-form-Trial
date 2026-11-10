@@ -969,6 +969,14 @@ h3 {
   line-height: 1.45;
 }
 
+.translation-disclaimer p {
+  margin: 0;
+}
+
+.translation-disclaimer p + p {
+  margin-top: 6px;
+}
+
 .translation-choice-fieldset {
   margin: 0;
   padding: 0;

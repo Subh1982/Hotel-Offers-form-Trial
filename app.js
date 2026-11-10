@@ -27,6 +27,7 @@ const sectionNavigationButtons = Array.from(document.querySelectorAll("[data-scr
 const formProgressBar = document.querySelector("#formProgressBar");
 const offerTypeTiles = Array.from(document.querySelectorAll("[data-offer-type]"));
 const translationSourceDisplay = document.querySelector("#translationSourceDisplay");
+const translationAvailableLanguages = document.querySelector("#translationAvailableLanguages");
 const translationTargetLanguage = document.querySelector("#translationTargetLanguage");
 const translateContentButton = document.querySelector("#translateContentButton");
 const translationPreviewList = document.querySelector("#translationPreviewList");
@@ -890,6 +891,19 @@ const workflowCopyTranslations = {
 };
 Object.entries(workflowCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
 
+const availableLanguagesLabelTranslations = {
+  en: "Available languages:",
+  th: "ภาษาที่รองรับ:",
+  vi: "Ngôn ngữ có sẵn:",
+  id: "Bahasa yang tersedia:",
+  ja: "利用可能な言語：",
+  ar: "اللغات المتاحة:",
+  tr: "Mevcut diller:",
+};
+Object.entries(availableLanguagesLabelTranslations).forEach(([language, translationAvailableLanguagesLabel]) => {
+  Object.assign(uiTranslations[language], { translationAvailableLanguagesLabel });
+});
+
 const translationAuditCopyTranslations = {
   th: { offerTypeHotelStay: "การเข้าพักโรงแรม", offerTypeDining: "การรับประทานอาหาร", offerTypeEvents: "กิจกรรม", continueButton: "ดำเนินการต่อ" },
   vi: { offerTypeHotelStay: "Lưu trú khách sạn", offerTypeDining: "Ẩm thực", offerTypeEvents: "Sự kiện", continueButton: "Tiếp tục" },
@@ -900,24 +914,24 @@ const translationAuditCopyTranslations = {
 Object.entries(translationAuditCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
 
 const imagePreviewCopyTranslations = {
-  en: { previewAfterUpload: "Preview appears after upload", socialImageOptionalNote: "Optional, for possible social media exposure." },
-  th: { previewAfterUpload: "ตัวอย่างจะแสดงหลังอัปโหลด", socialImageOptionalNote: "ไม่บังคับ สำหรับโอกาสเผยแพร่บนโซเชียลมีเดีย" },
-  vi: { previewAfterUpload: "Bản xem trước xuất hiện sau khi tải lên", socialImageOptionalNote: "Không bắt buộc, dành cho khả năng quảng bá trên mạng xã hội." },
-  id: { previewAfterUpload: "Pratinjau muncul setelah diunggah", socialImageOptionalNote: "Opsional, untuk kemungkinan eksposur media sosial." },
-  ja: { previewAfterUpload: "アップロード後にプレビューが表示されます", socialImageOptionalNote: "任意。ソーシャルメディア掲載の可能性があります。" },
-  ar: { previewAfterUpload: "تظهر المعاينة بعد التحميل", socialImageOptionalNote: "اختيارية، لاحتمال النشر على وسائل التواصل الاجتماعي." },
-  tr: { previewAfterUpload: "Önizleme yüklemeden sonra görünür", socialImageOptionalNote: "İsteğe bağlıdır; sosyal medyada kullanılabilir." },
+  en: { previewAfterUpload: "Preview appears after upload", socialImageOptionalNote: "Please note social media marketing exposure is not guaranteed." },
+  th: { previewAfterUpload: "ตัวอย่างจะแสดงหลังอัปโหลด", socialImageOptionalNote: "โปรดทราบว่าไม่รับประกันการเผยแพร่ผ่านการตลาดบนโซเชียลมีเดีย" },
+  vi: { previewAfterUpload: "Bản xem trước xuất hiện sau khi tải lên", socialImageOptionalNote: "Xin lưu ý rằng việc quảng bá trên mạng xã hội không được đảm bảo." },
+  id: { previewAfterUpload: "Pratinjau muncul setelah diunggah", socialImageOptionalNote: "Harap diperhatikan bahwa eksposur pemasaran di media sosial tidak dijamin." },
+  ja: { previewAfterUpload: "アップロード後にプレビューが表示されます", socialImageOptionalNote: "ソーシャルメディアでのマーケティング掲載は保証されません。" },
+  ar: { previewAfterUpload: "تظهر المعاينة بعد التحميل", socialImageOptionalNote: "يرجى ملاحظة أن الظهور التسويقي على وسائل التواصل الاجتماعي غير مضمون." },
+  tr: { previewAfterUpload: "Önizleme yüklemeden sonra görünür", socialImageOptionalNote: "Sosyal medya pazarlama görünürlüğünün garanti edilmediğini lütfen unutmayın." },
 };
 Object.entries(imagePreviewCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
 
 const runtimeCopyTranslations = {
-  en: { moreInformationLabel: "More information", translationSelectionHelp: "Select one or more languages. Use Ctrl/Command-click to select multiple options.", imageInvalidType: "Please upload a PNG, JPG, or WebP image.", imageTooLarge: "Image source file must not exceed 200 MB.", imageProcessing: "Creating banner, listing tile, and social image versions...", imageReady: "All image versions ready from one source image. Source size: {size} KB." },
-  th: { moreInformationLabel: "ข้อมูลเพิ่มเติม", translationSelectionHelp: "เลือกหนึ่งภาษาหรือหลายภาษา ใช้ Ctrl/Command-click เพื่อเลือกหลายรายการ", imageInvalidType: "โปรดอัปโหลดภาพ PNG, JPG หรือ WebP", imageTooLarge: "ไฟล์ภาพต้นฉบับต้องมีขนาดไม่เกิน 200 MB", imageProcessing: "กำลังสร้างภาพแบนเนอร์ การ์ดรายการ และโซเชียลมีเดีย...", imageReady: "ภาพทุกเวอร์ชันพร้อมแล้วจากภาพต้นฉบับหนึ่งภาพ ขนาดต้นฉบับ: {size} KB" },
-  vi: { moreInformationLabel: "Thông tin thêm", translationSelectionHelp: "Chọn một hoặc nhiều ngôn ngữ. Dùng Ctrl/Command-click để chọn nhiều mục.", imageInvalidType: "Vui lòng tải lên ảnh PNG, JPG hoặc WebP.", imageTooLarge: "Tệp ảnh nguồn không được vượt quá 200 MB.", imageProcessing: "Đang tạo các phiên bản banner, ô danh sách và ảnh mạng xã hội...", imageReady: "Đã tạo xong tất cả phiên bản từ một ảnh nguồn. Kích thước nguồn: {size} KB." },
-  id: { moreInformationLabel: "Informasi selengkapnya", translationSelectionHelp: "Pilih satu atau beberapa bahasa. Gunakan Ctrl/Command-click untuk memilih beberapa opsi.", imageInvalidType: "Unggah gambar PNG, JPG, atau WebP.", imageTooLarge: "File gambar sumber tidak boleh melebihi 200 MB.", imageProcessing: "Membuat versi banner, tile daftar, dan gambar media sosial...", imageReady: "Semua versi gambar siap dari satu gambar sumber. Ukuran sumber: {size} KB." },
-  ja: { moreInformationLabel: "詳細情報", translationSelectionHelp: "1つ以上の言語を選択してください。複数選択にはCtrl/Command-clickを使用します。", imageInvalidType: "PNG、JPG、またはWebP画像をアップロードしてください。", imageTooLarge: "元画像のファイルサイズは200 MB以下にしてください。", imageProcessing: "バナー、一覧タイル、ソーシャル画像を作成しています...", imageReady: "1枚の元画像からすべての画像を作成しました。元画像サイズ：{size} KB。" },
-  ar: { moreInformationLabel: "مزيد من المعلومات", translationSelectionHelp: "اختر لغة واحدة أو أكثر. استخدم Ctrl/Command-click لتحديد عدة خيارات.", imageInvalidType: "يرجى تحميل صورة بصيغة PNG أو JPG أو WebP.", imageTooLarge: "يجب ألا يتجاوز ملف الصورة المصدر 200 ميغابايت.", imageProcessing: "جارٍ إنشاء نسخ اللافتة وبطاقة القائمة وصورة وسائل التواصل...", imageReady: "جميع نسخ الصور جاهزة من صورة مصدر واحدة. حجم المصدر: {size} كيلوبايت." },
-  tr: { moreInformationLabel: "Daha fazla bilgi", translationSelectionHelp: "Bir veya daha fazla dil seçin. Birden fazla seçim için Ctrl/Command-click kullanın.", imageInvalidType: "Lütfen PNG, JPG veya WebP görseli yükleyin.", imageTooLarge: "Kaynak görsel dosyası 200 MB'ı aşmamalıdır.", imageProcessing: "Banner, liste kutucuğu ve sosyal medya görseli sürümleri oluşturuluyor...", imageReady: "Tüm görsel sürümleri tek bir kaynak görselden hazırlandı. Kaynak boyutu: {size} KB." },
+  en: { moreInformationLabel: "More information", translationSelectionHelp: "Select one or more languages. Use Ctrl/Command-click to select multiple options.", imageInvalidType: "Please upload a PNG, JPG, or WebP image.", imageTooLarge: "Image source file must not exceed 200 MB.", imageProcessing: "Creating banner, listing tile, and social image versions...", imageReady: "All image versions ready from one source image. Source size: {size} KB.", brandToneUnavailable: "Sorry, the Brand Tone Alignment feature is not available at the moment. Please proceed with submitting your offer.", translationUnavailable: "Sorry, the Translation feature is not available at the moment. Please proceed with submitting your offer." },
+  th: { moreInformationLabel: "ข้อมูลเพิ่มเติม", translationSelectionHelp: "เลือกหนึ่งภาษาหรือหลายภาษา ใช้ Ctrl/Command-click เพื่อเลือกหลายรายการ", imageInvalidType: "โปรดอัปโหลดภาพ PNG, JPG หรือ WebP", imageTooLarge: "ไฟล์ภาพต้นฉบับต้องมีขนาดไม่เกิน 200 MB", imageProcessing: "กำลังสร้างภาพแบนเนอร์ การ์ดรายการ และโซเชียลมีเดีย...", imageReady: "ภาพทุกเวอร์ชันพร้อมแล้วจากภาพต้นฉบับหนึ่งภาพ ขนาดต้นฉบับ: {size} KB", brandToneUnavailable: "ขออภัย ฟีเจอร์ปรับโทนแบรนด์ไม่พร้อมใช้งานในขณะนี้ โปรดดำเนินการส่งข้อเสนอของคุณต่อไป", translationUnavailable: "ขออภัย ฟีเจอร์แปลภาษาไม่พร้อมใช้งานในขณะนี้ โปรดดำเนินการส่งข้อเสนอของคุณต่อไป" },
+  vi: { moreInformationLabel: "Thông tin thêm", translationSelectionHelp: "Chọn một hoặc nhiều ngôn ngữ. Dùng Ctrl/Command-click để chọn nhiều mục.", imageInvalidType: "Vui lòng tải lên ảnh PNG, JPG hoặc WebP.", imageTooLarge: "Tệp ảnh nguồn không được vượt quá 200 MB.", imageProcessing: "Đang tạo các phiên bản banner, ô danh sách và ảnh mạng xã hội...", imageReady: "Đã tạo xong tất cả phiên bản từ một ảnh nguồn. Kích thước nguồn: {size} KB.", brandToneUnavailable: "Rất tiếc, tính năng Điều chỉnh giọng thương hiệu hiện không khả dụng. Vui lòng tiếp tục gửi ưu đãi của bạn.", translationUnavailable: "Rất tiếc, tính năng Dịch thuật hiện không khả dụng. Vui lòng tiếp tục gửi ưu đãi của bạn." },
+  id: { moreInformationLabel: "Informasi selengkapnya", translationSelectionHelp: "Pilih satu atau beberapa bahasa. Gunakan Ctrl/Command-click untuk memilih beberapa opsi.", imageInvalidType: "Unggah gambar PNG, JPG, atau WebP.", imageTooLarge: "File gambar sumber tidak boleh melebihi 200 MB.", imageProcessing: "Membuat versi banner, tile daftar, dan gambar media sosial...", imageReady: "Semua versi gambar siap dari satu gambar sumber. Ukuran sumber: {size} KB.", brandToneUnavailable: "Maaf, fitur Penyesuaian Gaya Merek saat ini tidak tersedia. Silakan lanjutkan pengiriman penawaran Anda.", translationUnavailable: "Maaf, fitur Terjemahan saat ini tidak tersedia. Silakan lanjutkan pengiriman penawaran Anda." },
+  ja: { moreInformationLabel: "詳細情報", translationSelectionHelp: "1つ以上の言語を選択してください。複数選択にはCtrl/Command-clickを使用します。", imageInvalidType: "PNG、JPG、またはWebP画像をアップロードしてください。", imageTooLarge: "元画像のファイルサイズは200 MB以下にしてください。", imageProcessing: "バナー、一覧タイル、ソーシャル画像を作成しています...", imageReady: "1枚の元画像からすべての画像を作成しました。元画像サイズ：{size} KB。", brandToneUnavailable: "申し訳ありません。ブランドトーン調整機能は現在ご利用いただけません。そのままオファーの送信を続けてください。", translationUnavailable: "申し訳ありません。翻訳機能は現在ご利用いただけません。そのままオファーの送信を続けてください。" },
+  ar: { moreInformationLabel: "مزيد من المعلومات", translationSelectionHelp: "اختر لغة واحدة أو أكثر. استخدم Ctrl/Command-click لتحديد عدة خيارات.", imageInvalidType: "يرجى تحميل صورة بصيغة PNG أو JPG أو WebP.", imageTooLarge: "يجب ألا يتجاوز ملف الصورة المصدر 200 ميغابايت.", imageProcessing: "جارٍ إنشاء نسخ اللافتة وبطاقة القائمة وصورة وسائل التواصل...", imageReady: "جميع نسخ الصور جاهزة من صورة مصدر واحدة. حجم المصدر: {size} كيلوبايت.", brandToneUnavailable: "عذرًا، ميزة مواءمة نبرة العلامة التجارية غير متاحة حاليًا. يرجى متابعة إرسال عرضك.", translationUnavailable: "عذرًا، ميزة الترجمة غير متاحة حاليًا. يرجى متابعة إرسال عرضك." },
+  tr: { moreInformationLabel: "Daha fazla bilgi", translationSelectionHelp: "Bir veya daha fazla dil seçin. Birden fazla seçim için Ctrl/Command-click kullanın.", imageInvalidType: "Lütfen PNG, JPG veya WebP görseli yükleyin.", imageTooLarge: "Kaynak görsel dosyası 200 MB'ı aşmamalıdır.", imageProcessing: "Banner, liste kutucuğu ve sosyal medya görseli sürümleri oluşturuluyor...", imageReady: "Tüm görsel sürümleri tek bir kaynak görselden hazırlandı. Kaynak boyutu: {size} KB.", brandToneUnavailable: "Üzgünüz, Marka Tonu Uyarlama özelliği şu anda kullanılamıyor. Lütfen teklifinizi göndermeye devam edin.", translationUnavailable: "Üzgünüz, Çeviri özelliği şu anda kullanılamıyor. Lütfen teklifinizi göndermeye devam edin." },
 };
 Object.entries(runtimeCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
 
@@ -927,6 +941,14 @@ function applyLanguage(language) {
   const labels = localizedLanguageLabels[language] || localizedLanguageLabels.en;
   document.documentElement.lang = language;
   document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+  if (translationAvailableLanguages) {
+    const availableLanguages = Object.keys(contentLanguageLabels).map((code) => labels[code] || contentLanguageLabels[code]);
+    const availableLanguagesLabel = availableLanguagesLabelTranslations[language] || availableLanguagesLabelTranslations.en;
+    translationAvailableLanguages.replaceChildren();
+    const label = document.createElement("strong");
+    label.textContent = availableLanguagesLabel;
+    translationAvailableLanguages.append(label, ` ${new Intl.ListFormat(language, { style: "long", type: "conjunction" }).format(availableLanguages)}`);
+  }
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     const key = element.dataset.i18n;
     const value = copy[key] ?? uiTranslations.en[key];
@@ -1772,7 +1794,8 @@ alignBrandToneButton.addEventListener("click", async () => {
     brandToneStatus.className = "muted success";
     offerDescription.focus();
   } catch (error) {
-    brandToneStatus.textContent = error.message || copy.alignBrandToneError;
+    console.error("Brand tone alignment unavailable after retry", error);
+    brandToneStatus.textContent = copy.brandToneUnavailable;
     brandToneStatus.className = "muted error";
   } finally {
     alignBrandToneButton.disabled = false;
@@ -1806,7 +1829,9 @@ translateContentButton.addEventListener("click", async () => {
     }
     setTranslationStatus(`${targetLanguages.length} optional translation${targetLanguages.length === 1 ? "" : "s"} generated and included automatically.`);
   } catch (error) {
-    setTranslationStatus(error.message || "One or more translations could not be generated.");
+    console.error("Translation unavailable after retry", error);
+    const copy = uiTranslations[languageSelect.value] || uiTranslations.en;
+    setTranslationStatus(copy.translationUnavailable, "error");
   } finally {
     translateContentButton.disabled = false;
     translateContentButton.textContent = (uiTranslations[languageSelect.value] || uiTranslations.en).previewTranslatedButton;
