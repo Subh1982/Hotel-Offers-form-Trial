@@ -48,10 +48,14 @@ test("server domain configuration validates exact domain names", () => {
 });
 
 test("checks the email domain before starting Clerk sign-in", () => {
+  const earlyHandler = source.indexOf("function rejectUnapprovedEmailBeforeClerk");
+  const earlyListener = source.indexOf('addEventListener("submit", rejectUnapprovedEmailBeforeClerk');
   const handlerStart = source.indexOf('document.querySelector("#authEmailForm")');
   const domainCheck = source.indexOf("if (!isAllowedEmail(email))", handlerStart);
   const clerkCreate = source.indexOf("await sendCode()", handlerStart);
 
+  assert.ok(earlyHandler >= 0, "an early domain-validation handler should exist");
+  assert.ok(earlyListener > earlyHandler, "domain validation should be attached before Clerk initialises");
   assert.ok(handlerStart >= 0, "email form handler should exist");
   assert.ok(domainCheck > handlerStart, "domain validation should run in the email handler");
   assert.ok(clerkCreate > domainCheck, "Clerk should only be called after domain validation");
@@ -87,9 +91,19 @@ test("uses the streamlined Explorer sign-in heading", () => {
 test("explains how to resolve an unapproved email domain", () => {
   assert.match(source, /That email domain isn’t currently approved\./);
   assert.match(source, /participating hotel work email address/);
-  assert.match(source, /If your hotel should have access, contact the platform administrator\./);
+  assert.match(source, /If your hotel should have access, use the request access option below\./);
   assert.match(source, /setAuthMessage\(UNAPPROVED_EMAIL_DOMAIN_MESSAGE, true\)/);
   assert.match(source, /showSignIn\(UNAPPROVED_EMAIL_DOMAIN_MESSAGE\)/);
+});
+
+test("offers an external request-access form on every sign-in screen", () => {
+  [indexHtml, confirmationHtml].forEach((html) => {
+    assert.match(html, /Don’t have access to the application\?/);
+    assert.match(html, /href="https:\/\/form\.asana\.com\/\?k=LobZIZ0SC8vvXpEannhHfQ&amp;d=10364894664649"/);
+    assert.match(html, />Request access<\/a>/);
+    assert.match(html, /target="_blank" rel="noopener noreferrer"/);
+  });
+  assert.match(styles, /\.auth-access-request/);
 });
 
 test("does not display the missing-auth configuration warning on the static preview", () => {

@@ -37,6 +37,10 @@
           </div>
           <div id="clerk-captcha"></div>
           <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
+          <div class="auth-access-request">
+            <p>Don’t have access to the application?</p>
+            <a href="https://form.asana.com/?k=LobZIZ0SC8vvXpEannhHfQ&amp;d=10364894664649" target="_blank" rel="noopener noreferrer">Request access</a>
+          </div>
         </div>
       </div>
     </section>
@@ -154,9 +158,6 @@
             </div>
             <label id="accommodationDetailsCoreField" class="is-hidden"><span class="field-label-row"><span data-i18n="accommodationDetailsLabel">Accommodation details</span><span class="field-tooltip"><button type="button" class="field-tooltip-trigger" aria-label="More information">i</button><span class="field-tooltip-content" role="tooltip" data-i18n="accommodationDetailsHelp">Include the hotel room and inclusions if accommodation is part of the event.</span></span></span>
               <textarea name="accommodation_details" rows="4" maxlength="300" data-i18n-placeholder="accommodationDetailsPlaceholder" placeholder="Include hotel room and inclusions if relevant."></textarea>
-            </label>
-            <label id="packageDetailsField"><span class="field-label-row"><span data-i18n="packageDetailsLabel">Package details</span><span class="field-tooltip"><button type="button" class="field-tooltip-trigger" aria-label="More information">i</button><span class="field-tooltip-content" role="tooltip" data-i18n="packageDetailsHelp">Up to 300 characters. List inclusions, member benefits, minimum stay and exclusions.</span></span></span>
-              <textarea name="package_details" required rows="6" maxlength="300" data-i18n-placeholder="packageDetailsPlaceholder" placeholder="List inclusions, member benefits, minimum stay and exclusions."></textarea>
             </label>
             <label><span class="field-label-row"><span data-i18n="termsLabel">Terms and conditions</span><span class="field-tooltip"><button type="button" class="field-tooltip-trigger" aria-label="More information">i</button><span class="field-tooltip-content" role="tooltip" data-i18n="termsHelp">Up to 300 characters. Include all terms and conditions in bullet points.</span></span></span>
               <textarea name="terms" required rows="5" maxlength="300" data-i18n-placeholder="termsPlaceholder" placeholder="Include all terms and conditions in bullet points."></textarea>
@@ -329,7 +330,7 @@
         <a id="bookingPreview" class="booking-dialog-link" href="#" target="_blank" rel="noreferrer"></a>
         <div class="actions booking-dialog-actions">
           <button value="cancel" class="secondary" data-i18n="goBackButton">Go back</button>
-          <button value="confirm" data-i18n="continueButton">Continue</button>
+          <button value="confirm" class="booking-dialog-continue" data-i18n="continueButton">Continue</button>
         </div>
       </form>
     </dialog>
@@ -338,6 +339,6 @@
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
     <script src="site-header.js?v=site-header-1"></script>
     <script src="auth.js?v=logout-fix-2"></script>
-    <script src="app.js?v=offer-fields-feedback-1"></script>
+    <script src="app.js?v=offer-validation-2"></script>
   </body>
 </html>

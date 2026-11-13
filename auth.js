@@ -1,6 +1,6 @@
 const PERMANENT_AUTH_DOMAINS = ["accor.com", "accorplus.com"];
 const ALLOWED_AUTH_DOMAINS = new Set(PERMANENT_AUTH_DOMAINS);
-const UNAPPROVED_EMAIL_DOMAIN_MESSAGE = "That email domain isn’t currently approved. Use an Accor, Accor Plus, or participating hotel work email address. If your hotel should have access, contact the platform administrator.";
+const UNAPPROVED_EMAIL_DOMAIN_MESSAGE = "That email domain isn’t currently approved. Use an Accor, Accor Plus, or participating hotel work email address. If your hotel should have access, use the request access option below.";
 
 function setAllowedAuthDomains(domains = []) {
   ALLOWED_AUTH_DOMAINS.clear();
@@ -106,6 +106,16 @@ function showEmailStep() {
   document.querySelector("#authEmail")?.focus();
 }
 
+function rejectUnapprovedEmailBeforeClerk(event) {
+  const input = document.querySelector("#authEmail");
+  const email = String(input?.value || "").trim().toLowerCase();
+  if (isAllowedEmail(email)) return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  setAuthMessage(UNAPPROVED_EMAIL_DOMAIN_MESSAGE, true);
+  input?.focus();
+}
+
 async function authenticatedFetch(input, init = {}) {
   await window.explorerAuthReady;
   const token = await window.Clerk?.session?.getToken();
@@ -120,6 +130,8 @@ async function authenticatedFetch(input, init = {}) {
   }
   return response;
 }
+
+document.querySelector("#authEmailForm")?.addEventListener("submit", rejectUnapprovedEmailBeforeClerk, { capture: true });
 
 window.authenticatedFetch = authenticatedFetch;
 window.explorerAuthReady = (async () => {

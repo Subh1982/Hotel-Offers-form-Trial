@@ -403,11 +403,63 @@ body.auth-loading > #appShell {
 }
 
 .auth-message.error {
+  margin-top: 20px;
+  padding: 12px 14px;
+  border-inline-start: 3px solid var(--danger);
+  background: #fff1f3;
   color: var(--danger);
+  line-height: 1.5;
 }
 
 .auth-message.success {
   color: var(--ok);
+}
+
+.auth-access-request {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.auth-access-request p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.auth-access-request a {
+  flex: none;
+  padding: 10px 14px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.auth-access-request a:hover,
+.auth-access-request a:focus-visible {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: #ffffff;
+}
+
+@media (max-width: 440px) {
+  .auth-access-request {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .auth-access-request a {
+    text-align: center;
+  }
 }
 
 input[readonly] {

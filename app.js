@@ -48,7 +48,6 @@ const submissionProgressBar = document.querySelector("#submissionProgressBar");
 const bookingScreenshotCard = document.querySelector("#bookingScreenshotCard");
 const accommodationDetailsCoreField = document.querySelector("#accommodationDetailsCoreField");
 const offerSubtitleField = document.querySelector("#offerSubtitleField");
-const packageDetailsField = document.querySelector("#packageDetailsField");
 const menuPdfLabel = document.querySelector("#menuPdfLabel");
 const menuPdfHelp = document.querySelector("#menuPdfHelp");
 const hotelNameInput = form.elements.hotel_name;
@@ -196,8 +195,8 @@ const uiTranslations = {
     bookingLinkChecking: "Checking booking link...",
     bookingLinkLiveTitle: "Booking link is live",
     bookingLinkLiveText: "The link has been validated and is live. You can continue with the submission.",
-    bookingLinkNotLiveTitle: "Booking link may not be live",
-    bookingLinkNotLiveText: "The offer link provided is not live. Do you want to proceed?",
+    bookingLinkNotLiveTitle: "Booking link is not live",
+    bookingLinkNotLiveText: "This offer cannot be submitted until the booking link is live. Check the link, publish the booking page, and try again.",
     continueButton: "Continue",
   },
   th: {
@@ -539,7 +538,7 @@ const uiTranslations = {
     confirmationEyebrow: "Gönderim tamamlandı", confirmationTitle: "Teklif başarıyla gönderildi", confirmationText: "Teklif kaydedildi ve Asana görevi oluşturuldu.", submissionDateRangeLabel: "Gönderim tarih aralığı", createAnotherButton: "Başka bir teklif oluştur", backToOptionsButton: "Seçeneklere dön",
     sideTitle: "Teklif Gönderimi", stepType: "Teklif türü", stepHotel: "Otel bilgileri", stepOffer: "Teklif ve tarihler", stepProof: "Kanıt ve formlar", stepImages: "Görseller ve inceleme", stepTranslations: "Çeviriler", formEyebrow: "Konaklama ve yeme-içme teklifleri", formTitle: "Explorer teklifinizi oluşturun",
     offerTypeQuestion: "Hangi tür teklifi gönderiyorsunuz?", offerTypeHelp: "Seçiminiz aşağıda istenecek tarihleri, fiyatları ve destekleyici bilgileri belirler.", offerTypeHotelStay: "Otel konaklaması", offerTypeDining: "Yeme-içme", offerTypeEvents: "Etkinlikler", offerTypePartners: "İş ortakları", hotelDetails: "Otel bilgileri", coreContent: "Temel teklif içeriği", datesBooking: "Tarihler ve rezervasyon", proofForms: "Kanıt ve gerekli formlar", imagesTitle: "Görseller", finalAcknowledgement: "Son onay", clearButton: "Temizle", submitButton: "Teklifi Gönder", goBackButton: "Geri dön", continueButton: "Devam et",
-    alignBrandToneButton: "Marka tonuna uyarla", alignBrandToneEmpty: "Önce bir teklif açıklaması girin.", alignBrandToneWorking: "Uyarlanıyor...", alignBrandToneProgress: "Açıklamanız Explorer marka tonuna göre yeniden yazılıyor...", alignBrandToneSuccess: "Marka tonuna uygun taslak hazır. Göndermeden önce düzenleyebilirsiniz.", alignBrandToneError: "Marka tonu uyarlaması başarısız oldu.", turnstileVerifying: "Gönderim doğrulanıyor...", turnstileUnavailable: "Bu gönderim doğrulanamadı. Lütfen tekrar deneyin.", bookingLinkChecking: "Rezervasyon bağlantısı kontrol ediliyor...", bookingLinkLiveTitle: "Rezervasyon bağlantısı aktif", bookingLinkLiveText: "Bağlantı doğrulandı ve aktif. Gönderime devam edebilirsiniz.", bookingLinkNotLiveTitle: "Rezervasyon bağlantısı aktif olmayabilir", bookingLinkNotLiveText: "Verilen teklif bağlantısı aktif değil. Devam etmek istiyor musunuz?",
+    alignBrandToneButton: "Marka tonuna uyarla", alignBrandToneEmpty: "Önce bir teklif açıklaması girin.", alignBrandToneWorking: "Uyarlanıyor...", alignBrandToneProgress: "Açıklamanız Explorer marka tonuna göre yeniden yazılıyor...", alignBrandToneSuccess: "Marka tonuna uygun taslak hazır. Göndermeden önce düzenleyebilirsiniz.", alignBrandToneError: "Marka tonu uyarlaması başarısız oldu.", turnstileVerifying: "Gönderim doğrulanıyor...", turnstileUnavailable: "Bu gönderim doğrulanamadı. Lütfen tekrar deneyin.", bookingLinkChecking: "Rezervasyon bağlantısı kontrol ediliyor...", bookingLinkLiveTitle: "Rezervasyon bağlantısı aktif", bookingLinkLiveText: "Bağlantı doğrulandı ve aktif. Gönderime devam edebilirsiniz.", bookingLinkNotLiveTitle: "Rezervasyon bağlantısı aktif değil", bookingLinkNotLiveText: "Rezervasyon bağlantısı aktif olana kadar bu teklif gönderilemez. Bağlantıyı kontrol edin, rezervasyon sayfasını yayımlayın ve tekrar deneyin.",
   },
 };
 
@@ -1012,14 +1011,14 @@ const typeFieldGroups = {
     { name: "public_price_per_night", label: "Public price per night", placeholder: "Example: From SGD 375++ per night" },
   ],
   dining: [
-    { name: "price", label: "Price", placeholder: "Example: SGD 68++ per person" },
+    { name: "price", label: "Public Package Price", placeholder: "Example: SGD 68++ per person", required: true },
     { name: "offer_validity_start_date", label: "Offer validity start date", type: "date", required: true },
     { name: "offer_validity_end_date", label: "Offer validity end date", type: "date", required: true },
     { name: "venue", label: "Venue", placeholder: "Example: The Cliff at Sofitel Singapore Sentosa Resort and Spa", required: true },
     { name: "member_benefits", label: "Member benefits", type: "textarea", placeholder: "Describe the member dining benefit, discount, inclusions, or early bird offer.", required: true },
   ],
   events: [
-    { name: "public_price", label: "Public price", placeholder: "Example: N/A or AUD 169 per person" },
+    { name: "public_price", label: "Public Package Price", placeholder: "Example: AUD 169 per person", required: true },
     { name: "member_price", label: "Member price", placeholder: "Example: AUD 139 per person", required: true },
     { name: "event_date", label: "Event date", type: "date", required: true },
     { name: "other_event_dates", label: "Other dates", type: "textarea", placeholder: "List any additional event dates." },
@@ -1434,7 +1433,6 @@ function updateCoreOfferGuidance() {
   const tileTitle = offerTileTitleInput;
   const subtitle = form.elements.offer_subtitle;
   const metaDescription = form.elements.meta_description;
-  const packageDetails = form.elements.package_details;
   const terms = form.elements.terms;
   const tileHelp = document.querySelector("[data-i18n='offerTileTitleHelp']");
   const bannerHelp = document.querySelector("[data-i18n='offerBannerTitleHelp']");
@@ -1442,17 +1440,11 @@ function updateCoreOfferGuidance() {
   const metaHelp = document.querySelector("[data-i18n='metaDescriptionHelp']");
   const descriptionHelp = document.querySelector("[data-i18n='offerDescriptionHelp']");
   const isRedHotRooms = selected === "red_hot_rooms";
-  const usesPackageDetails = selected === "more_escapes";
 
   offerSubtitleField.classList.toggle("is-hidden", isRedHotRooms);
-  packageDetailsField.classList.toggle("is-hidden", !usesPackageDetails);
   subtitle.required = !isRedHotRooms;
-  packageDetails.required = usesPackageDetails;
   if (isRedHotRooms) {
     subtitle.value = "";
-  }
-  if (!usesPackageDetails) {
-    packageDetails.value = "";
   }
 
   tileHelp.textContent = copy.offerTileTitleHelp;
@@ -2022,7 +2014,6 @@ function buildContentForTranslation() {
     ["Meta description", fieldValue("meta_description")],
     ["Offer description", fieldValue("offer_description")],
     ["Accommodation details", fieldValue("accommodation_details")],
-    ["Package details", fieldValue("package_details")],
     ...dynamicLines,
     ["Booking method", selectedBookingMethod() === "email_rsvp" ? "Booking via email / RSVP form" : "Booking link"],
     ["Booking link", fieldValue("booking_link")],
@@ -2078,7 +2069,6 @@ function buildSubmissionRecord() {
     offer_details: {
       ...collectDynamicFields(),
       accommodation_details: fieldValue("accommodation_details"),
-      package_details: fieldValue("package_details"),
       booking_method: selectedBookingMethod() === "email_rsvp" ? "Booking via email / RSVP form" : "Booking link",
       booking_email: fieldValue("booking_email"),
       translation_required: translationRequired === "yes" ? "Yes" : "No",
@@ -2330,14 +2320,15 @@ async function validateBookingLink(bookingLink, turnstileToken) {
   return result;
 }
 
-function confirmBookingLink(validation, bookingLink, copy) {
+function showBookingLinkNotLive(bookingLink, copy) {
   bookingPreview.href = bookingLink;
   bookingPreview.textContent = bookingLink;
-  bookingDialogTitle.textContent = validation.live ? copy.bookingLinkLiveTitle : copy.bookingLinkNotLiveTitle;
-  bookingDialogText.textContent = validation.live ? copy.bookingLinkLiveText : copy.bookingLinkNotLiveText;
-  bookingDialog.dataset.status = validation.live ? "live" : "warning";
+  bookingDialogTitle.textContent = copy.bookingLinkNotLiveTitle;
+  bookingDialogText.textContent = copy.bookingLinkNotLiveText;
+  bookingDialog.dataset.status = "warning";
+  bookingDialog.querySelector(".booking-dialog-continue").hidden = true;
   return new Promise((resolve) => {
-    bookingDialog.addEventListener("close", () => resolve(bookingDialog.returnValue === "confirm"), { once: true });
+    bookingDialog.addEventListener("close", () => resolve(false), { once: true });
     bookingDialog.showModal();
   });
 }
@@ -2364,7 +2355,10 @@ form.addEventListener("submit", async (event) => {
     if (selectedBookingMethod() === "booking_link") {
       submitButton.textContent = copy.bookingLinkChecking;
       const validation = await validateBookingLink(record.booking_link, turnstileToken);
-      if (!await confirmBookingLink(validation, record.booking_link, copy)) return;
+      if (!validation.live) {
+        await showBookingLinkNotLive(record.booking_link, copy);
+        return;
+      }
       submitButton.textContent = copy.turnstileVerifying;
       turnstileToken = await requestTurnstileToken();
     }

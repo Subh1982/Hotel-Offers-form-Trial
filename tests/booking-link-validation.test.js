@@ -14,7 +14,9 @@ test("booking-link check occurs after Turnstile and before submission", () => {
   const submitFlow = app.slice(app.indexOf('form.addEventListener("submit"'));
   assert.ok(submitFlow.indexOf("requestTurnstileToken()") < submitFlow.indexOf("validateBookingLink(record.booking_link"));
   assert.ok(submitFlow.indexOf("validateBookingLink(record.booking_link") < submitFlow.indexOf("submitOfferToDrive(record"));
-  assert.match(submitFlow, /confirmBookingLink\(validation/);
+  assert.match(submitFlow, /if \(!validation\.live\)/);
+  assert.match(submitFlow, /showBookingLinkNotLive\(record\.booking_link, copy\)/);
+  assert.doesNotMatch(submitFlow, /confirmBookingLink\(validation/);
 });
 
 test("only dining and events can use email or RSVP booking", () => {

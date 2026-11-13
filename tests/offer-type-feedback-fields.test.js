@@ -32,15 +32,18 @@ test("Dining menu attachment is optional in all seven languages", () => {
   }
 });
 
-test("Package details is limited to More Escapes and Red Hot Rooms supplies standard terms", () => {
+test("Package details is removed and Red Hot Rooms supplies standard terms", () => {
   assert.match(html, /id="offerSubtitleField"/);
-  assert.match(html, /id="packageDetailsField"/);
+  assert.doesNotMatch(html, /name="package_details"/);
   assert.match(app, /offerSubtitleField\.classList\.toggle\("is-hidden", isRedHotRooms\)/);
-  assert.match(app, /const usesPackageDetails = selected === "more_escapes"/);
-  assert.match(app, /packageDetailsField\.classList\.toggle\("is-hidden", !usesPackageDetails\)/);
-  assert.match(app, /packageDetails\.required = usesPackageDetails/);
+  assert.doesNotMatch(app, /fieldValue\("package_details"\)/);
   assert.match(app, /Accommodation must be fully prepaid at the time of booking/);
   assert.match(app, /function updateRedHotRoomsTitles\(\)/);
+});
+
+test("Dining and Events require a public package price", () => {
+  assert.match(app, /dining: \[\s*\{ name: "price", label: "Public Package Price"[^}]*required: true \}/);
+  assert.match(app, /events: \[\s*\{ name: "public_price", label: "Public Package Price"[^}]*required: true \}/);
 });
 
 test("new Events values are retained by Drive and Asana persistence", () => {
