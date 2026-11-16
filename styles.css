@@ -1875,11 +1875,9 @@ dialog[data-status="warning"] .booking-dialog-status-icon::before {
 
 .translation-controls select[multiple] { min-height: 168px; }
 .file-validation-message { display: block; margin-top: 6px; color: #9b2c2c; font-weight: 600; }
-.submission-progress { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center; margin: 20px 0; padding: 18px 20px; border-radius: 14px; background: #f2f5ec; border: 1px solid #dce5cf; }
-.submission-spinner { width: 28px; height: 28px; border: 3px solid #d0dac3; border-top-color: var(--accent); border-radius: 50%; animation: submission-spin .8s linear infinite; }
-.submission-progress-track { height: 7px; margin: 10px 0 6px; overflow: hidden; border-radius: 999px; background: #dfe7d5; }
+.submission-progress { margin: 20px 0; padding: 18px 20px; border-radius: 14px; background: #f2f5ec; border: 1px solid #dce5cf; }
+.submission-progress-track { height: 7px; margin-top: 10px; overflow: hidden; border-radius: 999px; background: #dfe7d5; }
 .submission-progress-track span { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--accent); transition: width .3s ease; }
-@keyframes submission-spin { to { transform: rotate(360deg); } }
 
 .confirmation-masthead {
   margin-bottom: 0;

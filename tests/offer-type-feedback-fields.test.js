@@ -42,7 +42,7 @@ test("Package details is removed and Red Hot Rooms supplies standard terms", () 
 });
 
 test("Dining and Events require a public package price", () => {
-  assert.match(app, /dining: \[\s*\{ name: "price", label: "Public Package Price"[^}]*required: true \}/);
+  assert.match(app, /dining: \[[\s\S]*?\{ name: "price", label: "Public Package Price"[^}]*required: true \}[\s\S]*?events: \[/);
   assert.match(app, /events: \[\s*\{ name: "public_price", label: "Public Package Price"[^}]*required: true \}/);
 });
 

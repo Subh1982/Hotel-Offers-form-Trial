@@ -16,10 +16,18 @@ test("booking-link check occurs after Turnstile and before submission", () => {
   assert.ok(submitFlow.indexOf("validateBookingLink(record.booking_link") < submitFlow.indexOf("submitOfferToDrive(record"));
   assert.match(submitFlow, /if \(!validation\.live\)/);
   assert.match(submitFlow, /showBookingLinkNotLive\(record\.booking_link, copy\)/);
+  assert.match(submitFlow, /if \(!proceed\) return/);
   assert.doesNotMatch(submitFlow, /confirmBookingLink\(validation/);
 });
 
-test("only dining and events can use email or RSVP booking", () => {
+test("a non-live booking link warns the user but still permits submission", () => {
+  const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
+  const warningFlow = app.slice(app.indexOf("function showBookingLinkNotLive"), app.indexOf('form.addEventListener("submit"'));
+  assert.match(warningFlow, /booking-dialog-continue"\)\.hidden = false/);
+  assert.match(warningFlow, /resolve\(bookingDialog\.returnValue === "confirm"\)/);
+});
+
+test("only dining and events can use an alternate direct booking method", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
   const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
   const bookingLogic = app.slice(app.indexOf("function selectedBookingMethod"), app.indexOf("function renderTypeSpecificFields"));
@@ -33,8 +41,9 @@ test("only dining and events can use email or RSVP booking", () => {
   assert.match(bookingLogic, /bookingMethodFieldset\.classList\.toggle\("is-hidden", !offersBookingChoice\)/);
   assert.match(bookingLogic, /bookingEmailInput\.required = usesEmailRsvp/);
   assert.doesNotMatch(typeFieldRendering, /process-note|offerTypeGuidance/);
-  assert.match(app, /booking_method: selectedBookingMethod\(\) === "email_rsvp"/);
+  assert.match(app, /booking_method: bookingMethodDisplayLabel\(\)/);
   assert.match(app, /booking_email: fieldValue\("booking_email"\)/);
+  assert.match(app, /diningBookingMethodDirect: "Booking via email \/ WhatsApp\/ Line"/);
 });
 
 test("Turkish is available for both the interface and translations", () => {

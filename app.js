@@ -180,6 +180,7 @@ const uiTranslations = {
     finalAcknowledgement: "Final acknowledgement",
     clearButton: "Clear",
     submitButton: "Submit Offer",
+    submittingOffer: "Submitting Offer...",
     dialogTitle: "Double-check the booking link",
     dialogText: "Hotels will send guests to this exact URL. Please confirm it opens the correct booking page for this offer.",
     goBackButton: "Go back",
@@ -200,6 +201,7 @@ const uiTranslations = {
     continueButton: "Continue",
   },
   th: {
+    submittingOffer: "กำลังส่งข้อเสนอ...",
     alignBrandToneButton: "ปรับคำอธิบายข้อเสนอให้สอดคล้องกับโทนแบรนด์ (ไม่บังคับ)",
     alignBrandToneEmpty: "โปรดกรอกรายละเอียดข้อเสนอก่อน",
     alignBrandToneWorking: "กำลังปรับโทน...",
@@ -272,6 +274,7 @@ const uiTranslations = {
     confirmButton: "ยืนยันและสร้างแพ็กเกจ",
   },
   vi: {
+    submittingOffer: "Đang gửi ưu đãi...",
     alignBrandToneButton: "Điều chỉnh mô tả ưu đãi theo giọng thương hiệu (không bắt buộc)",
     alignBrandToneEmpty: "Vui lòng nhập mô tả ưu đãi trước.",
     alignBrandToneWorking: "Đang điều chỉnh...",
@@ -344,6 +347,7 @@ const uiTranslations = {
     confirmButton: "Xác nhận và tạo gói",
   },
   id: {
+    submittingOffer: "Mengirim penawaran...",
     alignBrandToneButton: "Selaraskan deskripsi penawaran dengan gaya merek (opsional)",
     alignBrandToneEmpty: "Masukkan deskripsi penawaran terlebih dahulu.",
     alignBrandToneWorking: "Sedang menyesuaikan...",
@@ -416,6 +420,7 @@ const uiTranslations = {
     confirmButton: "Konfirmasi dan buat paket",
   },
   ja: {
+    submittingOffer: "オファーを送信しています...",
     alignBrandToneButton: "オファー説明をブランドトーンに合わせる（任意）",
     alignBrandToneEmpty: "まずオファー説明を入力してください。",
     alignBrandToneWorking: "調整中...",
@@ -488,6 +493,7 @@ const uiTranslations = {
     confirmButton: "確認してパッケージ作成",
   },
   ar: {
+    submittingOffer: "جارٍ إرسال العرض...",
     languageLabel: "اللغة",
     heroTitle: "بوابة عروض ALL Accor+ Explorer",
     heroText: "أرسل عروض الإقامة والمطاعم والفعاليات والشركاء إلى ALL Accor+ Explorer.",
@@ -533,6 +539,7 @@ const uiTranslations = {
     turnstileUnavailable: "تعذر التحقق من هذا الإرسال. يرجى المحاولة مرة أخرى.",
   },
   tr: {
+    submittingOffer: "Teklif gönderiliyor...",
     marketLabel: "Pasifik pazarlama platformu", languageLabel: "Dil", heroTitle: "ALL Accor+ Explorer Teklif Portalı", heroText: "ALL Accor+ Explorer için konaklama, yeme-içme, etkinlik ve iş ortağı teklifleri gönderin.",
     startEyebrow: "Teklif çalışma alanı", startTitle: "Ne yapmak istersiniz?", startText: "Görevinize uygun yolu seçin.", createOfferTitle: "Yeni teklif oluştur", createOfferText: "Yeni bir Explorer teklifi başlatın.", viewOfferTitle: "Mevcut teklifi görüntüle", viewOfferText: "Gönderilmiş bir teklifi değiştirmeden bulun.", editOfferTitle: "Mevcut teklifi düzenle", editOfferText: "Kaydedilmiş bir teklifi bulun ve güncelleyin.",
     confirmationEyebrow: "Gönderim tamamlandı", confirmationTitle: "Teklif başarıyla gönderildi", confirmationText: "Teklif kaydedildi ve Asana görevi oluşturuldu.", submissionDateRangeLabel: "Gönderim tarih aralığı", createAnotherButton: "Başka bir teklif oluştur", backToOptionsButton: "Seçeneklere dön",
@@ -890,6 +897,17 @@ const workflowCopyTranslations = {
 };
 Object.entries(workflowCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
 
+const requestedFormCopyTranslations = {
+  en: { translationRequiredQuestion: "Is local language translation required?", translationMarketDisclaimer: "The translation is required only for publication in its respective local market.", diningBookingMethodDirect: "Booking via email / WhatsApp/ Line", memberBenefitsDates: "Member Benefits & Dates" },
+  th: { translationRequiredQuestion: "จำเป็นต้องแปลเป็นภาษาท้องถิ่นหรือไม่?", translationMarketDisclaimer: "จำเป็นต้องแปลเฉพาะเมื่อจะเผยแพร่ข้อเสนอในตลาดท้องถิ่นนั้น", diningBookingMethodDirect: "จองผ่านอีเมล / WhatsApp / Line", memberBenefitsDates: "สิทธิประโยชน์สมาชิกและวันที่" },
+  vi: { translationRequiredQuestion: "Có cần bản dịch sang ngôn ngữ địa phương không?", translationMarketDisclaimer: "Bản dịch chỉ cần thiết khi ưu đãi được đăng tại thị trường địa phương tương ứng.", diningBookingMethodDirect: "Đặt qua email / WhatsApp / Line", memberBenefitsDates: "Quyền lợi thành viên và ngày" },
+  id: { translationRequiredQuestion: "Apakah terjemahan bahasa lokal diperlukan?", translationMarketDisclaimer: "Terjemahan hanya diperlukan untuk publikasi di pasar lokal terkait.", diningBookingMethodDirect: "Pemesanan melalui email / WhatsApp / Line", memberBenefitsDates: "Manfaat Anggota & Tanggal" },
+  ja: { translationRequiredQuestion: "現地語への翻訳は必要ですか？", translationMarketDisclaimer: "翻訳は、該当する現地市場で公開する場合にのみ必要です。", diningBookingMethodDirect: "メール / WhatsApp / Lineで予約", memberBenefitsDates: "会員特典と日程" },
+  ar: { translationRequiredQuestion: "هل الترجمة إلى اللغة المحلية مطلوبة؟", translationMarketDisclaimer: "تكون الترجمة مطلوبة فقط للنشر في السوق المحلي المعني.", diningBookingMethodDirect: "الحجز عبر البريد الإلكتروني / WhatsApp / Line", memberBenefitsDates: "مزايا الأعضاء والتواريخ" },
+  tr: { translationRequiredQuestion: "Yerel dil çevirisi gerekli mi?", translationMarketDisclaimer: "Çeviri yalnızca ilgili yerel pazarda yayımlanacak teklifler için gereklidir.", diningBookingMethodDirect: "E-posta / WhatsApp / Line ile rezervasyon", memberBenefitsDates: "Üye Avantajları ve Tarihler" },
+};
+Object.entries(requestedFormCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
+
 const availableLanguagesLabelTranslations = {
   en: "Available languages:",
   th: "ภาษาที่รองรับ:",
@@ -971,6 +989,7 @@ function applyLanguage(language) {
   updateTranslationTargetOptions(language);
   renderTranslationPreviews();
   localStorage.setItem("explorer-offer-language", language);
+  updateOfferTypeSpecificCopy();
 }
 
 const offerTypeLabels = {
@@ -1011,11 +1030,11 @@ const typeFieldGroups = {
     { name: "public_price_per_night", label: "Public price per night", placeholder: "Example: From SGD 375++ per night" },
   ],
   dining: [
+    { name: "member_benefits", label: "Member benefits", type: "textarea", placeholder: "Describe the member dining benefit, discount, inclusions, or early bird offer.", required: true },
     { name: "price", label: "Public Package Price", placeholder: "Example: SGD 68++ per person", required: true },
     { name: "offer_validity_start_date", label: "Offer validity start date", type: "date", required: true },
     { name: "offer_validity_end_date", label: "Offer validity end date", type: "date", required: true },
     { name: "venue", label: "Venue", placeholder: "Example: The Cliff at Sofitel Singapore Sentosa Resort and Spa", required: true },
-    { name: "member_benefits", label: "Member benefits", type: "textarea", placeholder: "Describe the member dining benefit, discount, inclusions, or early bird offer.", required: true },
   ],
   events: [
     { name: "public_price", label: "Public Package Price", placeholder: "Example: AUD 169 per person", required: true },
@@ -1351,6 +1370,23 @@ function selectedBookingMethod() {
   return isDiningOrEventOffer() ? (form.elements.booking_method?.value || "booking_link") : "booking_link";
 }
 
+function bookingMethodDisplayLabel() {
+  const copy = uiTranslations[languageSelect.value] || uiTranslations.en;
+  if (selectedBookingMethod() !== "email_rsvp") return copy.bookingMethodLink;
+  return offerType.value === "dining" ? copy.diningBookingMethodDirect : copy.bookingMethodEmailRsvp;
+}
+
+function updateOfferTypeSpecificCopy() {
+  const copy = uiTranslations[languageSelect.value] || uiTranslations.en;
+  const isDining = offerType.value === "dining";
+  const stepOffer = document.querySelector('[data-scroll-target="offerContentSection"][data-i18n="stepOffer"]');
+  const datesBookingTitle = document.querySelector("#datesBookingSection > h3");
+  const alternateBookingMethod = document.querySelector('[data-i18n="bookingMethodEmailRsvp"]');
+  if (stepOffer) stepOffer.textContent = isDining ? copy.memberBenefitsDates : copy.stepOffer;
+  if (datesBookingTitle) datesBookingTitle.textContent = isDining ? copy.memberBenefitsDates : copy.datesBooking;
+  if (alternateBookingMethod) alternateBookingMethod.textContent = isDining ? copy.diningBookingMethodDirect : copy.bookingMethodEmailRsvp;
+}
+
 function updateBookingMethodFields(clearInactive = false) {
   const offersBookingChoice = isDiningOrEventOffer();
   const bookingLinkOption = form.querySelector('input[name="booking_method"][value="booking_link"]');
@@ -1370,6 +1406,7 @@ function updateBookingMethodFields(clearInactive = false) {
   if (clearInactive && !usesBookingLink) bookingLinkInput.value = "";
   if (clearInactive && !usesEmailRsvp) bookingEmailInput.value = "";
   updateProofUploadFields(clearInactive);
+  updateOfferTypeSpecificCopy();
 }
 
 function renderTypeSpecificFields() {
@@ -2015,7 +2052,7 @@ function buildContentForTranslation() {
     ["Offer description", fieldValue("offer_description")],
     ["Accommodation details", fieldValue("accommodation_details")],
     ...dynamicLines,
-    ["Booking method", selectedBookingMethod() === "email_rsvp" ? "Booking via email / RSVP form" : "Booking link"],
+    ["Booking method", bookingMethodDisplayLabel()],
     ["Booking link", fieldValue("booking_link")],
     ["Booking email or RSVP form", fieldValue("booking_email")],
     ["Terms and conditions", fieldValue("terms")],
@@ -2069,7 +2106,7 @@ function buildSubmissionRecord() {
     offer_details: {
       ...collectDynamicFields(),
       accommodation_details: fieldValue("accommodation_details"),
-      booking_method: selectedBookingMethod() === "email_rsvp" ? "Booking via email / RSVP form" : "Booking link",
+      booking_method: bookingMethodDisplayLabel(),
       booking_email: fieldValue("booking_email"),
       translation_required: translationRequired === "yes" ? "Yes" : "No",
       translation_languages: requestedTranslationLanguages.join(", "),
@@ -2178,31 +2215,32 @@ async function postSubmission(payload) {
   return result;
 }
 
-function updateSubmissionProgress(text, percent) {
+function updateSubmissionProgress(percent) {
   submissionProgress.classList.remove("is-hidden");
-  submissionProgressText.textContent = text;
+  const copy = uiTranslations[languageSelect.value] || uiTranslations.en;
+  submissionProgressText.textContent = copy.submittingOffer || uiTranslations.en.submittingOffer;
   submissionProgressBar.style.width = `${percent}%`;
 }
 
 async function submitOfferToDrive(record, turnstileToken = "") {
-  updateSubmissionProgress("Creating your secure submission folder…", 8);
+  updateSubmissionProgress(8);
   const created = await postSubmission({ ...record, turnstile_token: turnstileToken });
   const assets = await buildSubmissionAssets();
   const uploadedAssets = [];
   for (let index = 0; index < assets.length; index += 1) {
     const asset = assets[index];
-    updateSubmissionProgress(`Saving file ${index + 1} of ${assets.length}…`, 15 + Math.round(((index + 1) / Math.max(assets.length, 1)) * 65));
+    updateSubmissionProgress(15 + Math.round(((index + 1) / Math.max(assets.length, 1)) * 65));
     const folderId = asset.file_type === "application/pdf" ? created.storage.documentsFolderId : created.storage.imagesFolderId;
     const result = await postSubmission({ action: "upload_asset", folder_id: folderId, asset });
     uploadedAssets.push(result.asset);
   }
-  updateSubmissionProgress("Finalising your offer…", 88);
+  updateSubmissionProgress(88);
   const result = await postSubmission({ action: "finalize_submission", offer_id: created.offer_id, folder_id: created.storage.folderId, record, assets: uploadedAssets });
   if (result.asana?.ok && result.asana.gid) {
-    updateSubmissionProgress("Adding images to the Asana task…", 94);
+    updateSubmissionProgress(94);
     result.asana.attachments = await attachImagesToAsana(result.asana.gid, assets);
   }
-  updateSubmissionProgress("Offer successfully submitted.", 100);
+  updateSubmissionProgress(100);
   return result;
 }
 
@@ -2326,9 +2364,9 @@ function showBookingLinkNotLive(bookingLink, copy) {
   bookingDialogTitle.textContent = copy.bookingLinkNotLiveTitle;
   bookingDialogText.textContent = copy.bookingLinkNotLiveText;
   bookingDialog.dataset.status = "warning";
-  bookingDialog.querySelector(".booking-dialog-continue").hidden = true;
+  bookingDialog.querySelector(".booking-dialog-continue").hidden = false;
   return new Promise((resolve) => {
-    bookingDialog.addEventListener("close", () => resolve(false), { once: true });
+    bookingDialog.addEventListener("close", () => resolve(bookingDialog.returnValue === "confirm"), { once: true });
     bookingDialog.showModal();
   });
 }
@@ -2347,22 +2385,18 @@ form.addEventListener("submit", async (event) => {
   const submitButton = form.querySelector('button[type="submit"]');
   submitButton.disabled = true;
   const copy = uiTranslations[languageSelect.value] || uiTranslations.en;
-  submitButton.textContent = copy.turnstileVerifying;
 
   try {
     const record = buildSubmissionRecord();
     let turnstileToken = await requestTurnstileToken();
     if (selectedBookingMethod() === "booking_link") {
-      submitButton.textContent = copy.bookingLinkChecking;
       const validation = await validateBookingLink(record.booking_link, turnstileToken);
       if (!validation.live) {
-        await showBookingLinkNotLive(record.booking_link, copy);
-        return;
+        const proceed = await showBookingLinkNotLive(record.booking_link, copy);
+        if (!proceed) return;
       }
-      submitButton.textContent = copy.turnstileVerifying;
       turnstileToken = await requestTurnstileToken();
     }
-    submitButton.textContent = "Creating ZIP and saving to Google Drive...";
     const result = await submitOfferToDrive(record, turnstileToken);
     const confirmation = {
       offer_id: result.offer_id,

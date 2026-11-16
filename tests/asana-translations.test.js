@@ -47,13 +47,18 @@ test("legacy persistence services are absent", () => {
   assert.equal(fs.existsSync(path.join(root, "netlify/functions/email-package.js")), false);
 });
 
-test("submission shows staged progress and Asana defaults to disabled", () => {
+test("submission shows a single localised progress message and Asana defaults to disabled", () => {
   const root = path.join(__dirname, "..");
   const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
+  const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
   const submit = fs.readFileSync(path.join(root, "netlify/functions/submit-offer.js"), "utf8");
 
   assert.match(app, /verificationTimeout = window\.setTimeout\(fail, 15000\)/);
   assert.match(app, /updateSubmissionProgress/);
+  assert.match(html, /data-i18n="submittingOffer">Submitting Offer\.\.\.<\/strong>/);
+  assert.doesNotMatch(html, /submission-spinner/);
+  assert.doesNotMatch(app, /submitButton\.textContent = copy\.bookingLinkChecking/);
+  assert.doesNotMatch(app, /Creating ZIP and saving to Google Drive/);
   assert.match(app, /action: "finalize_submission"/);
   assert.match(submit, /disabled: true/);
   assert.match(submit, /uploadOfferArchive\(offer, submission\.folder_id\)/);

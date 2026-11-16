@@ -4,20 +4,51 @@ function json(statusCode, body) {
 
 const { requireAuth } = require("./_auth");
 const { GeminiError, generateText } = require("./_gemini");
+const glossary = require("./translation-glossary.json");
 
-const BRAND_INSTRUCTIONS = `Rewrite the supplied offer description in the ALL Accor+ Explorer brand voice.
+const BRAND_INSTRUCTIONS = `You are James, a copywriting assistant for ALL Accor+ Explorer marketing content.
 
-Follow these rules in priority order:
-1. Brand tone, then clarity, then literal phrasing.
-2. Down to earth: warm, inviting, human, inclusive and naturally conversational at a premium level. Never sound corporate, overly formal, slangy or artificially friendly.
-3. Explorers at heart: lively, engaging and evocative. Inspire curiosity and discovery, bring the experience to life with controlled sensory language, and address the reader as "you" where natural. Clarity is more important than cleverness.
-4. Sophisticated yet simple: direct, elevated and concise. Use short, impactful sentences and highlight tangible member benefits. Avoid long sentences, generic claims, vague language and an overly sales-driven tone.
-5. Make the value clear at first read, including what the member gains. Preserve an emotional connection and premium positioning.
-6. Avoid internal jargon and assumptions about prior brand knowledge.
-7. Naturally use vocabulary such as unforgettable, meaningful, enriching, welcoming, explore, discover, journey, escape, uncover, exclusive, curated, seamless, refined or effortless only when accurate. Do not force these words.
-8. Preserve every factual detail, restriction, date, price, inclusion, location and proper noun from the source. Do not invent benefits or facts.
-9. Write in the same language as the source text.
-10. Return only the rewritten description, with no heading, quotation marks, explanation or commentary.`;
+Rewrite the supplied offer description so it is clear, compelling and on brand. Follow the Explorer Copywriting Knowledge Base, editorial guidance and approved glossary supplied with the request.
+
+Mandatory writing rules:
+- Always write in British English. Use spellings such as programme, flavour, personalised, prioritise and enrolment. Never use American spellings unless they appear in a quoted, approved source.
+- Down to Earth: be warm, inviting, human, inclusive and respectful.
+- Explorers at Heart: be lively, evocative and discovery led, never prescriptive.
+- Sophisticated Yet Simple: be direct, elevated, clear and concise. Sound premium without arrogance.
+- Use person-to-person language. Prefer "you" and "we" where appropriate.
+- Focus on tangible member benefits, access, value, ease and experience.
+- Use short, impactful sentences where suitable. Avoid vague, generic, purely functional, overly formal, corporate, pushy or over-salesy copy.
+- Do not use slang, forced humour or forced brand vocabulary. Brand words are inspiration, not filler.
+- Preserve every factual detail, restriction, date, price, inclusion, location and proper noun from the source.
+- Do not invent or guess facts, pricing, dates, eligibility, benefits or offer details.
+- Apply every relevant approved glossary term exactly as supplied. Do not paraphrase an approved term.
+- When in doubt, choose clarity, warmth and simplicity. The result should feel inviting, distinctive and easy to act on.
+- Return only the rewritten offer description, with no heading, quotation marks, explanation or commentary.`;
+
+function relevantGlossaryInstructions(description) {
+  const normalized = description.toLocaleLowerCase();
+  const matches = [];
+  const seen = new Set();
+  Object.values(glossary).forEach((terms) => {
+    Object.entries(terms).forEach(([english, localized]) => {
+      const sourceTerms = [english, localized].filter(Boolean);
+      const matchedSource = sourceTerms
+        .sort((a, b) => b.length - a.length)
+        .find((term) => normalized.includes(term.toLocaleLowerCase()));
+      if (!matchedSource) return;
+      const key = `${matchedSource.toLocaleLowerCase()}::${english.toLocaleLowerCase()}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+      matches.push({ source: matchedSource, english });
+    });
+  });
+  if (!matches.length) return "No approved glossary terms were detected in the source. Preserve all proper nouns exactly.";
+  return `Approved glossary terms detected in the source. Use the canonical British English form exactly:\n${matches
+    .sort((a, b) => b.source.length - a.source.length)
+    .slice(0, 40)
+    .map(({ source, english }) => `- ${source} -> ${english}`)
+    .join("\n")}`;
+}
 
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") return json(405, { error: "Method not allowed." });
@@ -37,7 +68,7 @@ exports.handler = async (event) => {
 
   try {
     const alignedDescription = await generateText({
-      systemInstruction: BRAND_INSTRUCTIONS,
+      systemInstruction: `${BRAND_INSTRUCTIONS}\n\n${relevantGlossaryInstructions(description)}`,
       prompt: description,
       maxOutputTokens: 1200,
     });
