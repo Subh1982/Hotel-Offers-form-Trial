@@ -2,9 +2,9 @@
 
 ## Status and scope
 
-This guide is mandatory for all user-facing application work. It incorporates the supplied Explorer Tone of Voice reference and records how brand consistency must be maintained in this repository.
+This guide is mandatory for all user-facing application work. It incorporates the supplied Explorer Tone of Voice reference and the supplied Explorer visual style guide, reproduced in this repository at [`docs/assets/explorer-visual-style-guide.png`](assets/explorer-visual-style-guide.png).
 
-The supplied reference governs voice and copy. It does not define a complete corporate visual identity system with official colour, typography, spacing, or component tokens. Until an approved visual identity guide is added, preserve the established application styles, shared components, and approved assets rather than inventing new brand rules.
+The visual source governs approved logos, minimum logo widths, iconography, member-card artwork, colour roles, and information-state treatments. The application implementation and approved design specifications provide the corresponding web tokens, typography, component dimensions, responsive behaviour, and accessibility requirements.
 
 If a requested change conflicts with this guide, an approved design, accessibility, or the existing application system, report the conflict and request product-owner direction before proceeding.
 
@@ -95,18 +95,65 @@ Brand vocabulary is inspiration, not filler. Prefer a plain, accurate word when 
 - Maintain full translation-key parity when changing shared interface copy.
 - Treat generated translations as drafts that remain editable and subject to human review.
 
-## Visual and interaction consistency
+## Visual identity
 
-Until an approved visual identity specification is committed:
+### Logos
+
+- Use only approved ALL Accor+, ALL Accor+ Explorer, ALL+ Accor, and ALL Accor logo artwork supplied in the visual guide or repository assets.
+- Maintain the clear proportions and padding of the supplied artwork. Never redraw, distort, stretch, outline, recolour, or add effects to a logo.
+- The horizontal ALL Accor+ Explorer lockup has a minimum rendered width of 78px.
+- The stacked ALL Accor+ Explorer lockup has a minimum rendered width of 56px.
+- Use white lockups on the approved navy background and navy lockups on light backgrounds; ensure sufficient contrast.
+- Do not substitute a text approximation when approved artwork is available.
+
+### Core colour roles
+
+Use the repository CSS custom properties rather than introducing near-duplicate colours:
+
+| Role | Token | Value |
+| --- | --- | --- |
+| Primary navy | `--accent` | `#050033` |
+| Body copy | `--ink` | `#221b1a` |
+| Secondary text | `--muted` | `#504d70` |
+| Primary hover / success | `--teal` | `#27666e` |
+| Information dark | `--info-dark` | `#38326c` |
+| Warning | `--warning` | `#f2d166` |
+| Error | `--danger` | `#ba1f1a` |
+| Offer emphasis | `--offer` | `#d4024d` |
+| Surface | `--surface` | `#ffffff` |
+| Light information panel | `--panel` | `#f4f2fd` |
+
+- Use navy as the primary brand anchor and teal for successful or completed states.
+- Reserve offer pink for offer-specific emphasis, not general decoration.
+- Use warning, information, success, error, and offer colours according to their semantic roles.
+- Pair semantic colours with text or icons; never rely on colour alone to communicate meaning.
+- Preserve accessible foreground/background contrast. Accessibility takes precedence over decorative usage.
+
+### Iconography and imagery
+
+- Reuse the approved iconography and repository sprites, including `assets/offer-icons.svg`, `assets/offer-type-icons.svg`, and `assets/header-icons.svg`.
+- Keep icons single-colour where the component system expects `currentColor`.
+- Do not replace approved icons with emoji, generic text glyphs, or a visually inconsistent icon library.
+- Use the supplied Explorer member-card artwork when a member card is required; do not reconstruct it in HTML or CSS.
+- Use imagery that accurately represents the offer and retains the required crop, focal point, and placement dimensions.
+
+### Typography and shape language
+
+- Use Montserrat with the repository fallbacks for application UI.
+- Use weights 400-700; do not introduce weight 800.
+- Follow the established hierarchy: clear, concise headings; readable body text; compact labels; and visible helper and status text.
+- The established component system uses square corners. Do not introduce rounded cards, pills, or controls unless an approved design explicitly requires them.
+
+## Component and interaction consistency
 
 - Reuse `site-header.js`, existing form controls, offer-type tiles, dialogs, confirmation components, icon sprites, and CSS patterns.
-- Use approved assets from `assets/`; do not redraw, recolour, stretch, crop destructively, or replace brand marks without approval.
+- Use approved assets from `assets/`; do not crop brand marks destructively or replace them without approval.
 - Extend existing CSS variables, dimensions, spacing rhythms, responsive breakpoints, and interaction states instead of creating a parallel style system.
 - Maintain consistent treatment across authentication, the main form, validation and progress states, dialogs, and confirmation pages.
 - Verify all supported responsive and right-to-left layouts affected by a change.
 - Use motion only when it communicates state or improves comprehension; respect reduced-motion preferences.
 
-Existing implementation is evidence of the current approved application style, but it is not permission to preserve an accessibility defect or inconsistency. Report and resolve such conflicts explicitly.
+The visual source image and existing implementation work together: the image defines brand assets and roles, while the application encodes the approved web implementation. Neither is permission to preserve an accessibility defect or inconsistency. Report and resolve such conflicts explicitly.
 
 ## Change checklist
 

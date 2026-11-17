@@ -29,6 +29,7 @@
 ## Mandatory brand compliance
 
 - Always read and follow `docs/brand-style-guide.md` before creating or changing user-facing copy, translations, layouts, components, colours, typography, imagery, icons, spacing, or interaction patterns.
+- Inspect `docs/assets/explorer-visual-style-guide.png` for visual-brand work; do not rely on memory or infer missing visual rules.
 - Treat the brand guide, approved assets, and existing shared components as the source of truth for the areas they govern.
 - Apply the Explorer tone of voice to all user-facing copy: Down to Earth, Explorers at Heart, and Sophisticated Yet Simple. Use British English for English-language copy.
 - Preserve brand intent across every supported language, responsive layout, form state, authentication view, and confirmation page.
