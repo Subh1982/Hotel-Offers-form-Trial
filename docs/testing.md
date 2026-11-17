@@ -22,6 +22,7 @@ Add focused regression coverage in `tests/` for every corrected defect or change
 
 ## Manual regression checklist
 
+- Review changed user-facing copy and presentation against `docs/brand-style-guide.md`.
 - Sign in with each permanent permitted domain and reject an unapproved domain.
 - Confirm the stakeholder-domain fallback behaviour when the Apps Script service is unavailable.
 - Switch interface languages and verify the confirmation page.

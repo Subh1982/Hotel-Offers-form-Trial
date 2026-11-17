@@ -26,6 +26,15 @@
 - Do not deploy, rotate credentials, change external-service configuration, or modify production data without explicit human approval.
 - Avoid adding production dependencies unless the need and operational impact are documented.
 
+## Mandatory brand compliance
+
+- Always read and follow `docs/brand-style-guide.md` before creating or changing user-facing copy, translations, layouts, components, colours, typography, imagery, icons, spacing, or interaction patterns.
+- Treat the brand guide, approved assets, and existing shared components as the source of truth for the areas they govern.
+- Apply the Explorer tone of voice to all user-facing copy: Down to Earth, Explorers at Heart, and Sophisticated Yet Simple. Use British English for English-language copy.
+- Preserve brand intent across every supported language, responsive layout, form state, authentication view, and confirmation page.
+- Do not introduce a new visual style, alter approved brand assets, or weaken accessibility to achieve a visual effect without explicit product-owner approval.
+- If the brand guide, existing implementation, supplied design, or requested change conflict, stop and report the conflict before implementing a subjective resolution.
+
 ## Validation
 
 Before declaring an implementation task complete:
@@ -41,6 +50,7 @@ Before declaring an implementation task complete:
 - Onboarding and local setup: `README.md`
 - System design and data flow: `ARCHITECTURE.md`
 - Business behaviour: `docs/business-rules.md`
+- Mandatory brand and content rules: `docs/brand-style-guide.md`
 - Testing: `docs/testing.md`
 - Deployment, monitoring, rollback, and incidents: `docs/operations.md`
 - Known risks and handover gaps: `docs/known-issues.md`

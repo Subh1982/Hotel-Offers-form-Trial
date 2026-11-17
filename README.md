@@ -6,6 +6,7 @@ Single-page offer submission portal for ALL Accor+ Explorer. A successful submis
 
 - Codex and repository working instructions: [`AGENTS.md`](AGENTS.md)
 - Architecture and integration boundaries: [`ARCHITECTURE.md`](ARCHITECTURE.md)
+- Mandatory brand and content guidance: [`docs/brand-style-guide.md`](docs/brand-style-guide.md)
 - Business rules: [`docs/business-rules.md`](docs/business-rules.md)
 - Testing guide: [`docs/testing.md`](docs/testing.md)
 - Operations and incident runbook: [`docs/operations.md`](docs/operations.md)
