@@ -2,6 +2,16 @@
 
 Single-page offer submission portal for ALL Accor+ Explorer. A successful submission packages the form data and optional translations into a ZIP archive, stores it in Google Drive, and opens a dedicated confirmation page. Asana task creation is temporarily disabled by default.
 
+## Maintainer handover
+
+- Codex and repository working instructions: [`AGENTS.md`](AGENTS.md)
+- Architecture and integration boundaries: [`ARCHITECTURE.md`](ARCHITECTURE.md)
+- Business rules: [`docs/business-rules.md`](docs/business-rules.md)
+- Testing guide: [`docs/testing.md`](docs/testing.md)
+- Operations and incident runbook: [`docs/operations.md`](docs/operations.md)
+- Known risks and handover gaps: [`docs/known-issues.md`](docs/known-issues.md)
+- Architecture decisions: [`docs/decisions/`](docs/decisions/)
+
 ## Authentication
 
 The form and all sensitive Netlify Functions are protected by Clerk. The custom passwordless flow validates the email domain before contacting Clerk. Only exact `accor.com` and `accorplus.com` addresses are permitted, and the server repeats the domain check after authentication.
