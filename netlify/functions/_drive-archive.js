@@ -63,7 +63,7 @@ function archiveFilename(offer) {
 function summary(offer) {
   const details = Object.entries(offer.offer_details || {}).filter(([, value]) => value).map(([key, value]) => `${key.replace(/_/g, " ")}: ${value}`);
   const assets = (offer.assets || []).map((asset) => `${asset.field || asset.name}: ${asset.webViewLink || ""}`);
-  return [`Explorer Offer ID: ${offer.offer_id}`, `Submitted: ${offer.generated_at}`, `Submitter: ${offer.person_in_charge_name} (${offer.email})`, `Hotel: ${offer.hotel_name}`, `Hotel RID code: ${offer.hotel_rid_code}`, `Offer type: ${offer.offer_type}`, `Offer title: ${offer.offer_tile_title}`, "", "Offer details", ...details, "", "Offer description", offer.offer_description || "", "", "Terms and conditions", offer.terms || "", "", "Uploaded images and documents", ...(assets.length ? assets : ["None"])].join("\n");
+  return [`Explorer Offer ID: ${offer.offer_id}`, `Submitted: ${offer.generated_at}`, `Submitter: ${offer.person_in_charge_name} (${offer.email})`, `Hotel: ${offer.hotel_name}`, `Hotel RID code: ${offer.hotel_rid_code}`, `City: ${offer.city || ""}`, `Country: ${offer.country || ""}`, `Offer type: ${offer.offer_type}`, `Offer title: ${offer.offer_tile_title}`, "", "Offer details", ...details, "", "Offer description", offer.offer_description || "", "", "Terms and conditions", offer.terms || "", "", "Uploaded images and documents", ...(assets.length ? assets : ["None"])].join("\n");
 }
 
 function buildArchive(offer) {
@@ -121,7 +121,7 @@ async function uploadOfferArchive(offer, folderId) {
     action: "finalize_submission", folder_id: folderId, filename, mime_type: "application/zip", archive_base64: zip.toString("base64"),
     offer,
   });
-  return { ok: true, id: result.file_id, name: result.file_name || filename, size: result.file_size, webViewLink: result.file_url, folderUrl: result.folder_url, sheet_updated: Boolean(result.sheet_updated) };
+  return { ok: true, id: result.file_id, name: result.file_name || filename, size: result.file_size, webViewLink: result.file_url, folderUrl: result.folder_url, sheet_updated: Boolean(result.sheet_updated), trackerRegion: result.tracker_region || "" };
 }
 
 module.exports = { archiveFilename, buildArchive, createSubmissionFolder, uploadSubmissionAsset, uploadOfferArchive };

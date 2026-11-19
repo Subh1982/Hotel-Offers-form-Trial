@@ -121,6 +121,10 @@ The public Turnstile site key is configured in `app.js`.
 | --- | --- |
 | `WEBHOOK_SECRET` | Must match `GOOGLE_APPS_SCRIPT_SECRET`. |
 | `DRIVE_FOLDER_ID` | Selects the parent Drive folder for submissions and the allowed-domain spreadsheet. |
-| `SPREADSHEET_ID` | Selects the offer tracking spreadsheet. |
+| `PACIFIC_SPREADSHEET_ID` | Selects the Pacific offer tracking spreadsheet. |
+| `ASIA_SPREADSHEET_ID` | Selects the Asia offer tracking spreadsheet. |
+| `MIDDLE_EAST_SPREADSHEET_ID` | Selects the Middle East offer tracking spreadsheet. |
 | `SHEET_NAME` | Optionally overrides the tracking tab name; defaults to `Offers`. |
 | `ALLOWED_DOMAINS_SPREADSHEET_ID` | Identifies the allowed-domain spreadsheet; created and stored automatically on first use. |
+
+Completed offers are routed by the selected ISO country code. The supplied country mapping takes precedence. Other Oceania countries route to Pacific, other Middle East and North Africa countries route to Middle East, and remaining countries route to Asia. Each tracker stores City and Country in separate columns.

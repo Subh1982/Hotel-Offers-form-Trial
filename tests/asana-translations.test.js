@@ -104,6 +104,9 @@ test("Drive storage uses the protected Apps Script webhook without OAuth credent
   assert.match(script, /get_allowed_domains/);
   assert.match(script, /Explorer Offers - Allowed Domains/);
   assert.match(script, /ALLOWED_DOMAINS_SPREADSHEET_ID/);
+  assert.match(script, /PACIFIC_SPREADSHEET_ID/);
+  assert.match(script, /ASIA_SPREADSHEET_ID/);
+  assert.match(script, /MIDDLE_EAST_SPREADSHEET_ID/);
 });
 
 test("Drive tracker receives the complete offer and separate asset links", () => {
@@ -114,7 +117,7 @@ test("Drive tracker receives the complete offer and separate asset links", () =>
   assert.match(drive, /archive_base64: zip\.toString\("base64"\),\s*\n\s*offer,/);
   assert.doesNotMatch(drive, /offer:\s*\{\s*offer_id/);
   [
-    "offer_banner_title", "offer_description", "booking_start_date", "booking_method",
+    "offer_banner_title", "offer_description", "booking_start_date", "booking_method", "offer.city", "offer.country",
     "translation_required", "translation_languages",
     "banner_image", "listing_tile_image", "social_image", "rate_screenshot",
     "booking_screenshot", "menu_pdf",

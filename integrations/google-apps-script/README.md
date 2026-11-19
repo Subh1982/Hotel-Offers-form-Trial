@@ -1,11 +1,13 @@
 # Google Apps Script storage webhook
 
-1. Create a Google Drive folder for ZIP archives and a Google Sheet for the submission register.
+1. Create a Google Drive folder for ZIP archives and three Google Sheets named for the Pacific, Asia, and Middle East offer trackers.
 2. Open [script.google.com](https://script.google.com), create a project, and replace `Code.gs` with this folder's `Code.gs`.
 3. In **Project Settings → Script Properties**, add:
    - `WEBHOOK_SECRET`: a long random value; use the same value for Netlify `GOOGLE_APPS_SCRIPT_SECRET`.
    - `DRIVE_FOLDER_ID`: the value after `/folders/` in the Drive folder URL.
-   - `SPREADSHEET_ID`: the value between `/d/` and `/edit` in the Sheet URL.
+   - `PACIFIC_SPREADSHEET_ID`: the ID from the Pacific tracker Sheet URL.
+   - `ASIA_SPREADSHEET_ID`: the ID from the Asia tracker Sheet URL.
+   - `MIDDLE_EAST_SPREADSHEET_ID`: the ID from the Middle East tracker Sheet URL.
    - `SHEET_NAME`: optional; defaults to `Offers`.
 4. Select **Deploy → New deployment → Web app**.
 5. Set **Execute as** to **Me** and access to **Anyone**. The webhook secret protects the endpoint.
@@ -26,3 +28,13 @@ Use the **Allowed Domains** tab as follows:
 Changes can take up to five minutes to appear because Netlify caches the list. `accor.com` and `accorplus.com` are permanent application fallbacks and remain allowed if this sheet, Drive, or Apps Script cannot be reached.
 
 Never commit or paste the webhook secret into this repository.
+
+## Regional tracker routing
+
+The form sends both the selected country name and its ISO country code. Apps Script routes each completed submission to one tracker:
+
+- Pacific: Australia, New Zealand, Fiji, and other Oceania countries and territories.
+- Middle East: the supplied Middle East markets plus the remaining Middle East and North Africa countries.
+- Asia: the supplied Asian markets and every country not covered by the two geographic fallbacks above.
+
+Each tracker uses separate `City` and `Country` columns. Create new tracker spreadsheets or ensure the target `SHEET_NAME` tab is empty before the first routed submission so Apps Script can create the current header structure.

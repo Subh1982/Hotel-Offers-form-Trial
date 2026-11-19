@@ -17,11 +17,23 @@ function objectBetween(startMarker, endMarker) {
 test("translation question and market guidance use the requested copy in every language", () => {
   const copy = objectBetween("const requestedFormCopyTranslations = ", "Object.entries(requestedFormCopyTranslations)");
   for (const language of ["en", "th", "vi", "id", "ja", "ar", "tr"]) {
-    assert.deepEqual(Object.keys(copy[language]).sort(), ["diningBookingMethodDirect", "memberBenefitsDates", "translationMarketDisclaimer", "translationRequiredQuestion"].sort());
+    assert.deepEqual(Object.keys(copy[language]).sort(), ["cityHelp", "cityLabel", "countryHelp", "countryLabel", "diningBookingMethodDirect", "memberBenefitsDates", "selectCountry", "translationMarketDisclaimer", "translationRequiredQuestion"].sort());
   }
   assert.equal(copy.en.translationRequiredQuestion, "Is local language translation required?");
-  assert.equal(copy.en.translationMarketDisclaimer, "The translation is required only for publication in its respective local market.");
+  assert.equal(copy.en.translationMarketDisclaimer, "Translation to one of the languages below is required only for publishing the offer in the respective local market.");
   assert.match(html, /English, Thai, Vietnamese, Bahasa Indonesia, Japanese, Arabic, and Turkish/);
+});
+
+test("City and Country are separate required fields with a complete country selector", () => {
+  assert.match(html, /<input name="city" required/);
+  assert.match(html, /<select name="country" required/);
+  assert.match(app, /const ISO_COUNTRY_CODES = "[A-Z ]+"\.split\(" "\)/);
+  assert.match(app, /country_code: countrySelect\.selectedOptions\[0\]\?\.dataset\.countryCode/);
+  assert.match(app, /city: fieldValue\("city"\)/);
+  assert.match(app, /country: fieldValue\("country"\)/);
+  const countryCodes = app.match(/const ISO_COUNTRY_CODES = "([A-Z ]+)"\.split\(" "\)/)[1].split(" ");
+  assert.ok(countryCodes.length >= 249, `expected a complete ISO country list, received ${countryCodes.length}`);
+  assert.equal(new Set(countryCodes).size, countryCodes.length);
 });
 
 test("Dining shows Member Benefits and Dates with member benefits first", () => {

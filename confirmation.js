@@ -4,7 +4,7 @@ const previewType = new URLSearchParams(window.location.search).get("type") || "
 const previewConfirmation = {
   offer_id: "EXP-20261105143209-7KQ2", offer_type: previewType,
   offer_tile_title: "A harbour escape with breakfast and sunset cocktails",
-  hotel_name: "Sofitel Sydney Darling Harbour", hotel_rid_code: "B590", city_country: "Sydney · Australia",
+  hotel_name: "Sofitel Sydney Darling Harbour", hotel_rid_code: "B590", city: "Sydney", country: "Australia", country_code: "AU", city_country: "Sydney · Australia",
   email: "preview@accorplus.com", booking_link: "https://example.com/harbour-escape", booking_details: "Not provided",
   date_range: "Booking period: 6 Nov 2026 – 20 Nov 2026\nStay period: 10 Nov 2026 – 28 Feb 2027",
   submitted_at: new Date().toISOString(),
@@ -35,6 +35,17 @@ const confirmationCopy = {
   tr: {
     eyebrow: "Gönderim tamamlandı", headline: (type) => `${type} teklifiniz gönderildi`, reference: "Teklif ID", copyId: "ID'yi kopyala", copied: "Kopyalandı", copyFailed: "ID'yi seçip elle kopyalayın.", whatNext: "Sonraki adımlar", received: "Alındı", inReview: "İnceleniyor", live: "Yayında", createAnother: "Başka bir teklif oluştur", notProvided: "Belirtilmedi", dateRange: "Tarihler", bookingMethod: "Rezervasyon yöntemi", languageLabel: "Dil", logout: "Çıkış yap", stagesProgress: "3 aşamadan 1'i tamamlandı", receivedDesc: "Teklifiniz ve dosyalarınız Explorer ekibine ulaştı.", now: "Şimdi", reviewDesc: "Ekip içeriğinizi, görsellerinizi ve koşullarınızı kontrol eder.", liveDesc: "Tekliflerin yayına alınması 2 haftaya kadar sürebilir.", summaryEyebrow: "Gönderim özeti", summaryTitle: "Aldığımız bilgiler", yourOffer: "Teklifiniz", submitted: "Gönderildi", submittedBy: "Gönderen", howMembersBook: "Üyeler nasıl rezervasyon yapar", bookingLinkLabel: "Rezervasyon bağlantısı", noticeLead: "Daha fazla bilgi gerekirse sizinle iletişime geçeceğiz.", noticeBody: (email) => `Bu teklifle ilgili sorular ${email} adresine gönderilecektir.`, prefillHelper: (hotel) => `${hotel} bilgileri sizin için doldurulacaktır.`, todayAt: (time) => `Bugün, ${time}`, rid: "RID", driveLabel: "Gönderim arşivi",
   },
+};
+
+const supportEmail = "explorer.offers@accorplus.com";
+const supportMessages = {
+  en: (offerId) => `For any queries, contact ${supportEmail} and include Offer ID ${offerId}.`,
+  th: (offerId) => `หากมีคำถาม โปรดติดต่อ ${supportEmail} และระบุหมายเลขข้อเสนอ ${offerId}`,
+  vi: (offerId) => `Nếu có thắc mắc, hãy liên hệ ${supportEmail} và cung cấp Mã ưu đãi ${offerId}.`,
+  id: (offerId) => `Untuk pertanyaan, hubungi ${supportEmail} dan sertakan ID penawaran ${offerId}.`,
+  ja: (offerId) => `お問い合わせは ${supportEmail} までご連絡のうえ、オファーID ${offerId} をお知らせください。`,
+  ar: (offerId) => `لأي استفسار، تواصل مع ${supportEmail} واذكر معرّف العرض ${offerId}.`,
+  tr: (offerId) => `Sorularınız için ${supportEmail} adresine ulaşın ve ${offerId} Teklif ID'sini belirtin.`,
 };
 
 const offerTypes = {
@@ -74,10 +85,14 @@ function renderBooking(copy) {
     target.append(label, link);
   } catch (error) { target.append(bdi(isMissing(confirmation.booking_details, copy) ? copy.notProvided : confirmation.booking_details)); }
 }
-function renderNotice(copy, email) {
+function renderNotice() {
   const notice = document.getElementById("confirmationNotice"); notice.replaceChildren();
-  const lead = document.createElement("strong"); lead.textContent = copy.noticeLead; notice.append(lead);
-  if (!isMissing(email, copy)) { const parts = copy.noticeBody("{email}").split("{email}"); notice.append(document.createTextNode(` ${parts[0]}`), bdi(email), document.createTextNode(parts[1] || "")); }
+  const message = (supportMessages[confirmationLanguage] || supportMessages.en)(confirmation.offer_id || "");
+  const parts = message.split(supportEmail);
+  const link = document.createElement("a");
+  link.href = `mailto:${supportEmail}?subject=${encodeURIComponent(`Explorer offer query ${confirmation.offer_id || ""}`)}`;
+  link.textContent = supportEmail;
+  notice.append(document.createTextNode(parts[0]), link, document.createTextNode(parts[1] || ""));
 }
 function applyConfirmationLanguage(language) {
   confirmationLanguage = confirmationCopy[language] ? language : "en";
@@ -117,7 +132,8 @@ function applyConfirmationLanguage(language) {
   document.getElementById("confirmationHotelName").replaceChildren(bdi(hotelName));
   const subParts = [];
   if (!isMissing(confirmation.hotel_rid_code, copy)) subParts.push(`${copy.rid} ${confirmation.hotel_rid_code}`);
-  if (!isMissing(confirmation.city_country, copy)) subParts.push(confirmation.city_country);
+  const location = [confirmation.city, confirmation.country].filter(Boolean).join(" · ") || confirmation.city_country;
+  if (!isMissing(location, copy)) subParts.push(location);
   const hotelSub = document.getElementById("confirmationHotelSub"); hotelSub.replaceChildren(); if (subParts.length) hotelSub.append(bdi(subParts.join(" · "))); hotelSub.hidden = !subParts.length;
   const fullSubmitted = formatSubmitted(confirmation.submitted_at, confirmationLanguage, { dateStyle: "medium", timeStyle: "short" });
   document.getElementById("confirmationSubmitted").replaceChildren(bdi(fullSubmitted || copy.notProvided));
@@ -128,7 +144,7 @@ function applyConfirmationLanguage(language) {
     submittedShort.append(bdi(sameDay ? copy.todayAt(formatSubmitted(confirmation.submitted_at, confirmationLanguage, { timeStyle: "short" })) : fullSubmitted));
   }
   const email = isMissing(confirmation.email, copy) ? copy.notProvided : confirmation.email;
-  document.getElementById("confirmationEmail").replaceChildren(bdi(email)); renderDates(confirmation.date_range, copy); renderBooking(copy); renderNotice(copy, email);
+  document.getElementById("confirmationEmail").replaceChildren(bdi(email)); renderDates(confirmation.date_range, copy); renderBooking(copy); renderNotice();
 }
 
 if (!rawConfirmation) window.location.replace("/");
@@ -146,6 +162,6 @@ else {
     }
   });
   document.getElementById("createAnotherOfferButton").addEventListener("click", () => {
-    sessionStorage.setItem("offerHotelPrefill", JSON.stringify({ hotel_name: confirmation.hotel_name || "", hotel_rid_code: confirmation.hotel_rid_code || "", city_country: confirmation.city_country || "" }));
+    sessionStorage.setItem("offerHotelPrefill", JSON.stringify({ hotel_name: confirmation.hotel_name || "", hotel_rid_code: confirmation.hotel_rid_code || "", city: confirmation.city || "", country: confirmation.country || "", country_code: confirmation.country_code || "", city_country: confirmation.city_country || "" }));
   });
 }

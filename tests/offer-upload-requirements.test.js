@@ -35,9 +35,10 @@ assert.match(source, /validateRequiredDetails\(\) \|\| !validateRequiredUploads\
 assert.match(html, /id="rateScreenshotCard"[^>]*is-hidden/);
 assert.match(html, /id="bookingScreenshotCard"[^>]*is-hidden/);
 
-["hotel_rid_code", "hotel_name", "city_country", "meta_description"].forEach((name) => {
+["hotel_rid_code", "hotel_name", "city", "meta_description"].forEach((name) => {
   assert.match(html, new RegExp(`<input name="${name}"[^>]*required`), `${name} should be required`);
 });
+assert.match(html, /<select name="country" required/);
 assert.match(html, /<textarea name="terms" required/);
 assert.doesNotMatch(html, /required-fields-note/);
 assert.doesNotMatch(html, /required-label/);

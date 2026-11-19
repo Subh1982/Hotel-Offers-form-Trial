@@ -4,7 +4,9 @@
  * Required Script Properties:
  * - WEBHOOK_SECRET: same value as Netlify GOOGLE_APPS_SCRIPT_SECRET
  * - DRIVE_FOLDER_ID: destination Google Drive folder
- * - SPREADSHEET_ID: tracking spreadsheet
+ * - PACIFIC_SPREADSHEET_ID: Pacific tracking spreadsheet
+ * - ASIA_SPREADSHEET_ID: Asia tracking spreadsheet
+ * - MIDDLE_EAST_SPREADSHEET_ID: Middle East tracking spreadsheet
  * - SHEET_NAME: optional, defaults to "Offers"
  * - ALLOWED_DOMAINS_SPREADSHEET_ID: created automatically on first use
  */
@@ -18,9 +20,8 @@ function doPost(event) {
     }
 
     var folderId = properties.getProperty('DRIVE_FOLDER_ID');
-    var spreadsheetId = properties.getProperty('SPREADSHEET_ID');
-    if (!folderId || !spreadsheetId) {
-      return jsonResponse_({ ok: false, error: 'Drive folder or spreadsheet is not configured.' });
+    if (!folderId) {
+      return jsonResponse_({ ok: false, error: 'Drive folder is not configured.' });
     }
     var offer = payload.offer || {};
     var rootFolder = DriveApp.getFolderById(folderId);
@@ -51,6 +52,12 @@ function doPost(event) {
 
     if (payload.action !== 'finalize_submission' || !payload.folder_id || !payload.filename || !payload.archive_base64) {
       return jsonResponse_({ ok: false, error: 'Final ZIP archive data is missing.' });
+    }
+    var trackerRegion = trackerRegionForOffer_(offer);
+    var trackerProperty = trackerSpreadsheetPropertyForRegion_(trackerRegion);
+    var spreadsheetId = properties.getProperty(trackerProperty);
+    if (!spreadsheetId) {
+      return jsonResponse_({ ok: false, error: trackerProperty + ' is not configured.' });
     }
     var bytes = Utilities.base64Decode(payload.archive_base64);
     var blob = Utilities.newBlob(bytes, payload.mime_type || 'application/zip', payload.filename);
@@ -84,7 +91,8 @@ function doPost(event) {
         offer.offer_type || '',
         offer.hotel_rid_code || '',
         offer.hotel_name || '',
-        offer.city_country || '',
+        offer.city || '',
+        offer.country || '',
         offer.person_in_charge_name || '',
         offer.email || '',
         offer.offer_tile_title || '',
@@ -140,7 +148,7 @@ function doPost(event) {
       lock.releaseLock();
     }
 
-    return jsonResponse_({ ok: true, file_id: file.getId(), file_name: file.getName(), file_size: file.getSize(), file_url: file.getUrl(), folder_url: submissionFolder.getUrl(), sheet_updated: true });
+    return jsonResponse_({ ok: true, file_id: file.getId(), file_name: file.getName(), file_size: file.getSize(), file_url: file.getUrl(), folder_url: submissionFolder.getUrl(), sheet_updated: true, tracker_region: trackerRegion });
   } catch (error) {
     return jsonResponse_({ ok: false, error: error && error.message ? error.message : 'Storage webhook failed.' });
   }
@@ -149,7 +157,7 @@ function doPost(event) {
 function trackerHeaders_() {
   return [
     'Submission timestamp', 'Submission date', 'Offer ID', 'Status', 'Offer type',
-    'Hotel RID code', 'Hotel name', 'City - Country', 'Person in charge', 'Submitter email',
+    'Hotel RID code', 'Hotel name', 'City', 'Country', 'Person in charge', 'Submitter email',
     'Offer tile title', 'Offer banner title', 'Offer subtitle', 'Meta description', 'Offer description',
     'Booking start date', 'Booking end date', 'Stay start date', 'Stay end date',
     'Offer validity start date', 'Offer validity end date', 'Event date', 'Event time', 'Venue',
@@ -163,6 +171,35 @@ function trackerHeaders_() {
     'Rate screenshot URL', 'Booking screenshot URL', 'Menu PDF URL',
     'Published URL', 'Notes', 'Other event dates', 'Exclusive member event'
   ];
+}
+
+function trackerSpreadsheetPropertyForRegion_(region) {
+  if (region === 'Pacific') return 'PACIFIC_SPREADSHEET_ID';
+  if (region === 'Middle East') return 'MIDDLE_EAST_SPREADSHEET_ID';
+  return 'ASIA_SPREADSHEET_ID';
+}
+
+function trackerRegionForOffer_(offer) {
+  var code = String(offer.country_code || '').trim().toUpperCase();
+  var country = String(offer.country || '').trim().toLowerCase();
+
+  // The supplied mapping is authoritative for these markets.
+  var suppliedMapping = {
+    'AU': 'Pacific', 'NZ': 'Pacific', 'FJ': 'Pacific',
+    'ID': 'Asia', 'SG': 'Asia', 'VN': 'Asia', 'TH': 'Asia', 'HK': 'Asia', 'JP': 'Asia', 'IN': 'Asia', 'MY': 'Asia', 'PH': 'Asia',
+    'BH': 'Middle East', 'EG': 'Middle East', 'IQ': 'Middle East', 'JO': 'Middle East', 'KW': 'Middle East', 'LB': 'Middle East', 'OM': 'Middle East', 'QA': 'Middle East', 'SA': 'Middle East', 'TR': 'Middle East'
+  };
+  if (suppliedMapping[code]) return suppliedMapping[code];
+
+  // Fallback: the rest of Oceania routes to Pacific; Middle East and North Africa route to Middle East; all remaining countries route to Asia.
+  var pacificCodes = ['AS', 'CK', 'FM', 'GU', 'KI', 'MH', 'MP', 'NC', 'NF', 'NR', 'NU', 'PF', 'PG', 'PN', 'PW', 'SB', 'TK', 'TO', 'TV', 'UM', 'VU', 'WF', 'WS'];
+  if (pacificCodes.indexOf(code) !== -1) return 'Pacific';
+  var middleEastCodes = ['AE', 'CY', 'DZ', 'EH', 'IL', 'IR', 'LY', 'MA', 'PS', 'SD', 'SY', 'TN', 'YE'];
+  if (middleEastCodes.indexOf(code) !== -1) return 'Middle East';
+
+  if (['australia', 'new zealand', 'fiji'].indexOf(country) !== -1) return 'Pacific';
+  if (['bahrain', 'egypt', 'iraq', 'jordan', 'kuwait', 'lebanon', 'oman', 'qatar', 'saudi arabia', 'turkey', 'türkiye', 'united arab emirates', 'israel', 'palestine', 'iran', 'syria', 'yemen', 'algeria', 'libya', 'morocco', 'tunisia', 'sudan'].indexOf(country) !== -1) return 'Middle East';
+  return 'Asia';
 }
 
 function getOrCreateAllowedDomainsFile_(properties, rootFolder) {

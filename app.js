@@ -51,6 +51,7 @@ const offerSubtitleField = document.querySelector("#offerSubtitleField");
 const menuPdfLabel = document.querySelector("#menuPdfLabel");
 const menuPdfHelp = document.querySelector("#menuPdfHelp");
 const hotelNameInput = form.elements.hotel_name;
+const countrySelect = form.elements.country;
 const offerTileTitleInput = form.elements.offer_tile_title;
 const offerBannerTitleInput = form.elements.offer_banner_title;
 const translationComponent = document.querySelector("#translationComponent");
@@ -69,6 +70,8 @@ let activeTurnstileWidgetId = null;
 
 const maxImageUploadSize = 200 * 1024 * 1024;
 const maxPdfUploadSize = 5 * 1024 * 1024;
+
+const ISO_COUNTRY_CODES = "AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW".split(" ");
 
 const uploadRequirementsByOfferType = {
   red_hot_rooms: { rateScreenshot: true, menuPdf: false, bookingScreenshot: false },
@@ -898,13 +901,13 @@ const workflowCopyTranslations = {
 Object.entries(workflowCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
 
 const requestedFormCopyTranslations = {
-  en: { translationRequiredQuestion: "Is local language translation required?", translationMarketDisclaimer: "The translation is required only for publication in its respective local market.", diningBookingMethodDirect: "Booking via email / WhatsApp/ Line", memberBenefitsDates: "Member Benefits & Dates" },
-  th: { translationRequiredQuestion: "จำเป็นต้องแปลเป็นภาษาท้องถิ่นหรือไม่?", translationMarketDisclaimer: "จำเป็นต้องแปลเฉพาะเมื่อจะเผยแพร่ข้อเสนอในตลาดท้องถิ่นนั้น", diningBookingMethodDirect: "จองผ่านอีเมล / WhatsApp / Line", memberBenefitsDates: "สิทธิประโยชน์สมาชิกและวันที่" },
-  vi: { translationRequiredQuestion: "Có cần bản dịch sang ngôn ngữ địa phương không?", translationMarketDisclaimer: "Bản dịch chỉ cần thiết khi ưu đãi được đăng tại thị trường địa phương tương ứng.", diningBookingMethodDirect: "Đặt qua email / WhatsApp / Line", memberBenefitsDates: "Quyền lợi thành viên và ngày" },
-  id: { translationRequiredQuestion: "Apakah terjemahan bahasa lokal diperlukan?", translationMarketDisclaimer: "Terjemahan hanya diperlukan untuk publikasi di pasar lokal terkait.", diningBookingMethodDirect: "Pemesanan melalui email / WhatsApp / Line", memberBenefitsDates: "Manfaat Anggota & Tanggal" },
-  ja: { translationRequiredQuestion: "現地語への翻訳は必要ですか？", translationMarketDisclaimer: "翻訳は、該当する現地市場で公開する場合にのみ必要です。", diningBookingMethodDirect: "メール / WhatsApp / Lineで予約", memberBenefitsDates: "会員特典と日程" },
-  ar: { translationRequiredQuestion: "هل الترجمة إلى اللغة المحلية مطلوبة؟", translationMarketDisclaimer: "تكون الترجمة مطلوبة فقط للنشر في السوق المحلي المعني.", diningBookingMethodDirect: "الحجز عبر البريد الإلكتروني / WhatsApp / Line", memberBenefitsDates: "مزايا الأعضاء والتواريخ" },
-  tr: { translationRequiredQuestion: "Yerel dil çevirisi gerekli mi?", translationMarketDisclaimer: "Çeviri yalnızca ilgili yerel pazarda yayımlanacak teklifler için gereklidir.", diningBookingMethodDirect: "E-posta / WhatsApp / Line ile rezervasyon", memberBenefitsDates: "Üye Avantajları ve Tarihler" },
+  en: { translationRequiredQuestion: "Is local language translation required?", translationMarketDisclaimer: "Translation to one of the languages below is required only for publishing the offer in the respective local market.", diningBookingMethodDirect: "Booking via email / WhatsApp/ Line", memberBenefitsDates: "Member Benefits & Dates", cityLabel: "City", countryLabel: "Country", selectCountry: "Select a country", cityHelp: "Enter the city where the hotel is located.", countryHelp: "Select the country where the hotel is located." },
+  th: { translationRequiredQuestion: "จำเป็นต้องแปลเป็นภาษาท้องถิ่นหรือไม่?", translationMarketDisclaimer: "จำเป็นต้องแปลเป็นภาษาใดภาษาหนึ่งด้านล่างเฉพาะเมื่อเผยแพร่ข้อเสนอในตลาดท้องถิ่นที่เกี่ยวข้อง", diningBookingMethodDirect: "จองผ่านอีเมล / WhatsApp / Line", memberBenefitsDates: "สิทธิประโยชน์สมาชิกและวันที่", cityLabel: "เมือง", countryLabel: "ประเทศ", selectCountry: "เลือกประเทศ", cityHelp: "กรอกเมืองที่โรงแรมตั้งอยู่", countryHelp: "เลือกประเทศที่โรงแรมตั้งอยู่" },
+  vi: { translationRequiredQuestion: "Có cần bản dịch sang ngôn ngữ địa phương không?", translationMarketDisclaimer: "Chỉ cần dịch sang một trong các ngôn ngữ dưới đây khi đăng ưu đãi tại thị trường địa phương tương ứng.", diningBookingMethodDirect: "Đặt qua email / WhatsApp / Line", memberBenefitsDates: "Quyền lợi thành viên và ngày", cityLabel: "Thành phố", countryLabel: "Quốc gia", selectCountry: "Chọn quốc gia", cityHelp: "Nhập thành phố nơi khách sạn tọa lạc.", countryHelp: "Chọn quốc gia nơi khách sạn tọa lạc." },
+  id: { translationRequiredQuestion: "Apakah terjemahan bahasa lokal diperlukan?", translationMarketDisclaimer: "Terjemahan ke salah satu bahasa di bawah ini hanya diperlukan untuk menerbitkan penawaran di pasar lokal terkait.", diningBookingMethodDirect: "Pemesanan melalui email / WhatsApp / Line", memberBenefitsDates: "Manfaat Anggota & Tanggal", cityLabel: "Kota", countryLabel: "Negara", selectCountry: "Pilih negara", cityHelp: "Masukkan kota tempat hotel berada.", countryHelp: "Pilih negara tempat hotel berada." },
+  ja: { translationRequiredQuestion: "現地語への翻訳は必要ですか？", translationMarketDisclaimer: "以下のいずれかの言語への翻訳は、該当する現地市場でオファーを公開する場合にのみ必要です。", diningBookingMethodDirect: "メール / WhatsApp / Lineで予約", memberBenefitsDates: "会員特典と日程", cityLabel: "都市", countryLabel: "国", selectCountry: "国を選択", cityHelp: "ホテルが所在する都市を入力してください。", countryHelp: "ホテルが所在する国を選択してください。" },
+  ar: { translationRequiredQuestion: "هل الترجمة إلى اللغة المحلية مطلوبة؟", translationMarketDisclaimer: "تُطلب الترجمة إلى إحدى اللغات أدناه فقط لنشر العرض في السوق المحلي المعني.", diningBookingMethodDirect: "الحجز عبر البريد الإلكتروني / WhatsApp / Line", memberBenefitsDates: "مزايا الأعضاء والتواريخ", cityLabel: "المدينة", countryLabel: "الدولة", selectCountry: "اختر الدولة", cityHelp: "أدخل المدينة التي يقع فيها الفندق.", countryHelp: "اختر الدولة التي يقع فيها الفندق." },
+  tr: { translationRequiredQuestion: "Yerel dil çevirisi gerekli mi?", translationMarketDisclaimer: "Aşağıdaki dillerden birine çeviri yalnızca teklifin ilgili yerel pazarda yayımlanması için gereklidir.", diningBookingMethodDirect: "E-posta / WhatsApp / Line ile rezervasyon", memberBenefitsDates: "Üye Avantajları ve Tarihler", cityLabel: "Şehir", countryLabel: "Ülke", selectCountry: "Ülke seçin", cityHelp: "Otelin bulunduğu şehri girin.", countryHelp: "Otelin bulunduğu ülkeyi seçin." },
 };
 Object.entries(requestedFormCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
 
@@ -952,12 +955,40 @@ const runtimeCopyTranslations = {
 };
 Object.entries(runtimeCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
 
+function populateCountryOptions(language) {
+  if (!countrySelect) return;
+  const selectedCountryCode = countrySelect.selectedOptions[0]?.dataset.countryCode || "";
+  const copy = uiTranslations[language] || uiTranslations.en;
+  const englishNames = new Intl.DisplayNames(["en"], { type: "region" });
+  const localizedNames = new Intl.DisplayNames([language], { type: "region" });
+  const countries = ISO_COUNTRY_CODES.map((code) => ({
+    code,
+    value: englishNames.of(code),
+    label: localizedNames.of(code),
+  })).filter((country) => country.value && country.value !== country.code);
+  countries.sort((left, right) => left.label.localeCompare(right.label, language, { sensitivity: "base" }));
+  countrySelect.replaceChildren();
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = copy.selectCountry || uiTranslations.en.selectCountry;
+  countrySelect.append(placeholder);
+  countries.forEach((country) => {
+    const option = document.createElement("option");
+    option.value = country.value;
+    option.dataset.countryCode = country.code;
+    option.textContent = country.label;
+    option.selected = country.code === selectedCountryCode;
+    countrySelect.append(option);
+  });
+}
+
 function applyLanguage(language) {
   const copy = uiTranslations[language] || uiTranslations.en;
   window.siteHeader?.setLanguage(language);
   const labels = localizedLanguageLabels[language] || localizedLanguageLabels.en;
   document.documentElement.lang = language;
   document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+  populateCountryOptions(language);
   if (translationAvailableLanguages) {
     const availableLanguages = Object.keys(contentLanguageLabels).map((code) => labels[code] || contentLanguageLabels[code]);
     const availableLanguagesLabel = availableLanguagesLabelTranslations[language] || availableLanguagesLabelTranslations.en;
@@ -1586,7 +1617,8 @@ function validateRequiredDetails() {
   if (!isPartnerOffer()) {
     if (!form.elements.hotel_rid_code.value.trim()) missing.push("hotel RID code");
     if (!form.elements.hotel_name.value.trim()) missing.push("hotel name");
-    if (!form.elements.city_country.value.trim()) missing.push("city - country");
+    if (!form.elements.city.value.trim()) missing.push("city");
+    if (!form.elements.country.value.trim()) missing.push("country");
   }
   if (isPartnerOffer() && !dynamicFieldValue("partner_name")) {
     missing.push("partner name");
@@ -2043,7 +2075,8 @@ function buildContentForTranslation() {
     ["Email", fieldValue("email")],
     ["Hotel RID code", fieldValue("hotel_rid_code")],
     ["Hotel name", fieldValue("hotel_name")],
-    ["City - Country", fieldValue("city_country")],
+    ["City", fieldValue("city")],
+    ["Country", fieldValue("country")],
     ["Offer type", selectedOfferTypeLabel()],
     ["Offer tile title", fieldValue("offer_tile_title")],
     ["Offer banner title", fieldValue("offer_banner_title")],
@@ -2095,7 +2128,10 @@ function buildSubmissionRecord() {
     person_in_charge_name: fieldValue("person_in_charge_name"),
     hotel_rid_code: fieldValue("hotel_rid_code"),
     hotel_name: fieldValue("hotel_name"),
-    city_country: fieldValue("city_country"),
+    city: fieldValue("city"),
+    country: fieldValue("country"),
+    country_code: countrySelect.selectedOptions[0]?.dataset.countryCode || "",
+    city_country: [fieldValue("city"), fieldValue("country")].filter(Boolean).join(" - "),
     offer_type: offerTypeLabels[fieldValue("offer_type")] || fieldValue("offer_type"),
     offer_tile_title: fieldValue("offer_tile_title"),
     offer_banner_title: fieldValue("offer_banner_title"),
@@ -2402,6 +2438,9 @@ form.addEventListener("submit", async (event) => {
       offer_id: result.offer_id,
       hotel_name: record.hotel_name || record.offer_details.partner_name || "Not provided",
       hotel_rid_code: record.hotel_rid_code || "Not provided",
+      city: record.city || "",
+      country: record.country || "",
+      country_code: record.country_code || "",
       city_country: record.city_country || "",
       offer_tile_title: record.offer_tile_title || "Not provided",
       offer_type: record.offer_type || "Not provided",
@@ -2469,9 +2508,15 @@ const savedHotelPrefill = sessionStorage.getItem("offerHotelPrefill");
 if (savedHotelPrefill) {
   try {
     const hotelPrefill = JSON.parse(savedHotelPrefill);
-    ["hotel_name", "hotel_rid_code", "city_country"].forEach((field) => {
+    ["hotel_name", "hotel_rid_code", "city"].forEach((field) => {
       if (form.elements[field] && hotelPrefill[field]) form.elements[field].value = hotelPrefill[field];
     });
+    if (!hotelPrefill.city && hotelPrefill.city_country) form.elements.city.value = String(hotelPrefill.city_country).split(/\s[-·]\s/)[0] || "";
+    const prefillCountry = hotelPrefill.country || String(hotelPrefill.city_country || "").split(/\s[-·]\s/).pop();
+    if (prefillCountry) {
+      const matchingCountry = Array.from(countrySelect.options).find((option) => option.value === prefillCountry || option.dataset.countryCode === hotelPrefill.country_code);
+      if (matchingCountry) countrySelect.value = matchingCountry.value;
+    }
   } finally {
     sessionStorage.removeItem("offerHotelPrefill");
   }

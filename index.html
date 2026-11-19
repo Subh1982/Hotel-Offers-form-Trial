@@ -126,8 +126,11 @@
               <label><span class="field-label-row"><span data-i18n="hotelNameLabel">Hotel name</span><span class="field-tooltip"><button type="button" class="field-tooltip-trigger" aria-label="More information">i</button><span class="field-tooltip-content" role="tooltip" data-i18n="hotelNameHelp">Enter the full hotel name as it should appear on the offer.</span></span></span>
                 <input name="hotel_name" required autocomplete="organization" placeholder="Example: Swissotel Jakarta PIK Avenue">
               </label>
-              <label><span class="field-label-row"><span data-i18n="cityCountryLabel">City - Country</span><span class="field-tooltip"><button type="button" class="field-tooltip-trigger" aria-label="More information">i</button><span class="field-tooltip-content" role="tooltip" data-i18n="cityCountryHelp">Enter the city and country where the hotel is located.</span></span></span>
-                <input name="city_country" required placeholder="Example: Phuket - Thailand">
+              <label><span class="field-label-row"><span data-i18n="cityLabel">City</span><span class="field-tooltip"><button type="button" class="field-tooltip-trigger" aria-label="More information">i</button><span class="field-tooltip-content" role="tooltip" data-i18n="cityHelp">Enter the city where the hotel is located.</span></span></span>
+                <input name="city" required autocomplete="address-level2" placeholder="Example: Phuket">
+              </label>
+              <label><span class="field-label-row"><span data-i18n="countryLabel">Country</span><span class="field-tooltip"><button type="button" class="field-tooltip-trigger" aria-label="More information">i</button><span class="field-tooltip-content" role="tooltip" data-i18n="countryHelp">Select the country where the hotel is located.</span></span></span>
+                <select name="country" required autocomplete="country-name"><option value="" data-i18n="selectCountry">Select a country</option></select>
               </label>
             </div>
           </section>
@@ -266,7 +269,7 @@
           <section id="translationsSection" class="form-section translation-review-section offer-dependent-section" data-section-number="06">
             <h3 data-i18n="translationRequiredQuestion">Is local language translation required?</h3>
             <div class="translation-disclaimer">
-              <p data-i18n="translationMarketDisclaimer">The translation is required only for publication in its respective local market.</p>
+              <p data-i18n="translationMarketDisclaimer">Translation to one of the languages below is required only for publishing the offer in the respective local market.</p>
               <p id="translationAvailableLanguages"><strong>Available languages:</strong> English, Thai, Vietnamese, Bahasa Indonesia, Japanese, Arabic, and Turkish</p>
             </div>
             <fieldset class="translation-choice-fieldset">

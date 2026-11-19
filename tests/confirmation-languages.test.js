@@ -7,7 +7,7 @@ const source = fs.readFileSync(path.join(__dirname, "..", "confirmation.js"), "u
 
 function confirmationCopyObject() {
   const startMarker = "const confirmationCopy = ";
-  const endMarker = "\n\nconst offerTypes";
+  const endMarker = "\n\nconst supportEmail";
   const start = source.indexOf(startMarker);
   const end = source.indexOf(endMarker, start);
   return Function(`"use strict"; return (${source.slice(start + startMarker.length, end).trim().replace(/;$/, "")});`)();
@@ -82,6 +82,14 @@ test("confirmation supports copying the ID and prefilling another offer", () => 
   assert.match(source, /navigator\.clipboard\.writeText\(confirmation\.offer_id\)/);
   assert.match(source, /sessionStorage\.setItem\("offerHotelPrefill"/);
   assert.match(source, /Your \$\{englishHeadlineLabel\} is submitted/);
+});
+
+test("confirmation shows the support address with the submitted Offer ID", () => {
+  assert.match(source, /explorer\.offers@accorplus\.com/);
+  assert.match(source, /Explorer offer query \$\{confirmation\.offer_id/);
+  assert.match(source, /supportMessages\[confirmationLanguage\]/);
+  assert.match(source, /city: confirmation\.city/);
+  assert.match(source, /country: confirmation\.country/);
 });
 
 test("generic offer types are localized on confirmation", () => {
