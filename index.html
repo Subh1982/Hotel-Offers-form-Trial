@@ -214,7 +214,7 @@
             <div class="upload-zone upload-row">
               <div class="upload-copy">
                 <strong data-i18n="masterImageTitle">Use one image for all placements</strong>
-                <p data-i18n="masterImageHelp">Upload one high-quality image. The app will resize it and show previews for the banner, listing tile, and social image formats.</p>
+                <p data-i18n="masterImageHelp">Upload one high-quality image. The app will resize it and show previews for the banner and listing tile formats.</p>
               </div>
               <label class="file-action"><input id="masterImageInput" name="master_image" type="file" accept="image/png,image/jpeg,image/webp" required><span class="file-button">Choose image</span><small data-file-name-for="master_image">No file selected</small></label>
             </div>
@@ -229,12 +229,6 @@
                 <figcaption><strong data-i18n="listingTileImageTitle">Listing tile image</strong><span>400 × 250</span></figcaption>
                 <div class="image-preview-placeholder" data-i18n="previewAfterUpload">Preview appears after upload</div>
                 <img id="masterListingPreview" alt="Listing tile image preview">
-              </figure>
-              <figure class="image-preview-card image-preview-social">
-                <figcaption><strong data-i18n="socialImageTitle">Social media image</strong><span>1080 × 1080</span></figcaption>
-                <p class="image-preview-note" data-i18n="socialImageOptionalNote">Please note social media marketing exposure is not guaranteed.</p>
-                <div class="image-preview-placeholder" data-i18n="previewAfterUpload">Preview appears after upload</div>
-                <img id="masterSocialPreview" alt="Social media image preview">
               </figure>
             </div>
             <div class="upload-zone upload-row secondary-upload legacy-image-upload">
@@ -255,15 +249,6 @@
               <img id="listingTilePreview" alt="">
             </div>
             <p id="listingTileMessage" class="muted legacy-image-upload"></p>
-            <div class="upload-zone upload-row secondary-upload legacy-image-upload">
-              <div class="upload-copy">
-                <strong data-i18n="socialImageTitle">Social media image</strong>
-                <p data-i18n="socialImageHelp">Optional, for possible social media exposure. The app will auto-resize it to 1080 x 1080px JPG.</p>
-              </div>
-              <label class="file-action"><input id="socialInput" name="social_image" type="file" accept="image/png,image/jpeg,image/webp"><span class="file-button">Choose image</span><small data-file-name-for="social_image">No file selected</small></label>
-              <img id="socialPreview" alt="">
-            </div>
-            <p id="socialMessage" class="muted legacy-image-upload"></p>
           </section>
 
           <section id="translationsSection" class="form-section translation-review-section offer-dependent-section" data-section-number="06">
@@ -304,7 +289,7 @@
             <h3 data-i18n="finalAcknowledgement">Final acknowledgement</h3>
             <label class="checkline">
               <input name="acknowledgement" type="checkbox" value="I understand" required>
-              <span data-i18n="acknowledgementText">I understand incomplete or inaccurate submissions may delay promotion, and assets are due 6 weeks in advance.</span>
+              <span data-i18n="acknowledgementText">I understand incomplete or inaccurate submissions may delay promotion, and content and assets are due up to 6 weeks in advance.</span>
             </label>
           </section>
 

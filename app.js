@@ -5,16 +5,12 @@ const masterImageInput = document.querySelector("#masterImageInput");
 const masterImageMessage = document.querySelector("#masterImageMessage");
 const masterBannerPreview = document.querySelector("#masterBannerPreview");
 const masterListingPreview = document.querySelector("#masterListingPreview");
-const masterSocialPreview = document.querySelector("#masterSocialPreview");
 const bannerInput = document.querySelector("#bannerInput");
 const bannerPreview = document.querySelector("#bannerPreview");
 const bannerMessage = document.querySelector("#bannerMessage");
 const listingTileInput = document.querySelector("#listingTileInput");
 const listingTilePreview = document.querySelector("#listingTilePreview");
 const listingTileMessage = document.querySelector("#listingTileMessage");
-const socialInput = document.querySelector("#socialInput");
-const socialPreview = document.querySelector("#socialPreview");
-const socialMessage = document.querySelector("#socialMessage");
 const formMessage = document.querySelector("#formMessage");
 const dateMessage = document.querySelector("#dateMessage");
 const bookingDialog = document.querySelector("#bookingDialog");
@@ -582,7 +578,7 @@ const formCopyTranslations = {
     bookingScreenshotHelp: "Required for dining, event, and partner offers. Max 1 MB image.",
     departmentConfirmationText: "All relevant hotel departments can confirm the rate loading is set up correctly for members to book.",
     masterImageTitle: "Use one image for all placements",
-    masterImageHelp: "Upload one high-quality image and the app will resize it into banner, listing tile, and social versions.",
+    masterImageHelp: "Upload one high-quality image and the app will resize it into banner and listing tile versions.",
     bannerImageTitle: "Banner image",
     bannerImageHelp: "Upload any image size. The app will auto-resize it to 2048 x 1366px JPG. Source file must not exceed 200 MB. No text and no logo.",
     listingTileImageTitle: "Listing tile image",
@@ -597,7 +593,7 @@ const formCopyTranslations = {
     savePreviewButton: "Save translation",
     translatedPreviewLabel: "Translated preview",
     translationEditHelp: "Review or edit this optional draft. Any text in this box is included automatically with the offer.",
-    acknowledgementText: "I understand incomplete or inaccurate submissions may delay promotion, and assets are due 6 weeks in advance.",
+    acknowledgementText: "I understand incomplete or inaccurate submissions may delay promotion, and content and assets are due up to 6 weeks in advance.",
   },
   th: {
     formTitle: "สร้างข้อเสนอ Explorer ของคุณ",
@@ -630,7 +626,7 @@ const formCopyTranslations = {
     bookingScreenshotHelp: "จำเป็นสำหรับข้อเสนอห้องอาหาร อีเวนต์ และพาร์ทเนอร์ ขนาดภาพสูงสุด 1 MB",
     departmentConfirmationText: "ทุกแผนกที่เกี่ยวข้องของโรงแรมยืนยันได้ว่าการโหลดราคาได้รับการตั้งค่าอย่างถูกต้องเพื่อให้สมาชิกจองได้",
     masterImageTitle: "ใช้ภาพเดียวสำหรับทุกตำแหน่ง",
-    masterImageHelp: "อัปโหลดภาพคุณภาพสูงหนึ่งภาพ แล้วระบบจะปรับขนาดเป็นแบนเนอร์ ไทล์รายการ และภาพโซเชียล",
+    masterImageHelp: "อัปโหลดภาพคุณภาพสูงหนึ่งภาพ แล้วระบบจะปรับขนาดเป็นภาพแบนเนอร์และภาพไทล์รายการ",
     bannerImageTitle: "ภาพแบนเนอร์",
     bannerImageHelp: "อัปโหลดภาพขนาดใดก็ได้ ระบบจะปรับเป็น JPG 2048 x 1366px ไฟล์ต้นฉบับต้องไม่เกิน 200 MB ไม่มีข้อความและโลโก้",
     listingTileImageTitle: "ภาพไทล์รายการ",
@@ -645,7 +641,7 @@ const formCopyTranslations = {
     savePreviewButton: "บันทึกตัวอย่างลงแพ็กเกจ",
     translatedPreviewLabel: "ตัวอย่างคำแปล",
     translationEditHelp: "ตรวจทานหรือแก้ไขฉบับร่างที่ไม่บังคับนี้ ข้อความในช่องนี้จะรวมไปกับข้อเสนอโดยอัตโนมัติ",
-    acknowledgementText: "ฉันเข้าใจว่าการส่งข้อมูลที่ไม่ครบถ้วนหรือไม่ถูกต้องอาจทำให้การโปรโมตล่าช้า และต้องส่งไฟล์ล่วงหน้า 6 สัปดาห์",
+    acknowledgementText: "ฉันเข้าใจว่าการส่งข้อมูลที่ไม่ครบถ้วนหรือไม่ถูกต้องอาจทำให้การโปรโมตล่าช้า และต้องส่งเนื้อหาและไฟล์ล่วงหน้าสูงสุด 6 สัปดาห์",
   },
   vi: {
     formTitle: "Tạo ưu đãi Explorer của bạn",
@@ -678,7 +674,7 @@ const formCopyTranslations = {
     bookingScreenshotHelp: "Bắt buộc đối với ưu đãi ẩm thực, sự kiện và đối tác. Ảnh tối đa 1 MB.",
     departmentConfirmationText: "Tất cả bộ phận liên quan của khách sạn xác nhận việc tải giá đã được thiết lập đúng để thành viên đặt chỗ.",
     masterImageTitle: "Dùng một ảnh cho mọi vị trí",
-    masterImageHelp: "Tải lên một ảnh chất lượng cao và ứng dụng sẽ đổi kích thước thành banner, ô danh sách và ảnh mạng xã hội.",
+    masterImageHelp: "Tải lên một ảnh chất lượng cao và ứng dụng sẽ đổi kích thước thành phiên bản banner và ô danh sách.",
     bannerImageTitle: "Ảnh banner",
     bannerImageHelp: "Tải lên ảnh kích thước bất kỳ. Ứng dụng sẽ tự đổi thành JPG 2048 x 1366px. Tệp gốc không quá 200 MB. Không có chữ và logo.",
     listingTileImageTitle: "Ảnh ô danh sách",
@@ -693,7 +689,7 @@ const formCopyTranslations = {
     savePreviewButton: "Lưu bản xem trước vào gói",
     translatedPreviewLabel: "Bản dịch xem trước",
     translationEditHelp: "Xem lại hoặc chỉnh sửa bản nháp không bắt buộc này. Nội dung trong ô sẽ tự động được gửi cùng ưu đãi.",
-    acknowledgementText: "Tôi hiểu rằng nội dung gửi không đầy đủ hoặc không chính xác có thể làm chậm chương trình khuyến mãi, và tài sản cần gửi trước 6 tuần.",
+    acknowledgementText: "Tôi hiểu rằng nội dung gửi không đầy đủ hoặc không chính xác có thể làm chậm chương trình khuyến mãi, và nội dung cùng tài sản phải được gửi trước tối đa 6 tuần.",
   },
   id: {
     formTitle: "Buat penawaran Explorer Anda",
@@ -726,7 +722,7 @@ const formCopyTranslations = {
     bookingScreenshotHelp: "Wajib untuk penawaran dining, event, dan partner. Gambar maks. 1 MB.",
     departmentConfirmationText: "Semua departemen hotel terkait dapat mengonfirmasi bahwa pemuatan tarif sudah benar agar anggota dapat memesan.",
     masterImageTitle: "Gunakan satu gambar untuk semua penempatan",
-    masterImageHelp: "Unggah satu gambar berkualitas tinggi dan aplikasi akan mengubah ukurannya menjadi banner, listing tile, dan sosial.",
+    masterImageHelp: "Unggah satu gambar berkualitas tinggi dan aplikasi akan mengubah ukurannya menjadi versi banner dan tile daftar.",
     bannerImageTitle: "Gambar banner",
     bannerImageHelp: "Unggah gambar ukuran apa pun. Aplikasi akan mengubahnya menjadi JPG 2048 x 1366px. File sumber maks. 200 MB. Tanpa teks dan logo.",
     listingTileImageTitle: "Gambar listing tile",
@@ -741,7 +737,7 @@ const formCopyTranslations = {
     savePreviewButton: "Simpan pratinjau ke paket",
     translatedPreviewLabel: "Pratinjau terjemahan",
     translationEditHelp: "Tinjau atau edit draf opsional ini. Teks dalam kotak akan otomatis disertakan bersama penawaran.",
-    acknowledgementText: "Saya memahami bahwa pengiriman yang tidak lengkap atau tidak akurat dapat menunda promosi, dan aset harus dikirim 6 minggu sebelumnya.",
+    acknowledgementText: "Saya memahami bahwa pengajuan yang tidak lengkap atau tidak akurat dapat menunda promosi, dan konten serta aset harus diserahkan hingga 6 minggu sebelumnya.",
   },
   ja: {
     formTitle: "Explorerオファーを作成",
@@ -774,7 +770,7 @@ const formCopyTranslations = {
     bookingScreenshotHelp: "ダイニング、イベント、パートナーオファーでは必須です。画像は最大1 MBです。",
     departmentConfirmationText: "関連するホテル部門は、会員が予約できるよう料金ロードが正しく設定されていることを確認できます。",
     masterImageTitle: "1枚の画像をすべての配置に使用",
-    masterImageHelp: "高品質な画像を1枚アップロードすると、バナー、一覧タイル、ソーシャル用にリサイズされます。",
+    masterImageHelp: "高品質な画像を1枚アップロードすると、バナー用と一覧タイル用にリサイズされます。",
     bannerImageTitle: "バナー画像",
     bannerImageHelp: "任意サイズの画像をアップロードできます。アプリが2048 x 1366px JPGに自動リサイズします。元ファイルは200 MB以下。文字とロゴは不可。",
     listingTileImageTitle: "一覧タイル画像",
@@ -789,7 +785,7 @@ const formCopyTranslations = {
     savePreviewButton: "プレビューをパッケージに保存",
     translatedPreviewLabel: "翻訳プレビュー",
     translationEditHelp: "この任意の下書きを確認・編集できます。ボックス内のテキストはオファーと一緒に自動保存されます。",
-    acknowledgementText: "不完全または不正確な提出はプロモーションの遅延につながる可能性があり、素材は6週間前までに提出する必要があることを理解しています。",
+    acknowledgementText: "不完全または不正確な提出はプロモーションの遅延につながる可能性があり、コンテンツと素材は最大6週間前までに提出する必要があることを理解しています。",
   },
   ar: {
     formTitle: "أنشئ عرض Explorer الخاص بك",
@@ -821,7 +817,7 @@ const formCopyTranslations = {
     bookingScreenshotLabel: "لقطة شاشة لصفحة الحجز النهائية",
     bookingScreenshotHelp: "مطلوبة لعروض المطاعم والفعاليات والشركاء. الحد الأقصى للصورة 1 ميغابايت.",
     masterImageTitle: "استخدم صورة واحدة لجميع المواضع",
-    masterImageHelp: "حمّل صورة واحدة عالية الجودة وسيغيّر التطبيق حجمها لإصدارات اللافتة وبطاقة القائمة ووسائل التواصل.",
+    masterImageHelp: "حمّل صورة واحدة عالية الجودة وسيغيّر التطبيق حجمها لإصداري اللافتة وبطاقة القائمة.",
     bannerImageTitle: "صورة اللافتة",
     bannerImageHelp: "حمّل صورة بأي حجم. سيغيّر التطبيق حجمها تلقائيًا إلى JPG بمقاس 2048 × 1366 بكسل. يجب ألا يتجاوز الملف 200 ميغابايت، ومن دون نص أو شعار.",
     listingTileImageTitle: "صورة بطاقة القائمة",
@@ -836,12 +832,12 @@ const formCopyTranslations = {
     savePreviewButton: "حفظ المعاينة في الحزمة",
     translatedPreviewLabel: "معاينة الترجمة",
     translationEditHelp: "راجع هذه المسودة الاختيارية أو عدّلها. سيُرفق أي نص في هذا المربع تلقائيًا مع العرض.",
-    acknowledgementText: "أقر بأن الإرسالات غير المكتملة أو غير الدقيقة قد تؤخر الترويج، وأن المواد مطلوبة قبل 6 أسابيع.",
+    acknowledgementText: "أقر بأن الإرسالات غير المكتملة أو غير الدقيقة قد تؤخر الترويج، وأن المحتوى والمواد مطلوبان قبل موعد النشر بما يصل إلى 6 أسابيع.",
   },
   tr: {
   emailLabel: "E-posta", requiredFieldsNote: "* ile işaretli alanlar zorunludur.", contactNameLabel: "Sorumlu kişinin adı", hotelRidLabel: "Otel RID kodu", hotelNameLabel: "Otel adı", offerTypeLabel: "Teklif türü", selectOne: "Birini seçin", cityCountryLabel: "Şehir - Ülke", offerTileTitleLabel: "Teklif kutucuğu başlığı", offerBannerTitleLabel: "Teklif banner başlığı", offerSubtitleLabel: "Teklif alt başlığı", metaDescriptionLabel: "Meta açıklaması", offerDescriptionLabel: "Teklif açıklaması", bookingLinkLabel: "Rezervasyon bağlantısı", bookingMethodQuestion: "Üyeler nasıl rezervasyon yapabilir?", bookingMethodLink: "Rezervasyon bağlantısı", bookingMethodEmailRsvp: "E-posta / RSVP formu ile rezervasyon", bookingEmailRsvpLabel: "Rezervasyon e-postası veya RSVP formu", bookingEmailRsvpPlaceholder: "E-posta adresini, e-posta talimatlarını veya RSVP formu URL'sini girin.", termsLabel: "Hüküm ve koşullar",
-  rateScreenshotLabel: "Fiyat ekran görüntüsü", rateScreenshotHelp: "Lütfen all.com üzerinde yüklenmiş fiyatı gösterin. Görsel en fazla 1 MB.", menuPdfLabel: "Yeme-içme / etkinlik menüsü PDF", menuPdfHelp: "PDF'leri tek bir dosyada birleştirin. En fazla 10 MB.", bookingScreenshotLabel: "Son rezervasyon sayfası ekran görüntüsü", bookingScreenshotHelp: "Yeme-içme, etkinlik ve iş ortağı teklifleri için gereklidir. Görsel en fazla 1 MB.", departmentConfirmationText: "İlgili tüm otel departmanları, üyelerin rezervasyon yapabilmesi için fiyat yüklemesinin doğru kurulduğunu onaylar.", masterImageTitle: "Tüm yerleşimler için tek görsel kullanın", masterImageHelp: "Yüksek kaliteli tek bir görsel yükleyin; uygulama banner, liste kutucuğu ve sosyal medya sürümlerini oluşturur.", bannerImageTitle: "Banner görseli", bannerImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama görseli otomatik olarak 2048 x 1366px JPG'ye dönüştürür. Kaynak dosya 200 MB'ı aşmamalı; metin ve logo içermemelidir.", listingTileImageTitle: "Liste kutucuğu görseli", listingTileImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama 400 x 250px JPG'ye dönüştürür.", socialImageTitle: "Sosyal medya görseli", socialImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama 1080 x 1080px JPG'ye dönüştürür.",
-  translationPreviewTitle: "İçeriği çevirin", translationSourcePrefix: "Yukarıda girilen teklif içeriğinin dili", translationSourceSuffix: "olarak, sağ üstte seçilen dile göre kabul edilir.", previewInLabel: "Çeviri dilleri", previewTranslatedButton: "İçeriği Çevir", savePreviewButton: "Çeviriyi kaydet", translatedPreviewLabel: "Çeviri önizlemesi", translationEditHelp: "Bu isteğe bağlı taslağı inceleyebilir veya düzenleyebilirsiniz. Kutudaki metin teklifle birlikte otomatik olarak kaydedilir.", acknowledgementText: "Eksik veya hatalı gönderimlerin promosyonu geciktirebileceğini ve materyallerin 6 hafta önceden gönderilmesi gerektiğini anlıyorum.",
+  rateScreenshotLabel: "Fiyat ekran görüntüsü", rateScreenshotHelp: "Lütfen all.com üzerinde yüklenmiş fiyatı gösterin. Görsel en fazla 1 MB.", menuPdfLabel: "Yeme-içme / etkinlik menüsü PDF", menuPdfHelp: "PDF'leri tek bir dosyada birleştirin. En fazla 10 MB.", bookingScreenshotLabel: "Son rezervasyon sayfası ekran görüntüsü", bookingScreenshotHelp: "Yeme-içme, etkinlik ve iş ortağı teklifleri için gereklidir. Görsel en fazla 1 MB.", departmentConfirmationText: "İlgili tüm otel departmanları, üyelerin rezervasyon yapabilmesi için fiyat yüklemesinin doğru kurulduğunu onaylar.", masterImageTitle: "Tüm yerleşimler için tek görsel kullanın", masterImageHelp: "Yüksek kaliteli tek bir görsel yükleyin; uygulama banner ve liste kutucuğu sürümlerini oluşturur.", bannerImageTitle: "Banner görseli", bannerImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama görseli otomatik olarak 2048 x 1366px JPG'ye dönüştürür. Kaynak dosya 200 MB'ı aşmamalı; metin ve logo içermemelidir.", listingTileImageTitle: "Liste kutucuğu görseli", listingTileImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama 400 x 250px JPG'ye dönüştürür.", socialImageTitle: "Sosyal medya görseli", socialImageHelp: "Herhangi bir boyutta görsel yükleyin. Uygulama 1080 x 1080px JPG'ye dönüştürür.",
+  translationPreviewTitle: "İçeriği çevirin", translationSourcePrefix: "Yukarıda girilen teklif içeriğinin dili", translationSourceSuffix: "olarak, sağ üstte seçilen dile göre kabul edilir.", previewInLabel: "Çeviri dilleri", previewTranslatedButton: "İçeriği Çevir", savePreviewButton: "Çeviriyi kaydet", translatedPreviewLabel: "Çeviri önizlemesi", translationEditHelp: "Bu isteğe bağlı taslağı inceleyebilir veya düzenleyebilirsiniz. Kutudaki metin teklifle birlikte otomatik olarak kaydedilir.", acknowledgementText: "Eksik veya hatalı gönderimlerin promosyonu geciktirebileceğini ve içerik ile materyallerin 6 haftaya kadar önceden teslim edilmesi gerektiğini anlıyorum.",
   menuPdfHelp: "PDF'leri tek bir dosyada birleştirin. PDF 5 MB'tan küçük olmalıdır.",
   },
 };
@@ -890,13 +886,13 @@ Object.entries(accommodationHelpTranslations).forEach(([language, accommodationD
 });
 
 const workflowCopyTranslations = {
-  en: { contactEmailHelp: "The email address we should use if we need to discuss this offer.", contactNameHelp: "The person responsible for answering questions about this offer.", hotelRidHelp: "Enter the hotel's unique RID code.", hotelNameHelp: "Enter the full hotel name as it should appear on the offer.", cityCountryHelp: "Enter the city and country where the hotel is located.", translationRequiredQuestion: "Is translation to another language required?", translationMarketDisclaimer: "Translation is relevant only when publishing the offer in the selected market is planned.", yesLabel: "Yes", noLabel: "No", masterImageHelp: "Upload one high-quality image. The app will resize it and show previews for the banner, listing tile, and social image formats.", translationPreviewTitle: "Translate content" },
-  th: { contactEmailHelp: "อีเมลที่เราควรใช้หากต้องติดต่อเรื่องข้อเสนอนี้", contactNameHelp: "ผู้รับผิดชอบในการตอบคำถามเกี่ยวกับข้อเสนอนี้", hotelRidHelp: "กรอกรหัส RID เฉพาะของโรงแรม", hotelNameHelp: "กรอกชื่อโรงแรมเต็มตามที่ควรแสดงในข้อเสนอ", cityCountryHelp: "กรอกเมืองและประเทศที่โรงแรมตั้งอยู่", translationRequiredQuestion: "ต้องการแปลเป็นภาษาอื่นหรือไม่?", translationMarketDisclaimer: "การแปลเกี่ยวข้องเฉพาะเมื่อมีแผนเผยแพร่ข้อเสนอในตลาดนั้น", yesLabel: "ใช่", noLabel: "ไม่", masterImageHelp: "อัปโหลดภาพคุณภาพสูงหนึ่งภาพ ระบบจะปรับขนาดและแสดงตัวอย่างสำหรับแบนเนอร์ การ์ดรายการ และโซเชียลมีเดีย", translationPreviewTitle: "แปลเนื้อหา" },
-  vi: { contactEmailHelp: "Email chúng tôi nên sử dụng nếu cần trao đổi về ưu đãi này.", contactNameHelp: "Người phụ trách trả lời các câu hỏi về ưu đãi này.", hotelRidHelp: "Nhập mã RID riêng của khách sạn.", hotelNameHelp: "Nhập tên đầy đủ của khách sạn như sẽ hiển thị trong ưu đãi.", cityCountryHelp: "Nhập thành phố và quốc gia nơi khách sạn tọa lạc.", translationRequiredQuestion: "Có cần dịch sang ngôn ngữ khác không?", translationMarketDisclaimer: "Bản dịch chỉ phù hợp khi có kế hoạch đăng ưu đãi tại thị trường tương ứng.", yesLabel: "Có", noLabel: "Không", masterImageHelp: "Tải lên một ảnh chất lượng cao. Ứng dụng sẽ đổi kích thước và hiển thị bản xem trước cho banner, ô danh sách và ảnh mạng xã hội.", translationPreviewTitle: "Dịch nội dung" },
-  id: { contactEmailHelp: "Alamat email yang dapat kami gunakan jika perlu membahas penawaran ini.", contactNameHelp: "Orang yang bertanggung jawab menjawab pertanyaan tentang penawaran ini.", hotelRidHelp: "Masukkan kode RID unik hotel.", hotelNameHelp: "Masukkan nama lengkap hotel seperti yang akan ditampilkan pada penawaran.", cityCountryHelp: "Masukkan kota dan negara lokasi hotel.", translationRequiredQuestion: "Apakah terjemahan ke bahasa lain diperlukan?", translationMarketDisclaimer: "Terjemahan hanya relevan jika penawaran direncanakan untuk diterbitkan di pasar terkait.", yesLabel: "Ya", noLabel: "Tidak", masterImageHelp: "Unggah satu gambar berkualitas tinggi. Aplikasi akan mengubah ukuran dan menampilkan pratinjau untuk banner, tile daftar, dan gambar media sosial.", translationPreviewTitle: "Terjemahkan konten" },
-  ja: { contactEmailHelp: "このオファーについて確認が必要な場合に使用するメールアドレスです。", contactNameHelp: "このオファーに関する質問に回答する担当者です。", hotelRidHelp: "ホテル固有のRIDコードを入力してください。", hotelNameHelp: "オファーに表示するホテルの正式名称を入力してください。", cityCountryHelp: "ホテルが所在する都市と国を入力してください。", translationRequiredQuestion: "他の言語への翻訳は必要ですか？", translationMarketDisclaimer: "翻訳は、該当市場でオファーを公開する予定がある場合にのみ必要です。", yesLabel: "はい", noLabel: "いいえ", masterImageHelp: "高品質の画像を1枚アップロードしてください。バナー、一覧タイル、ソーシャル画像用にリサイズしてプレビューを表示します。", translationPreviewTitle: "コンテンツを翻訳" },
-  ar: { contactEmailHelp: "عنوان البريد الإلكتروني الذي سنستخدمه إذا احتجنا إلى مناقشة هذا العرض.", contactNameHelp: "الشخص المسؤول عن الإجابة عن الأسئلة المتعلقة بهذا العرض.", hotelRidHelp: "أدخل رمز RID الفريد للفندق.", hotelNameHelp: "أدخل الاسم الكامل للفندق كما يجب أن يظهر في العرض.", cityCountryHelp: "أدخل المدينة والدولة التي يقع فيها الفندق.", translationRequiredQuestion: "هل يلزم ترجمة العرض إلى لغة أخرى؟", translationMarketDisclaimer: "تكون الترجمة ذات صلة فقط عند التخطيط لنشر العرض في السوق المعني.", yesLabel: "نعم", noLabel: "لا", masterImageHelp: "حمّل صورة واحدة عالية الجودة. سيغيّر التطبيق حجمها ويعرض معاينات للافتة وبطاقة القائمة وصورة وسائل التواصل.", translationPreviewTitle: "ترجمة المحتوى" },
-  tr: { contactEmailHelp: "Bu teklif hakkında görüşmemiz gerekirse kullanacağımız e-posta adresi.", contactNameHelp: "Bu teklifle ilgili soruları yanıtlayacak sorumlu kişi.", hotelRidHelp: "Otelin benzersiz RID kodunu girin.", hotelNameHelp: "Teklifte görünmesi gereken tam otel adını girin.", cityCountryHelp: "Otelin bulunduğu şehir ve ülkeyi girin.", translationRequiredQuestion: "Başka bir dile çeviri gerekiyor mu?", translationMarketDisclaimer: "Çeviri yalnızca teklifin ilgili pazarda yayımlanması planlanıyorsa gereklidir.", yesLabel: "Evet", noLabel: "Hayır", masterImageHelp: "Tek bir yüksek kaliteli görsel yükleyin. Uygulama görseli banner, liste kutucuğu ve sosyal medya biçimleri için yeniden boyutlandırıp önizlemeleri gösterir.", translationPreviewTitle: "İçeriği çevir" },
+  en: { contactEmailHelp: "The email address we should use if we need to discuss this offer.", contactNameHelp: "The person responsible for answering questions about this offer.", hotelRidHelp: "Enter the hotel's unique RID code.", hotelNameHelp: "Enter the full hotel name as it should appear on the offer.", cityCountryHelp: "Enter the city and country where the hotel is located.", translationRequiredQuestion: "Is translation to another language required?", translationMarketDisclaimer: "Translation is relevant only when publishing the offer in the selected market is planned.", yesLabel: "Yes", noLabel: "No", masterImageHelp: "Upload one high-quality image. The app will resize it and show previews for the banner and listing tile formats.", translationPreviewTitle: "Translate content" },
+  th: { contactEmailHelp: "อีเมลที่เราควรใช้หากต้องติดต่อเรื่องข้อเสนอนี้", contactNameHelp: "ผู้รับผิดชอบในการตอบคำถามเกี่ยวกับข้อเสนอนี้", hotelRidHelp: "กรอกรหัส RID เฉพาะของโรงแรม", hotelNameHelp: "กรอกชื่อโรงแรมเต็มตามที่ควรแสดงในข้อเสนอ", cityCountryHelp: "กรอกเมืองและประเทศที่โรงแรมตั้งอยู่", translationRequiredQuestion: "ต้องการแปลเป็นภาษาอื่นหรือไม่?", translationMarketDisclaimer: "การแปลเกี่ยวข้องเฉพาะเมื่อมีแผนเผยแพร่ข้อเสนอในตลาดนั้น", yesLabel: "ใช่", noLabel: "ไม่", masterImageHelp: "อัปโหลดภาพคุณภาพสูงหนึ่งภาพ ระบบจะปรับขนาดและแสดงตัวอย่างสำหรับแบนเนอร์และการ์ดรายการ", translationPreviewTitle: "แปลเนื้อหา" },
+  vi: { contactEmailHelp: "Email chúng tôi nên sử dụng nếu cần trao đổi về ưu đãi này.", contactNameHelp: "Người phụ trách trả lời các câu hỏi về ưu đãi này.", hotelRidHelp: "Nhập mã RID riêng của khách sạn.", hotelNameHelp: "Nhập tên đầy đủ của khách sạn như sẽ hiển thị trong ưu đãi.", cityCountryHelp: "Nhập thành phố và quốc gia nơi khách sạn tọa lạc.", translationRequiredQuestion: "Có cần dịch sang ngôn ngữ khác không?", translationMarketDisclaimer: "Bản dịch chỉ phù hợp khi có kế hoạch đăng ưu đãi tại thị trường tương ứng.", yesLabel: "Có", noLabel: "Không", masterImageHelp: "Tải lên một ảnh chất lượng cao. Ứng dụng sẽ đổi kích thước và hiển thị bản xem trước cho banner và ô danh sách.", translationPreviewTitle: "Dịch nội dung" },
+  id: { contactEmailHelp: "Alamat email yang dapat kami gunakan jika perlu membahas penawaran ini.", contactNameHelp: "Orang yang bertanggung jawab menjawab pertanyaan tentang penawaran ini.", hotelRidHelp: "Masukkan kode RID unik hotel.", hotelNameHelp: "Masukkan nama lengkap hotel seperti yang akan ditampilkan pada penawaran.", cityCountryHelp: "Masukkan kota dan negara lokasi hotel.", translationRequiredQuestion: "Apakah terjemahan ke bahasa lain diperlukan?", translationMarketDisclaimer: "Terjemahan hanya relevan jika penawaran direncanakan untuk diterbitkan di pasar terkait.", yesLabel: "Ya", noLabel: "Tidak", masterImageHelp: "Unggah satu gambar berkualitas tinggi. Aplikasi akan mengubah ukuran dan menampilkan pratinjau untuk banner dan tile daftar.", translationPreviewTitle: "Terjemahkan konten" },
+  ja: { contactEmailHelp: "このオファーについて確認が必要な場合に使用するメールアドレスです。", contactNameHelp: "このオファーに関する質問に回答する担当者です。", hotelRidHelp: "ホテル固有のRIDコードを入力してください。", hotelNameHelp: "オファーに表示するホテルの正式名称を入力してください。", cityCountryHelp: "ホテルが所在する都市と国を入力してください。", translationRequiredQuestion: "他の言語への翻訳は必要ですか？", translationMarketDisclaimer: "翻訳は、該当市場でオファーを公開する予定がある場合にのみ必要です。", yesLabel: "はい", noLabel: "いいえ", masterImageHelp: "高品質の画像を1枚アップロードしてください。バナー用と一覧タイル用にリサイズしてプレビューを表示します。", translationPreviewTitle: "コンテンツを翻訳" },
+  ar: { contactEmailHelp: "عنوان البريد الإلكتروني الذي سنستخدمه إذا احتجنا إلى مناقشة هذا العرض.", contactNameHelp: "الشخص المسؤول عن الإجابة عن الأسئلة المتعلقة بهذا العرض.", hotelRidHelp: "أدخل رمز RID الفريد للفندق.", hotelNameHelp: "أدخل الاسم الكامل للفندق كما يجب أن يظهر في العرض.", cityCountryHelp: "أدخل المدينة والدولة التي يقع فيها الفندق.", translationRequiredQuestion: "هل يلزم ترجمة العرض إلى لغة أخرى؟", translationMarketDisclaimer: "تكون الترجمة ذات صلة فقط عند التخطيط لنشر العرض في السوق المعني.", yesLabel: "نعم", noLabel: "لا", masterImageHelp: "حمّل صورة واحدة عالية الجودة. سيغيّر التطبيق حجمها ويعرض معاينات للافتة وبطاقة القائمة.", translationPreviewTitle: "ترجمة المحتوى" },
+  tr: { contactEmailHelp: "Bu teklif hakkında görüşmemiz gerekirse kullanacağımız e-posta adresi.", contactNameHelp: "Bu teklifle ilgili soruları yanıtlayacak sorumlu kişi.", hotelRidHelp: "Otelin benzersiz RID kodunu girin.", hotelNameHelp: "Teklifte görünmesi gereken tam otel adını girin.", cityCountryHelp: "Otelin bulunduğu şehir ve ülkeyi girin.", translationRequiredQuestion: "Başka bir dile çeviri gerekiyor mu?", translationMarketDisclaimer: "Çeviri yalnızca teklifin ilgili pazarda yayımlanması planlanıyorsa gereklidir.", yesLabel: "Evet", noLabel: "Hayır", masterImageHelp: "Tek bir yüksek kaliteli görsel yükleyin. Uygulama görseli banner ve liste kutucuğu biçimleri için yeniden boyutlandırıp önizlemeleri gösterir.", translationPreviewTitle: "İçeriği çevir" },
 };
 Object.entries(workflowCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
 
@@ -945,13 +941,13 @@ const imagePreviewCopyTranslations = {
 Object.entries(imagePreviewCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
 
 const runtimeCopyTranslations = {
-  en: { moreInformationLabel: "More information", translationSelectionHelp: "Select one or more languages. Use Ctrl/Command-click to select multiple options.", imageInvalidType: "Please upload a PNG, JPG, or WebP image.", imageTooLarge: "Image source file must not exceed 200 MB.", imageProcessing: "Creating banner, listing tile, and social image versions...", imageReady: "All image versions ready from one source image. Source size: {size} KB.", brandToneUnavailable: "Sorry, the Brand Tone Alignment feature is not available at the moment. Please proceed with submitting your offer.", translationUnavailable: "Sorry, the Translation feature is not available at the moment. Please proceed with submitting your offer." },
-  th: { moreInformationLabel: "ข้อมูลเพิ่มเติม", translationSelectionHelp: "เลือกหนึ่งภาษาหรือหลายภาษา ใช้ Ctrl/Command-click เพื่อเลือกหลายรายการ", imageInvalidType: "โปรดอัปโหลดภาพ PNG, JPG หรือ WebP", imageTooLarge: "ไฟล์ภาพต้นฉบับต้องมีขนาดไม่เกิน 200 MB", imageProcessing: "กำลังสร้างภาพแบนเนอร์ การ์ดรายการ และโซเชียลมีเดีย...", imageReady: "ภาพทุกเวอร์ชันพร้อมแล้วจากภาพต้นฉบับหนึ่งภาพ ขนาดต้นฉบับ: {size} KB", brandToneUnavailable: "ขออภัย ฟีเจอร์ปรับโทนแบรนด์ไม่พร้อมใช้งานในขณะนี้ โปรดดำเนินการส่งข้อเสนอของคุณต่อไป", translationUnavailable: "ขออภัย ฟีเจอร์แปลภาษาไม่พร้อมใช้งานในขณะนี้ โปรดดำเนินการส่งข้อเสนอของคุณต่อไป" },
-  vi: { moreInformationLabel: "Thông tin thêm", translationSelectionHelp: "Chọn một hoặc nhiều ngôn ngữ. Dùng Ctrl/Command-click để chọn nhiều mục.", imageInvalidType: "Vui lòng tải lên ảnh PNG, JPG hoặc WebP.", imageTooLarge: "Tệp ảnh nguồn không được vượt quá 200 MB.", imageProcessing: "Đang tạo các phiên bản banner, ô danh sách và ảnh mạng xã hội...", imageReady: "Đã tạo xong tất cả phiên bản từ một ảnh nguồn. Kích thước nguồn: {size} KB.", brandToneUnavailable: "Rất tiếc, tính năng Điều chỉnh giọng thương hiệu hiện không khả dụng. Vui lòng tiếp tục gửi ưu đãi của bạn.", translationUnavailable: "Rất tiếc, tính năng Dịch thuật hiện không khả dụng. Vui lòng tiếp tục gửi ưu đãi của bạn." },
-  id: { moreInformationLabel: "Informasi selengkapnya", translationSelectionHelp: "Pilih satu atau beberapa bahasa. Gunakan Ctrl/Command-click untuk memilih beberapa opsi.", imageInvalidType: "Unggah gambar PNG, JPG, atau WebP.", imageTooLarge: "File gambar sumber tidak boleh melebihi 200 MB.", imageProcessing: "Membuat versi banner, tile daftar, dan gambar media sosial...", imageReady: "Semua versi gambar siap dari satu gambar sumber. Ukuran sumber: {size} KB.", brandToneUnavailable: "Maaf, fitur Penyesuaian Gaya Merek saat ini tidak tersedia. Silakan lanjutkan pengiriman penawaran Anda.", translationUnavailable: "Maaf, fitur Terjemahan saat ini tidak tersedia. Silakan lanjutkan pengiriman penawaran Anda." },
-  ja: { moreInformationLabel: "詳細情報", translationSelectionHelp: "1つ以上の言語を選択してください。複数選択にはCtrl/Command-clickを使用します。", imageInvalidType: "PNG、JPG、またはWebP画像をアップロードしてください。", imageTooLarge: "元画像のファイルサイズは200 MB以下にしてください。", imageProcessing: "バナー、一覧タイル、ソーシャル画像を作成しています...", imageReady: "1枚の元画像からすべての画像を作成しました。元画像サイズ：{size} KB。", brandToneUnavailable: "申し訳ありません。ブランドトーン調整機能は現在ご利用いただけません。そのままオファーの送信を続けてください。", translationUnavailable: "申し訳ありません。翻訳機能は現在ご利用いただけません。そのままオファーの送信を続けてください。" },
-  ar: { moreInformationLabel: "مزيد من المعلومات", translationSelectionHelp: "اختر لغة واحدة أو أكثر. استخدم Ctrl/Command-click لتحديد عدة خيارات.", imageInvalidType: "يرجى تحميل صورة بصيغة PNG أو JPG أو WebP.", imageTooLarge: "يجب ألا يتجاوز ملف الصورة المصدر 200 ميغابايت.", imageProcessing: "جارٍ إنشاء نسخ اللافتة وبطاقة القائمة وصورة وسائل التواصل...", imageReady: "جميع نسخ الصور جاهزة من صورة مصدر واحدة. حجم المصدر: {size} كيلوبايت.", brandToneUnavailable: "عذرًا، ميزة مواءمة نبرة العلامة التجارية غير متاحة حاليًا. يرجى متابعة إرسال عرضك.", translationUnavailable: "عذرًا، ميزة الترجمة غير متاحة حاليًا. يرجى متابعة إرسال عرضك." },
-  tr: { moreInformationLabel: "Daha fazla bilgi", translationSelectionHelp: "Bir veya daha fazla dil seçin. Birden fazla seçim için Ctrl/Command-click kullanın.", imageInvalidType: "Lütfen PNG, JPG veya WebP görseli yükleyin.", imageTooLarge: "Kaynak görsel dosyası 200 MB'ı aşmamalıdır.", imageProcessing: "Banner, liste kutucuğu ve sosyal medya görseli sürümleri oluşturuluyor...", imageReady: "Tüm görsel sürümleri tek bir kaynak görselden hazırlandı. Kaynak boyutu: {size} KB.", brandToneUnavailable: "Üzgünüz, Marka Tonu Uyarlama özelliği şu anda kullanılamıyor. Lütfen teklifinizi göndermeye devam edin.", translationUnavailable: "Üzgünüz, Çeviri özelliği şu anda kullanılamıyor. Lütfen teklifinizi göndermeye devam edin." },
+  en: { moreInformationLabel: "More information", translationSelectionHelp: "Select one or more languages. Use Ctrl/Command-click to select multiple options.", imageInvalidType: "Please upload a PNG, JPG, or WebP image.", imageTooLarge: "Image source file must not exceed 200 MB.", imageProcessing: "Creating banner and listing tile image versions...", imageReady: "Banner and listing tile images are ready. Source size: {size} KB.", brandToneUnavailable: "Sorry, the Brand Tone Alignment feature is not available at the moment. Please proceed with submitting your offer.", translationUnavailable: "Sorry, the Translation feature is not available at the moment. Please proceed with submitting your offer." },
+  th: { moreInformationLabel: "ข้อมูลเพิ่มเติม", translationSelectionHelp: "เลือกหนึ่งภาษาหรือหลายภาษา ใช้ Ctrl/Command-click เพื่อเลือกหลายรายการ", imageInvalidType: "โปรดอัปโหลดภาพ PNG, JPG หรือ WebP", imageTooLarge: "ไฟล์ภาพต้นฉบับต้องมีขนาดไม่เกิน 200 MB", imageProcessing: "กำลังสร้างภาพแบนเนอร์และการ์ดรายการ...", imageReady: "ภาพแบนเนอร์และการ์ดรายการพร้อมแล้ว ขนาดต้นฉบับ: {size} KB", brandToneUnavailable: "ขออภัย ฟีเจอร์ปรับโทนแบรนด์ไม่พร้อมใช้งานในขณะนี้ โปรดดำเนินการส่งข้อเสนอของคุณต่อไป", translationUnavailable: "ขออภัย ฟีเจอร์แปลภาษาไม่พร้อมใช้งานในขณะนี้ โปรดดำเนินการส่งข้อเสนอของคุณต่อไป" },
+  vi: { moreInformationLabel: "Thông tin thêm", translationSelectionHelp: "Chọn một hoặc nhiều ngôn ngữ. Dùng Ctrl/Command-click để chọn nhiều mục.", imageInvalidType: "Vui lòng tải lên ảnh PNG, JPG hoặc WebP.", imageTooLarge: "Tệp ảnh nguồn không được vượt quá 200 MB.", imageProcessing: "Đang tạo các phiên bản banner và ô danh sách...", imageReady: "Ảnh banner và ô danh sách đã sẵn sàng. Kích thước nguồn: {size} KB.", brandToneUnavailable: "Rất tiếc, tính năng Điều chỉnh giọng thương hiệu hiện không khả dụng. Vui lòng tiếp tục gửi ưu đãi của bạn.", translationUnavailable: "Rất tiếc, tính năng Dịch thuật hiện không khả dụng. Vui lòng tiếp tục gửi ưu đãi của bạn." },
+  id: { moreInformationLabel: "Informasi selengkapnya", translationSelectionHelp: "Pilih satu atau beberapa bahasa. Gunakan Ctrl/Command-click untuk memilih beberapa opsi.", imageInvalidType: "Unggah gambar PNG, JPG, atau WebP.", imageTooLarge: "File gambar sumber tidak boleh melebihi 200 MB.", imageProcessing: "Membuat versi banner dan tile daftar...", imageReady: "Gambar banner dan tile daftar sudah siap. Ukuran sumber: {size} KB.", brandToneUnavailable: "Maaf, fitur Penyesuaian Gaya Merek saat ini tidak tersedia. Silakan lanjutkan pengiriman penawaran Anda.", translationUnavailable: "Maaf, fitur Terjemahan saat ini tidak tersedia. Silakan lanjutkan pengiriman penawaran Anda." },
+  ja: { moreInformationLabel: "詳細情報", translationSelectionHelp: "1つ以上の言語を選択してください。複数選択にはCtrl/Command-clickを使用します。", imageInvalidType: "PNG、JPG、またはWebP画像をアップロードしてください。", imageTooLarge: "元画像のファイルサイズは200 MB以下にしてください。", imageProcessing: "バナー画像と一覧タイル画像を作成しています...", imageReady: "バナー画像と一覧タイル画像を作成しました。元画像サイズ：{size} KB。", brandToneUnavailable: "申し訳ありません。ブランドトーン調整機能は現在ご利用いただけません。そのままオファーの送信を続けてください。", translationUnavailable: "申し訳ありません。翻訳機能は現在ご利用いただけません。そのままオファーの送信を続けてください。" },
+  ar: { moreInformationLabel: "مزيد من المعلومات", translationSelectionHelp: "اختر لغة واحدة أو أكثر. استخدم Ctrl/Command-click لتحديد عدة خيارات.", imageInvalidType: "يرجى تحميل صورة بصيغة PNG أو JPG أو WebP.", imageTooLarge: "يجب ألا يتجاوز ملف الصورة المصدر 200 ميغابايت.", imageProcessing: "جارٍ إنشاء نسختي اللافتة وبطاقة القائمة...", imageReady: "صورتا اللافتة وبطاقة القائمة جاهزتان. حجم المصدر: {size} كيلوبايت.", brandToneUnavailable: "عذرًا، ميزة مواءمة نبرة العلامة التجارية غير متاحة حاليًا. يرجى متابعة إرسال عرضك.", translationUnavailable: "عذرًا، ميزة الترجمة غير متاحة حاليًا. يرجى متابعة إرسال عرضك." },
+  tr: { moreInformationLabel: "Daha fazla bilgi", translationSelectionHelp: "Bir veya daha fazla dil seçin. Birden fazla seçim için Ctrl/Command-click kullanın.", imageInvalidType: "Lütfen PNG, JPG veya WebP görseli yükleyin.", imageTooLarge: "Kaynak görsel dosyası 200 MB'ı aşmamalıdır.", imageProcessing: "Banner ve liste kutucuğu görselleri oluşturuluyor...", imageReady: "Banner ve liste kutucuğu görselleri hazır. Kaynak boyutu: {size} KB.", brandToneUnavailable: "Üzgünüz, Marka Tonu Uyarlama özelliği şu anda kullanılamıyor. Lütfen teklifinizi göndermeye devam edin.", translationUnavailable: "Üzgünüz, Çeviri özelliği şu anda kullanılamıyor. Lütfen teklifinizi göndermeye devam edin." },
 };
 Object.entries(runtimeCopyTranslations).forEach(([language, copy]) => Object.assign(uiTranslations[language], copy));
 
@@ -1654,10 +1650,6 @@ function validateRequiredUploads() {
   if (!resizedListingTileFile) {
     missing.push("listing tile image");
   }
-  if (!resizedSocialFile) {
-    missing.push("social image");
-  }
-
   if (missing.length) {
     setMessage(`Please add the required upload: ${missing.join(", ")}.`, "error");
     return false;
@@ -1735,10 +1727,8 @@ async function handleMasterImageUpload() {
   masterImageInput.closest(".upload-zone")?.classList.remove("has-preview");
   bannerInput.closest(".upload-zone")?.classList.remove("has-preview");
   listingTileInput.closest(".upload-zone")?.classList.remove("has-preview");
-  socialInput.closest(".upload-zone")?.classList.remove("has-preview");
   masterBannerPreview.style.display = "none";
   masterListingPreview.style.display = "none";
-  masterSocialPreview.style.display = "none";
   generatedImagePreviews.classList.add("is-hidden");
   masterImageMessage.textContent = "";
 
@@ -1767,17 +1757,14 @@ async function handleMasterImageUpload() {
 
   showPreview(masterBannerPreview, resizedBannerFile);
   showPreview(masterListingPreview, resizedListingTileFile);
-  showPreview(masterSocialPreview, resizedSocialFile);
   generatedImagePreviews.classList.remove("is-hidden");
   showPreview(bannerPreview, resizedBannerFile);
   showPreview(listingTilePreview, resizedListingTileFile);
-  showPreview(socialPreview, resizedSocialFile);
 
   const before = Math.round(file.size / 1024);
   masterImageMessage.textContent = copy.imageReady.replace("{size}", before);
   bannerMessage.textContent = "Banner image ready from master upload.";
   listingTileMessage.textContent = "Listing tile image ready from master upload.";
-  socialMessage.textContent = "Social image ready from master upload.";
 }
 
 masterImageInput.addEventListener("change", handleMasterImageUpload);
@@ -1796,14 +1783,6 @@ listingTileInput.addEventListener("change", () => handleImageUpload(
   listingTileMessage,
   (file) => { resizedListingTileFile = file; },
   { width: 400, height: 250, cover: true, label: "Listing tile image", outputName: "listing-tile-400x250.jpg" },
-));
-
-socialInput.addEventListener("change", () => handleImageUpload(
-  socialInput,
-  socialPreview,
-  socialMessage,
-  (file) => { resizedSocialFile = file; },
-  { width: 1080, height: 1080, cover: true, label: "Social image", outputName: "social-1080x1080.jpg" },
 ));
 
 function updateFileName(input) {
@@ -2472,17 +2451,14 @@ form.addEventListener("reset", () => {
     resizedSocialFile = null;
     masterBannerPreview.style.display = "none";
     masterListingPreview.style.display = "none";
-    masterSocialPreview.style.display = "none";
     generatedImagePreviews.classList.add("is-hidden");
     bannerPreview.style.display = "none";
     listingTilePreview.style.display = "none";
-    socialPreview.style.display = "none";
     document.querySelectorAll(".upload-zone.has-preview").forEach((zone) => zone.classList.remove("has-preview"));
     document.querySelectorAll(".file-card.has-file").forEach((card) => card.classList.remove("has-file"));
     masterImageMessage.textContent = "";
     bannerMessage.textContent = "";
     listingTileMessage.textContent = "";
-    socialMessage.textContent = "";
     document.querySelectorAll('input[type="file"]').forEach((input) => updateFileName(input));
     generatedContentTranslations = {};
     translationComponent.classList.add("is-hidden");
